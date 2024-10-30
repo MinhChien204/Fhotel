@@ -9,12 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import learn.fpoly.fhotel.R;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Fragment_Demo#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Fragment_Demo extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
