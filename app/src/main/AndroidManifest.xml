@@ -19,10 +19,16 @@
             android:name=".getStats"
             android:exported="false" />
         <activity
+            android:name=".WelcomeOnboarding"
+            android:exported="false" />
+        <activity
             android:name=".Login"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TrangChuAdmin"
             android:exported="false" />
         <activity
             android:name=".Welcome"
