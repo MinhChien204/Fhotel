@@ -18,7 +18,7 @@ public class Welcome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                Intent intent = new Intent(Welcome.this, Login.class );
+                Intent intent = new Intent(Welcome.this, navigation.class );
                 startActivity(intent);
                 finish();
         }, DATN );
