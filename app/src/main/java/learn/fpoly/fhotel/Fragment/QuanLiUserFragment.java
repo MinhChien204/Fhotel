@@ -3,6 +3,8 @@ package learn.fpoly.fhotel.Fragment;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -96,9 +98,38 @@ public class QuanLiUserFragment extends Fragment {
         });
     }
 
+    private void showDeleteConfirmationDialog(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Xác nhận xóa");
+        builder.setMessage("Bạn có chắc chắn muốn xóa người dùng này không?");
+
+        builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteUser(position); // Thực hiện xóa nếu người dùng đồng ý
+            }
+        });
+
+        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss(); // Đóng hộp thoại nếu người dùng hủy
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    // Cập nhật hàm deleteAddress để gọi hộp thoại xác nhận
     private void deleteAddress(int position) {
+        showDeleteConfirmationDialog(position); // Hiển thị hộp thoại xác nhận trước khi xóa
+    }
+
+    // Thực hiện xóa người dùng khi đã xác nhận
+    private void deleteUser(int position) {
         String userId = list.get(position).get_id();
-        Log.d(TAG, "Deleting address with ID: " + userId);
+        Log.d(TAG, "Deleting user with ID: " + userId);
         Call<Void> call = apiService.deleteUser(userId);
 
         call.enqueue(new Callback<Void>() {
@@ -107,10 +138,13 @@ public class QuanLiUserFragment extends Fragment {
                 if (response.isSuccessful()) {
                     list.remove(position);
                     adapter.notifyItemRemoved(position);
+                    Toast.makeText(getContext(), "Xóa người dùng thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.e(TAG, "Failed to delete user. Code: " + response.code());
                     if (response.code() == 404) {
                         Toast.makeText(getContext(), "User không tồn tại", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Lỗi khi xóa người dùng", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -118,6 +152,7 @@ public class QuanLiUserFragment extends Fragment {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.e(TAG, "Error deleting user: " + t.getMessage());
+                Toast.makeText(getContext(), "Không thể kết nối đến server", Toast.LENGTH_SHORT).show();
             }
         });
     }
