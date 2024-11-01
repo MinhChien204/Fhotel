@@ -29,7 +29,7 @@ router.get("/user", async (req, res) => {
   });
 
 //API thêm user
-router.post("/add_users", async (req, res) => {
+router.post("/add_user", async (req, res) => {
     try {
       const { username, password, email, name,gioitinh, phonenumber, address, avartar } = req.body;
   
@@ -76,7 +76,7 @@ router.get("/detail_user/:id", async (req, res) => {
   });
 
 //API update user
-router.put("/update_users/:id", async (req, res) => {
+router.put("/update_user/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const { username, password, email, name,gioitinh, phonenumber, address, avartar } = req.body;
@@ -108,7 +108,7 @@ router.put("/update_users/:id", async (req, res) => {
   });
 
 //API delete user
-router.delete("/delete_users/:id", async (req, res) => {
+router.delete("/delete_user/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const deleteUser = await users.findByIdAndDelete(id);

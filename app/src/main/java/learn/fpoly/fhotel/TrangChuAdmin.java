@@ -20,6 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import learn.fpoly.fhotel.Fragment.HoaDonAdminFragment;
 import learn.fpoly.fhotel.Fragment.HomeAdminFragment;
 import learn.fpoly.fhotel.Fragment.NotificationAdminFragment;
+import learn.fpoly.fhotel.Fragment.QuanLiUserFragment;
 import learn.fpoly.fhotel.Fragment.ThongKeAdminFragment;
 
 public class TrangChuAdmin extends AppCompatActivity {
@@ -39,7 +40,7 @@ public class TrangChuAdmin extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemID = item.getItemId();
                 if (itemID == R.id.navHome) {
-                    loadFragment(new HomeAdminFragment(), false);
+                    loadFragment(new QuanLiUserFragment(), false);
                 } else if (itemID == R.id.navHoaDon) {
                     loadFragment(new HoaDonAdminFragment(), false);
                 } else if (itemID == R.id.navNotification) {
@@ -52,7 +53,7 @@ public class TrangChuAdmin extends AppCompatActivity {
         });
 
 // Set fragment mặc định khi mở Activity
-        loadFragment(new HomeAdminFragment(), true);
+        loadFragment(new QuanLiUserFragment(), true);
 
     }
     private void loadFragment(Fragment fragment, boolean isAppInitialized) {
