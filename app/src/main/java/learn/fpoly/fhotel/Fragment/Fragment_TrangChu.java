@@ -1,10 +1,12 @@
 package learn.fpoly.fhotel.Fragment;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
@@ -12,59 +14,94 @@ import java.util.List;
 
 import learn.fpoly.fhotel.Adapter.RecentsAdapter;
 import learn.fpoly.fhotel.Adapter.TopPlacesAdapter;
-import learn.fpoly.fhotel.Model.RecentsData;
-import learn.fpoly.fhotel.Model.TopPlacesData;
+import learn.fpoly.fhotel.Model.Room;
+import learn.fpoly.fhotel.Model.Response;
 import learn.fpoly.fhotel.R;
+import learn.fpoly.fhotel.Retrofit.ApiService;
+import learn.fpoly.fhotel.Retrofit.HttpRequest; // Import your Retrofit client
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class Fragment_TrangChu extends Fragment {
+
+    private RecyclerView recentRecycler, topPlacesRecycler;
+    private RecentsAdapter recentsAdapter;
+    private TopPlacesAdapter topPlacesAdapter;
+    private HttpRequest httpRequest;
 
     public Fragment_TrangChu() {
         // Required empty public constructor
     }
 
-    RecyclerView recentRecycler, topPlacesRecycler;
-    RecentsAdapter recentsAdapter;
-    TopPlacesAdapter topPlacesAdapter;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment__trang_chu, container, false);
 
-        List<RecentsData> recentsDataList = new ArrayList<>();
-        recentsDataList.add(new RecentsData("AM Lake", "India", "From $200", R.drawable.bg));
-        recentsDataList.add(new RecentsData("Nilgiri Hills", "India", "From $300", R.drawable.bg));
-        recentsDataList.add(new RecentsData("AM Lake", "India", "From $200", R.drawable.bg));
-        recentsDataList.add(new RecentsData("Nilgiri Hills", "India", "From $300", R.drawable.bg));
-        recentsDataList.add(new RecentsData("AM Lake", "India", "From $200", R.drawable.bg));
-        recentsDataList.add(new RecentsData("Nilgiri Hills", "India", "From $300", R.drawable.bg));
+        // Khởi tạo ApiService
+        httpRequest = new HttpRequest();
 
-        setRecentRecycler(view, recentsDataList);
+        // Khởi tạo RecyclerView
+        recentRecycler = view.findViewById(R.id.recent_recycler);
+        topPlacesRecycler = view.findViewById(R.id.top_places_recycler);
 
-        List<TopPlacesData> topPlacesDataList = new ArrayList<>();
-        topPlacesDataList.add(new TopPlacesData("Kasimir Hill", "India", "$200 - $500", R.drawable.bg));
-        topPlacesDataList.add(new TopPlacesData("Kasimir Hill", "India", "$200 - $500", R.drawable.bg));
-        topPlacesDataList.add(new TopPlacesData("Kasimir Hill", "India", "$200 - $500", R.drawable.bg));
-        topPlacesDataList.add(new TopPlacesData("Kasimir Hill", "India", "$200 - $500", R.drawable.bg));
-        topPlacesDataList.add(new TopPlacesData("Kasimir Hill", "India", "$200 - $500", R.drawable.bg));
-
-        setTopPlacesRecycler(view, topPlacesDataList);
+        // Gọi API để lấy dữ liệu
+        fetchRecentsData(view);
+        fetchTopPlacesData(view);
 
         return view;
     }
 
-    private void setRecentRecycler(View view, List<RecentsData> recentsDataList) {
-        recentRecycler = view.findViewById(R.id.recent_recycler);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-        recentRecycler.setLayoutManager(layoutManager);
+    private void fetchRecentsData(View view) {
+        httpRequest.callAPI().getRooms().enqueue(new Callback<Response<ArrayList<Room>>>() {
+            @Override
+            public void onResponse(Call<Response<ArrayList<Room>>> call, retrofit2.Response<Response<ArrayList<Room>>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ArrayList<Room> recentsDataList = response.body().getData();
+                    setRecentRecycler(view, recentsDataList);
+                } else {
+                    Toast.makeText(getContext(), "Failed to load recent rooms", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<ArrayList<Room>>> call, Throwable t) {
+                Log.e("API_ERROR", "Error fetching top places: " + t.getMessage(), t);
+                Toast.makeText(getContext(), "E: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void fetchTopPlacesData(View view) {
+        httpRequest.callAPI().getRooms().enqueue(new Callback<Response<ArrayList<Room>>>() {
+            @Override
+            public void onResponse(Call<Response<ArrayList<Room>>> call, retrofit2.Response<Response<ArrayList<Room>>> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    ArrayList<Room> topPlacesDataList = response.body().getData();
+                    setTopPlacesRecycler(view, topPlacesDataList);
+                } else {
+                    Toast.makeText(getContext(), "Failed to load top places", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<ArrayList<Room>>> call, Throwable t) {
+
+                Log.e("API_ERROR", "Error fetching top places", t);
+                Toast.makeText(getContext(), "Error fetching top places", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setRecentRecycler(View view, List<Room> recentsDataList) {
+        recentRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         recentsAdapter = new RecentsAdapter(getContext(), recentsDataList);
         recentRecycler.setAdapter(recentsAdapter);
     }
 
-    private void setTopPlacesRecycler(View view, List<TopPlacesData> topPlacesDataList) {
-        topPlacesRecycler = view.findViewById(R.id.top_places_recycler);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        topPlacesRecycler.setLayoutManager(layoutManager);
+    private void setTopPlacesRecycler(View view, List<Room> topPlacesDataList) {
+        topPlacesRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         topPlacesAdapter = new TopPlacesAdapter(getContext(), topPlacesDataList);
         topPlacesRecycler.setAdapter(topPlacesAdapter);
     }

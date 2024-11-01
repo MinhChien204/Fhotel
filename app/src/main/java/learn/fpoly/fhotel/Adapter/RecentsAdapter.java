@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import learn.fpoly.fhotel.DetailsActivity;
 import learn.fpoly.fhotel.Model.RecentsData;
+import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
 
 import java.util.List;
@@ -20,9 +21,9 @@ import java.util.List;
 public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsViewHolder> {
 
     Context context;
-    List<RecentsData> recentsDataList;
+    List<Room> recentsDataList;
 
-    public RecentsAdapter(Context context, List<RecentsData> recentsDataList) {
+    public RecentsAdapter(Context context, List<Room> recentsDataList) {
         this.context = context;
         this.recentsDataList = recentsDataList;
     }
@@ -40,10 +41,10 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
     @Override
     public void onBindViewHolder(@NonNull RecentsViewHolder holder, int position) {
 
-        holder.countryName.setText(recentsDataList.get(position).getCountryName());
-        holder.placeName.setText(recentsDataList.get(position).getPlaceName());
-        holder.price.setText(recentsDataList.get(position).getPrice());
-        holder.placeImage.setImageResource(recentsDataList.get(position).getImageUrl());
+        holder.room_name.setText(recentsDataList.get(position).getName());
+        holder.room_code.setText(recentsDataList.get(position).getRoomCode());
+        holder.price_room.setText(String.valueOf(recentsDataList.get(position).getPrice()));
+//        holder.room_image.setImageResource(recentsDataList.get(position).getImage());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,16 +63,16 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
 
     public static final class RecentsViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView placeImage;
-        TextView placeName, countryName, price;
+        ImageView room_image;
+        TextView room_name, room_code, price_room;
 
         public RecentsViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            placeImage = itemView.findViewById(R.id.place_image);
-            placeName = itemView.findViewById(R.id.place_name);
-            countryName = itemView.findViewById(R.id.country_name);
-            price = itemView.findViewById(R.id.price);
+            room_image = itemView.findViewById(R.id.room_image);
+            room_name = itemView.findViewById(R.id.room_name);
+            room_code = itemView.findViewById(R.id.room_code);
+            price_room = itemView.findViewById(R.id.price_room);
 
         }
     }

@@ -7,7 +7,7 @@
     android:background="@drawable/search_bg">
 
     <ImageView
-        android:id="@+id/place_image"
+        android:id="@+id/room_image"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:adjustViewBounds="true"
@@ -18,32 +18,32 @@
         app:srcCompat="@drawable/bg" />
 
     <TextView
-        android:id="@+id/place_name"
+        android:id="@+id/room_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:text="AM Lake"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/place_image" />
+        app:layout_constraintTop_toBottomOf="@+id/room_image" />
 
     <TextView
-        android:id="@+id/country_name"
+        android:id="@+id/room_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:text="India"
-        app:layout_constraintStart_toStartOf="@+id/place_name"
-        app:layout_constraintTop_toBottomOf="@+id/place_name" />
+        app:layout_constraintStart_toStartOf="@+id/room_name"
+        app:layout_constraintTop_toBottomOf="@+id/room_name" />
 
     <TextView
-        android:id="@+id/price"
+        android:id="@+id/price_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="16dp"
         android:text="From $200"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/country_name"
-        app:layout_constraintTop_toBottomOf="@+id/country_name" />
+        app:layout_constraintStart_toStartOf="@+id/room_code"
+        app:layout_constraintTop_toBottomOf="@+id/room_code" />
 </androidx.constraintlayout.widget.ConstraintLayout>

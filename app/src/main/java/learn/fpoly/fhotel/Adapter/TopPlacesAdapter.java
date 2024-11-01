@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
 
 import java.util.List;
@@ -19,9 +20,9 @@ import learn.fpoly.fhotel.Model.TopPlacesData;
 public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopPlacesViewHolder> {
 
     Context context;
-    List<TopPlacesData> topPlacesDataList;
+    List<Room> topPlacesDataList;
 
-    public TopPlacesAdapter(Context context, List<TopPlacesData> topPlacesDataList) {
+    public TopPlacesAdapter(Context context, List<Room> topPlacesDataList) {
         this.context = context;
         this.topPlacesDataList = topPlacesDataList;
     }
@@ -39,10 +40,10 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
     @Override
     public void onBindViewHolder(@NonNull TopPlacesViewHolder holder, int position) {
 
-        holder.countryName.setText(topPlacesDataList.get(position).getCountryName());
-        holder.placeName.setText(topPlacesDataList.get(position).getPlaceName());
-        holder.price.setText(topPlacesDataList.get(position).getPrice());
-        holder.placeImage.setImageResource(topPlacesDataList.get(position).getImageUrl());
+        holder.room_name.setText(topPlacesDataList.get(position).getName());
+        holder.room_code.setText(topPlacesDataList.get(position).getRoomCode());
+        holder.price_room.setText(String.valueOf(topPlacesDataList.get(position).getPrice()));
+//        holder.room_image.setImageResource(topPlacesDataList.get(position).getImage());
     }
 
     @Override
@@ -52,16 +53,16 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
 
     public static final class TopPlacesViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView placeImage;
-        TextView placeName, countryName, price;
+        ImageView room_image;
+        TextView room_name, room_code, price_room;
 
         public TopPlacesViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            placeImage = itemView.findViewById(R.id.place_image);
-            placeName = itemView.findViewById(R.id.place_name);
-            countryName = itemView.findViewById(R.id.country_name);
-            price = itemView.findViewById(R.id.price);
+            room_image = itemView.findViewById(R.id.room_image);
+            room_name = itemView.findViewById(R.id.room_name);
+            room_code = itemView.findViewById(R.id.room_code);
+            price_room = itemView.findViewById(R.id.price_room);
 
         }
     }
