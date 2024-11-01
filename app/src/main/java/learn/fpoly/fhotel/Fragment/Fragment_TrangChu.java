@@ -1,66 +1,71 @@
 package learn.fpoly.fhotel.Fragment;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.List;
 
+import learn.fpoly.fhotel.Adapter.RecentsAdapter;
+import learn.fpoly.fhotel.Adapter.TopPlacesAdapter;
+import learn.fpoly.fhotel.Model.RecentsData;
+import learn.fpoly.fhotel.Model.TopPlacesData;
 import learn.fpoly.fhotel.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Fragment_TrangChu#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Fragment_TrangChu extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public Fragment_TrangChu() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Fragment_TrangChu.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Fragment_TrangChu newInstance(String param1, String param2) {
-        Fragment_TrangChu fragment = new Fragment_TrangChu();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    RecyclerView recentRecycler, topPlacesRecycler;
+    RecentsAdapter recentsAdapter;
+    TopPlacesAdapter topPlacesAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment__trang_chu, container, false);
+        View view = inflater.inflate(R.layout.fragment__trang_chu, container, false);
+
+        List<RecentsData> recentsDataList = new ArrayList<>();
+        recentsDataList.add(new RecentsData("AM Lake", "India", "From $200", R.drawable.bg));
+        recentsDataList.add(new RecentsData("Nilgiri Hills", "India", "From $300", R.drawable.bg));
+        recentsDataList.add(new RecentsData("AM Lake", "India", "From $200", R.drawable.bg));
+        recentsDataList.add(new RecentsData("Nilgiri Hills", "India", "From $300", R.drawable.bg));
+        recentsDataList.add(new RecentsData("AM Lake", "India", "From $200", R.drawable.bg));
+        recentsDataList.add(new RecentsData("Nilgiri Hills", "India", "From $300", R.drawable.bg));
+
+        setRecentRecycler(view, recentsDataList);
+
+        List<TopPlacesData> topPlacesDataList = new ArrayList<>();
+        topPlacesDataList.add(new TopPlacesData("Kasimir Hill", "India", "$200 - $500", R.drawable.bg));
+        topPlacesDataList.add(new TopPlacesData("Kasimir Hill", "India", "$200 - $500", R.drawable.bg));
+        topPlacesDataList.add(new TopPlacesData("Kasimir Hill", "India", "$200 - $500", R.drawable.bg));
+        topPlacesDataList.add(new TopPlacesData("Kasimir Hill", "India", "$200 - $500", R.drawable.bg));
+        topPlacesDataList.add(new TopPlacesData("Kasimir Hill", "India", "$200 - $500", R.drawable.bg));
+
+        setTopPlacesRecycler(view, topPlacesDataList);
+
+        return view;
+    }
+
+    private void setRecentRecycler(View view, List<RecentsData> recentsDataList) {
+        recentRecycler = view.findViewById(R.id.recent_recycler);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        recentRecycler.setLayoutManager(layoutManager);
+        recentsAdapter = new RecentsAdapter(getContext(), recentsDataList);
+        recentRecycler.setAdapter(recentsAdapter);
+    }
+
+    private void setTopPlacesRecycler(View view, List<TopPlacesData> topPlacesDataList) {
+        topPlacesRecycler = view.findViewById(R.id.top_places_recycler);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        topPlacesRecycler.setLayoutManager(layoutManager);
+        topPlacesAdapter = new TopPlacesAdapter(getContext(), topPlacesDataList);
+        topPlacesRecycler.setAdapter(topPlacesAdapter);
     }
 }
