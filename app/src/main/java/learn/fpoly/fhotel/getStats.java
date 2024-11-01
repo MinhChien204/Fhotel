@@ -2,6 +2,8 @@ package learn.fpoly.fhotel;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class getStats extends AppCompatActivity {
 
+    Button btngetstatt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,8 +23,16 @@ public class getStats extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+
         });
-        Intent i = new Intent(getStats.this, MainActivity.class);
-        startActivity(i);
+        btngetstatt = findViewById(R.id.btngetstat);
+        btngetstatt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getStats.this , Login.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }

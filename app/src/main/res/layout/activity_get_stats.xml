@@ -43,9 +43,10 @@
             android:textColor="@color/black"
             android:textSize="18dp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btngetstat"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_margin="30dp"
             android:background="@drawable/button_bg"
             android:text="Get Stat"

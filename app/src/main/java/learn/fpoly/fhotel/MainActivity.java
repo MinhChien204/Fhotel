@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import learn.fpoly.fhotel.Fragment.Fragment_TrangChu;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,5 +24,15 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        if (savedInstanceState == null) {
+            relaceFrg(new Fragment_TrangChu());
+            setTitle("Trang chủ");
+        }
     }
+
+    public void relaceFrg(Fragment frg) {
+        FragmentManager fg = getSupportFragmentManager();
+        fg.beginTransaction().replace(R.id.frameLayout, frg).commit();
+    }
+
 }

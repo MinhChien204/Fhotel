@@ -86,7 +86,7 @@ public class navigation extends AppCompatActivity {
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(navigation.this, MainActivity.class);
+                Intent i = new Intent(navigation.this, Login.class);
                 startActivity(i);
                 finish();
             }
