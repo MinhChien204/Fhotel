@@ -1,15 +1,13 @@
-package learn.fpoly.fhotel;
+package learn.fpoly.fhotel.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import learn.fpoly.fhotel.R;
 
 public class Welcome extends AppCompatActivity {
     private static final int DATN = 3000;

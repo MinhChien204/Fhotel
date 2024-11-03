@@ -11,8 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import learn.fpoly.fhotel.DetailsActivity;
-import learn.fpoly.fhotel.Model.RecentsData;
+import learn.fpoly.fhotel.activity.DetailsActivity;
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
 

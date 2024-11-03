@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg"
     android:orientation="vertical"
-    tools:context=".getStats">
+    tools:context=".activity.getStats">
 
     <LinearLayout
         android:layout_width="match_parent"

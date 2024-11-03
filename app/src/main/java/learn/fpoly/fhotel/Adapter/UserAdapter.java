@@ -49,9 +49,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         User user = list.get(position);
 
         Glide.with(holder.itemView.getContext()).load(user.getAvartar()).into(holder.imgUser);
-        holder.txtUserName.setText(user.getName());
-        holder.txtUserPhone.setText(user.getPhonenumber());
-        holder.txtUserAddress.setText(user.getAddress());
+        holder.txtUserName.setText("Name:"+user.getName());
+        holder.txtUserPhone.setText("Phone:"+user.getPhonenumber());
+        holder.txtUserAddress.setText("Address:"+user.getAddress());
 
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override

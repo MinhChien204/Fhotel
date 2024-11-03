@@ -1,16 +1,12 @@
-package learn.fpoly.fhotel;
+package learn.fpoly.fhotel.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -18,10 +14,10 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import learn.fpoly.fhotel.Fragment.HoaDonAdminFragment;
-import learn.fpoly.fhotel.Fragment.HomeAdminFragment;
 import learn.fpoly.fhotel.Fragment.NotificationAdminFragment;
 import learn.fpoly.fhotel.Fragment.QuanLiUserFragment;
 import learn.fpoly.fhotel.Fragment.ThongKeAdminFragment;
+import learn.fpoly.fhotel.R;
 
 public class TrangChuAdmin extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;

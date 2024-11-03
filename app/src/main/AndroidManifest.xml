@@ -20,25 +20,25 @@
         android:theme="@style/Theme.Fhotel"
         tools:targetApi="31">
         <activity
-            android:name=".DetailsActivity"
+            android:name=".activity.DetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".navigation"
+            android:name=".activity.navigation"
             android:exported="false" />
         <activity
-            android:name=".getStats"
+            android:name=".activity.getStats"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".activity.Login"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".TrangChuAdmin"
+            android:name=".activity.TrangChuAdmin"
             android:exported="false" />
         <activity
-            android:name=".Welcome"
+            android:name=".activity.Welcome"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
