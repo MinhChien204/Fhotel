@@ -41,7 +41,7 @@
             android:name=".activity.getStats"
             android:exported="false" />
         <activity
-            android:name=".activity.Login"
+            android:name=".activity.TrangChuAdmin"
             android:exported="false" />
         <activity
             android:name=".activity.Register"
@@ -50,10 +50,10 @@
             android:name=".activity.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.TrangChuAdmin"
+            android:name=".activity.Welcome"
             android:exported="false" />
         <activity
-            android:name=".activity.Welcome"
+            android:name=".activity.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -5,12 +5,88 @@
     android:layout_height="match_parent"
     tools:context=".Fragment.ThongKeAdminFragment">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:gravity="center"
-        android:textSize="20dp"
-        android:text="ThongKe Admin Fragment" />
+        android:padding="16dp">
+
+        <!-- Thẻ Số lượng đặt phòng hôm nay -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/card_background">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đặt phòng hôm nay"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="120"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_blue_dark" />
+        </LinearLayout>
+
+        <!-- Thẻ Tổng doanh thu hôm nay -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/card_background">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Doanh thu hôm nay"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5,000,000 VND"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_green_dark" />
+        </LinearLayout>
+
+        <!-- Thẻ Số lượng phòng trống -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/card_background">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phòng trống"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="45"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_orange_dark" />
+        </LinearLayout>
+    </LinearLayout>
+
 
 </FrameLayout>

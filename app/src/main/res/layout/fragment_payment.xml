@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     tools:context=".Fragment.PaymentFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -16,7 +17,7 @@
 
         <!-- Nút Back -->
         <ImageView
-            android:id="@+id/ivBack"
+            android:id="@+id/ivBackPayment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -233,14 +234,7 @@
                 android:text="Occupancy taxes and fees: $10"
                 android:layout_marginTop="8dp"/>
 
-            <TextView
-                android:id="@+id/grand_total"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Grand Total: $320"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:textSize="18sp"/>
+
         </LinearLayout>
     </ScrollView>
 

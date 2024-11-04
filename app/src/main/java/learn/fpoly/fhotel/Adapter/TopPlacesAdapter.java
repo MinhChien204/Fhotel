@@ -1,5 +1,6 @@
 package learn.fpoly.fhotel.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
@@ -43,7 +46,10 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
         holder.room_name.setText(topPlacesDataList.get(position).getName());
         holder.room_code.setText(topPlacesDataList.get(position).getRoomCode());
         holder.price_room.setText(String.valueOf(topPlacesDataList.get(position).getPrice()));
-//        holder.room_image.setImageResource(topPlacesDataList.get(position).getImage());
+        Glide.with((Activity) context) // Sử dụng Activity context
+                .load(topPlacesDataList.get(position).getImage()) // Đảm bảo bạn dùng đúng phương thức lấy URL ảnh
+                .thumbnail(Glide.with(context).load(R.drawable.ic_launcher_foreground))
+                .into(holder.room_image);
     }
 
     @Override

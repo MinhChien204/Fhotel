@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.Fhotel" parent="Base.Theme.Fhotel" />
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation" tools:ignore="DuplicateDefinition">@anim/slide_out_bottom</item>
+    </style>
+
 </resources>

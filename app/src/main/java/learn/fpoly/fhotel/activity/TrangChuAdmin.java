@@ -1,8 +1,16 @@
 package learn.fpoly.fhotel.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -22,6 +30,7 @@ import learn.fpoly.fhotel.R;
 public class TrangChuAdmin extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FrameLayout frameLayout;
+    Button btnPayDone;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +39,13 @@ public class TrangChuAdmin extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         frameLayout = findViewById(R.id.framelayout);
+        btnPayDone = findViewById(R.id.btnpaydone);
+        btnPayDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -52,6 +68,23 @@ public class TrangChuAdmin extends AppCompatActivity {
         loadFragment(new QuanLiUserFragment(), true);
 
     }
+
+    private void showDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.bottomsheetpaymentdone);
+
+        //Code Logic
+
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+
+    }
+
     private void loadFragment(Fragment fragment, boolean isAppInitialized) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
