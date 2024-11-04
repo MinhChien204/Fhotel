@@ -5,4 +5,5 @@
     <color name="primary">#FFC107</color> //mau so cap
     <color name="secondary">#FFEB3B</color>//mau trung cap
     <color name="mau_chu">#4E352F</color>
+    <color name="purple_500">#6200EE</color>
 </resources>
