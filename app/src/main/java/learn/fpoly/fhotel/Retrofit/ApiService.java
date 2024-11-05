@@ -20,7 +20,7 @@ public interface ApiService {
     Call<Response<ArrayList<Room>>> getRooms();
     //API user
     @GET("api/room/{id}")
-    Call<Room> getRoomById(@Path("id") String roomId);
+    Call<Response<Room>> getRoomById(@Path("id") String roomId);
     //
     @GET("api/user")
     Call<List<User>> getUsers();

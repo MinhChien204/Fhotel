@@ -18,7 +18,7 @@ import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
+import learn.fpoly.fhotel.Model.Response;
 
 public class DetailsActivity extends AppCompatActivity {
     private ImageView ivBack, ivFavorite, imgRom_details;
@@ -48,8 +48,7 @@ public class DetailsActivity extends AppCompatActivity {
         String roomId = getIntent().getStringExtra("room_id");
         Log.d("dcm", "onCreate: " + roomId);
 
-
-         // Kiểm tra nếu ID hợp lệ và gọi API
+        // Kiểm tra nếu ID hợp lệ và gọi API
         if (roomId != null && !roomId.isEmpty()) {
             fetchRoomById(roomId);
         } else {
@@ -78,31 +77,35 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
-    // Hàm lấy chi tiết phòng theo ID và gán dữ liệu vào các View
     public void fetchRoomById(String roomId) {
-        Call<Room> call = httpRequest.callAPI().getRoomById(roomId);
-        call.enqueue(new Callback<Room>() {
+        Call<Response<Room>> call = httpRequest.callAPI().getRoomById(roomId);
+        call.enqueue(new Callback<Response<Room>>() {
             @Override
-            public void onResponse(Call<Room> call, Response<Room> response) {
+            public void onResponse(Call<Response<Room>> call, retrofit2.Response<Response<Room>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Room room = response.body();
-                    Log.d("room", "onResponse: " + room);
-                    // Gán dữ liệu phòng vào các View
-                    txtNamerom_details.setText(room.getName());
-                    txtRating_details.setText(String.valueOf(room.getRating()));
-                    txtdescription_details.setText(room.getDescription());
-                    txtprice_details.setText(String.valueOf(room.getPrice()));
-                    // Nếu có hình ảnh, hãy gán nó vào imgRom_details
-                    Glide.with(DetailsActivity.this)
-                            .load(room.getImage()) // Thay `getImageUrl()` bằng phương thức lấy URL ảnh
-                            .into(imgRom_details);// nếu bạn có phương thức này
+                    Response<Room> roomResponse = response.body(); // Lấy đối tượng Response
+                    if (roomResponse.getStatus() == 200) { // Kiểm tra status
+                        Room room = roomResponse.getData(); // Lấy dữ liệu Room
+                        Log.d("room", "onResponse: " + room);
+                        // Gán dữ liệu phòng vào các View
+                        txtNamerom_details.setText(room.getName());
+                        txtRating_details.setText(String.valueOf(room.getRating()));
+                        txtdescription_details.setText(room.getDescription());
+                        txtprice_details.setText(String.valueOf(room.getPrice()));
+                        // Nếu có hình ảnh, hãy gán nó vào imgRom_details
+                        Glide.with(DetailsActivity.this)
+                                .load(room.getImage()) // Thay `getImageUrl()` bằng phương thức lấy URL ảnh
+                                .into(imgRom_details);
+                    } else {
+                        Toast.makeText(DetailsActivity.this, "Room not found: " + roomResponse.getMessenger(), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(DetailsActivity.this, "Room not found", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Room> call, Throwable t) {
+            public void onFailure(Call<Response<Room>> call, Throwable t) {
                 Toast.makeText(DetailsActivity.this, "Failed to load room details: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
