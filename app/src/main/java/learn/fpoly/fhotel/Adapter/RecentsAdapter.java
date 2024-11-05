@@ -45,7 +45,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
 
         holder.room_name.setText(recentsDataList.get(position).getName());
         holder.room_code.setText(recentsDataList.get(position).getRoomCode());
-        holder.price_room.setText(String.valueOf(recentsDataList.get(position).getPrice()));
+        holder.price_room.setText(String.valueOf("$"+recentsDataList.get(position).getPrice()));
         Glide.with((Activity) context) // Sử dụng Activity context
                 .load(recentsDataList.get(position).getImage()) // Đảm bảo bạn dùng đúng phương thức lấy URL ảnh
                 .thumbnail(Glide.with(context).load(R.drawable.ic_launcher_foreground))
