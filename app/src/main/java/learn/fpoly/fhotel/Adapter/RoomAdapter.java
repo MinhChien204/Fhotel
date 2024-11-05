@@ -36,6 +36,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         holder.priceTextView.setText(String.valueOf(room.getPrice()));
         holder.ratingTextView.setText(String.valueOf(room.getRating()));
         holder.descriptionTextView.setText(room.getDescription());
+
         // Thêm mã để tải hình ảnh từ URL nếu cần
     }
 

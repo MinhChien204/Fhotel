@@ -17,8 +17,6 @@ import learn.fpoly.fhotel.R;
 
 import java.util.List;
 
-import learn.fpoly.fhotel.Model.TopPlacesData;
-
 public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopPlacesViewHolder> {
 
     Context context;

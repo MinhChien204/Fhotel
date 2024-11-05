@@ -19,10 +19,15 @@ public interface ApiService {
     @GET("api/rooms")
     Call<Response<ArrayList<Room>>> getRooms();
     //API user
+    @GET("api/room/{id}")
+    Call<Room> getRoomById(@Path("id") String roomId);
+    //
     @GET("api/user")
     Call<List<User>> getUsers();
+    /////
     @GET("api/detail_user/{id}")
     Call<User> getUserDetails(@Path("id") String userId);
+    /////
     @POST("api/add_user")
     Call<User> createUser(@Body User user);
     @PUT("api/update_user/{id}")

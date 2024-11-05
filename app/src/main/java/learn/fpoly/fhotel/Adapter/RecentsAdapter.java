@@ -41,10 +41,10 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
 
     @Override
     public void onBindViewHolder(@NonNull RecentsViewHolder holder, int position) {
-
-        holder.room_name.setText(recentsDataList.get(position).getName());
-        holder.room_code.setText(recentsDataList.get(position).getRoomCode());
-        holder.price_room.setText(String.valueOf(recentsDataList.get(position).getPrice()));
+        Room room = recentsDataList.get(position);
+        holder.room_name.setText(room.getName());
+        holder.room_code.setText(room.getRoomCode());
+        holder.price_room.setText(String.valueOf(room.getPrice()));
         Glide.with(context)
                 .load(recentsDataList.get(position).getImage()) // URL của hình ảnh
                 .into(holder.room_image); // ImageView để hiển thị ảnh
@@ -53,6 +53,10 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, DetailsActivity.class);
+                // Truyền dữ liệu qua Intent
+                i.putExtra("room_id", room.getId());
+
+                // Bắt đầu Activity DetailsActivity
                 context.startActivity(i);
             }
         });

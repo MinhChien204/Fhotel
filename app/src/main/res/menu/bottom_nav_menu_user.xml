@@ -11,11 +11,11 @@
         android:title="Thông báo" />
     <item
         android:id="@+id/navUuDai_u"
-        android:icon="@drawable/booking"
+        android:icon="@drawable/baseline_notifications_24"
         android:title="Booking" />
     <item
         android:id="@+id/nav"
-        android:icon="@drawable/payment"
+        android:icon="@drawable/baseline_notifications_24"
         android:title="Ưu đãi" />
     <item
         android:id="@+id/navTaiKhoan_u"

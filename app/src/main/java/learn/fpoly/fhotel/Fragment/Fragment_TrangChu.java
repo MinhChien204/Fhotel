@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import learn.fpoly.fhotel.Adapter.RecentsAdapter;
 import learn.fpoly.fhotel.Adapter.TopPlacesAdapter;
 import learn.fpoly.fhotel.Model.Room;
@@ -19,9 +20,9 @@ import learn.fpoly.fhotel.Model.Response;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.ApiService;
 import learn.fpoly.fhotel.Retrofit.HttpRequest; // Import your Retrofit client
-
 import retrofit2.Call;
 import retrofit2.Callback;
+
 
 public class Fragment_TrangChu extends Fragment {
 
