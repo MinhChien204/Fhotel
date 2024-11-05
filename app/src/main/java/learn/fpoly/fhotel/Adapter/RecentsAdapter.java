@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import learn.fpoly.fhotel.activity.DetailsActivity;
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
@@ -43,7 +45,9 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
         holder.room_name.setText(recentsDataList.get(position).getName());
         holder.room_code.setText(recentsDataList.get(position).getRoomCode());
         holder.price_room.setText(String.valueOf(recentsDataList.get(position).getPrice()));
-//        holder.room_image.setImageResource(recentsDataList.get(position).getImage());
+        Glide.with(context)
+                .load(recentsDataList.get(position).getImage()) // URL của hình ảnh
+                .into(holder.room_image); // ImageView để hiển thị ảnh
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
