@@ -258,17 +258,41 @@ router.get("/hotels", async (req, res) => {
 });
 
 // API hiển thị danh sách người dùng
-router.get("/users", async (req, res) => {
+// router.get("/users", async (req, res) => {
+//   try {
+//       let users = await User.find();
+//       res.status(200).json({
+//           status: 200,
+//           message: "Users retrieved successfully",
+//           data: users,
+//       });
+//   } catch (error) {
+//       console.error("Error:", error);
+//       res.status(500).json({ message: "An error occurred while retrieving users" });
+//   }
+// });
+
+//API Login 
+router.post("/login",async (req, res) => {
   try {
-      let users = await User.find();
-      res.status(200).json({
-          status: 200,
-          message: "Users retrieved successfully",
-          data: users,
+    const {username,password} = req.body;
+    const user = await users.findOne({ username,password})
+    if(user){
+      res.json({
+        status: 200,
+        message: "Login successful",
+        data: user,
       });
+    }else{
+      res.json({
+        status: 400,
+        message: "Login failed",
+        data:[]
+      })
+    }
   } catch (error) {
-      console.error("Error:", error);
-      res.status(500).json({ message: "An error occurred while retrieving users" });
+    console.log(error);
+    
   }
-});
+})
 module.exports = router; 
