@@ -50,10 +50,10 @@
             android:name=".activity.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.Welcome"
+            android:name=".activity.Login"
             android:exported="false" />
         <activity
-            android:name=".activity.Login"
+            android:name=".activity.Welcome"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

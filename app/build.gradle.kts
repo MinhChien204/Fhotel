@@ -53,5 +53,5 @@ dependencies {
     implementation ("com.google.android.material:material:1.7.0")
     implementation ("com.airbnb.android:lottie:5.2.0")
 
-
+    implementation (libs.android.gif.drawable)
 }
