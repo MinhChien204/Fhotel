@@ -9,4 +9,6 @@
     <color name="primary_blue">#5566FF</color> <!-- Màu bình thường của nút -->
     <color name="darker_blue">#3344CC</color>   <!-- Màu khi nhấn -->
     <color name="light_gray">#F1F1F1</color>
+    <color name="dialog_color_1">#FDD736</color>
+    <color name="dialog_color_2">#3B5796</color>
 </resources>

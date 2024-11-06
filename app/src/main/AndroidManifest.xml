@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.Welcome"
+            android:exported="false" />
+        <activity
             android:name=".activity.Home_User"
             android:exported="false" />
         <activity
@@ -53,7 +56,7 @@
             android:name=".activity.Login"
             android:exported="false" />
         <activity
-            android:name=".activity.Welcome"
+            android:name=".activity.RateUsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
