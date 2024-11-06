@@ -12,7 +12,7 @@
     <item
         android:id="@+id/navUuDai_u"
         android:icon="@drawable/baseline_notifications_24"
-        android:title="Ưu đãi" />
+        android:title="Booking" />
     <item
         android:id="@+id/nav"
         android:icon="@drawable/baseline_notifications_24"

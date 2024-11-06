@@ -1,6 +1,10 @@
 package learn.fpoly.fhotel.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Room {
+    @SerializedName("_id")
+    private String id;
     private String name;
     private Double price;
     private Double rating;
@@ -11,7 +15,9 @@ public class Room {
     private String status;
 
     // Constructor
-    public Room(String name, Double price, Double rating, String description, String image, int capacity, String room_code, String status) {
+
+    public Room(String id, String name, Double price, Double rating, String description, String image, int capacity, String room_code, String status) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.rating = rating;
@@ -23,6 +29,15 @@ public class Room {
     }
 
     // Getters và Setters
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -86,4 +101,5 @@ public class Room {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }
