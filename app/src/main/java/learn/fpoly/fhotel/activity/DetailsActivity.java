@@ -9,11 +9,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import learn.fpoly.fhotel.Adapter.ServiceAdapter;
 import learn.fpoly.fhotel.Fragment.PaymentFragment;
 import learn.fpoly.fhotel.Model.Room;
+import learn.fpoly.fhotel.Model.RoomService;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import retrofit2.Call;
@@ -21,11 +28,12 @@ import retrofit2.Callback;
 import learn.fpoly.fhotel.Model.Response;
 
 public class DetailsActivity extends AppCompatActivity {
-    private ImageView ivBack, ivFavorite, imgRom_details;
+    private ImageView ivBack, ivFavorite, imgRom_details,imageView8;
     private Button btnBookingHotel;
     private TextView txtdescription_details, txtprice_details, txtRating_details, txtNamerom_details;
     private HttpRequest httpRequest;
-
+private RecyclerView rvServices;
+private ServiceAdapter serviceAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +41,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         // Khởi tạo HttpRequest
         httpRequest = new HttpRequest();
-
+        rvServices = findViewById(R.id.rvServices);
+        rvServices.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         // Ánh xạ các view từ layout
         txtNamerom_details = findViewById(R.id.txtNamerom_details);
         txtRating_details = findViewById(R.id.txtRating_details);
@@ -43,6 +52,8 @@ public class DetailsActivity extends AppCompatActivity {
         ivFavorite = findViewById(R.id.ivFavorite);
         btnBookingHotel = findViewById(R.id.buttonBooking);
         imgRom_details = findViewById(R.id.imgRom_details);
+        serviceAdapter = new ServiceAdapter(this, new ArrayList<>());
+        rvServices.setAdapter(serviceAdapter);
 
         // Nhận dữ liệu room_id từ Intent
         String roomId = getIntent().getStringExtra("room_id");
@@ -51,6 +62,7 @@ public class DetailsActivity extends AppCompatActivity {
         // Kiểm tra nếu ID hợp lệ và gọi API
         if (roomId != null && !roomId.isEmpty()) {
             fetchRoomById(roomId);
+            fetchServiceByRoomId(roomId);
         } else {
             Toast.makeText(this, "Invalid Room ID", Toast.LENGTH_SHORT).show();
         }
@@ -107,6 +119,34 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Response<Room>> call, Throwable t) {
                 Toast.makeText(DetailsActivity.this, "Failed to load room details: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void fetchServiceByRoomId(String roomId) {
+        Call<Response<ArrayList<RoomService>>> call = httpRequest.callAPI().getServiceByIdRoom(roomId);
+        call.enqueue(new Callback<Response<ArrayList<RoomService>>>() {
+            @Override
+            public void onResponse(Call<Response<ArrayList<RoomService>>> call, retrofit2.Response<Response<ArrayList<RoomService>>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Response<ArrayList<RoomService>> roomResponse = response.body();
+                    if (roomResponse.getStatus() == 200) {
+                        ArrayList<RoomService> services = roomResponse.getData();
+
+                        // Update RecyclerView with fetched services
+                        serviceAdapter.updateData(services); // Assuming you have an updateData method in ServiceAdapter
+
+                        Toast.makeText(DetailsActivity.this, "Services loaded successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(DetailsActivity.this, "Services not found: " + roomResponse.getMessenger(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(DetailsActivity.this, "Failed to load services", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<ArrayList<RoomService>>> call, Throwable t) {
+                Toast.makeText(DetailsActivity.this, "Failed to load services: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

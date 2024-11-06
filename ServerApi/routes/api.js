@@ -5,6 +5,8 @@ const hotels = require('../models/hotels');
 const TypeHotels = require('../models/typeHotels')
 const users = require('../models/users')
 const Room = require('../models/Room'); 
+const RoomService=require('../models/roomservice')
+const Service=require('../models/service')
 const Upload = require('../config/common/upload');
 
 // CRUD Hotel
@@ -237,6 +239,48 @@ router.delete("/delete_room/:id", async (req, res) => {
   } catch (error) {
       console.error("Error:", error);
       res.status(500).json({ message: "An error occurred while deleting room" });
+  }
+});
+
+// API lấy danh sách dịch vụ theo phòng
+router.get("/room/:id/services", async (req, res) => {
+  try {
+      const { id } = req.params;
+      const roomServices = await RoomService.find({ roomId: id }).populate('serviceId');
+
+      // Lấy danh sách dịch vụ từ roomServices
+      const services = roomServices.map(rs => rs.serviceId);
+
+      res.status(200).json({
+          status: 200,
+          message: "Services retrieved successfully",
+          data: services
+      });
+  } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ message: "An error occurred while retrieving services", error: error.message });
+  }
+});
+
+router.post("/room/:roomId/add_service", async (req, res) => {
+  try {
+      const { roomId } = req.params;
+      const { serviceId } = req.body;
+
+      const newRoomService = new RoomService({
+          roomId,
+          serviceId
+      });
+
+      const result = await newRoomService.save();
+      res.status(201).json({
+          status: 200,
+          message: "Service added to room successfully",
+          data: result
+      });
+  } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ message: "An error occurred while adding service to room", error: error.message });
   }
 });
 

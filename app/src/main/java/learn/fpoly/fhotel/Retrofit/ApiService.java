@@ -5,6 +5,7 @@ import java.util.List;
 
 import learn.fpoly.fhotel.Model.Response;
 import learn.fpoly.fhotel.Model.Room;
+import learn.fpoly.fhotel.Model.RoomService;
 import learn.fpoly.fhotel.Model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -22,6 +23,8 @@ public interface ApiService {
     @GET("api/room/{id}")
     Call<Response<Room>> getRoomById(@Path("id") String roomId);
     //
+    @GET("api/room/{id}/services")
+    Call<Response<ArrayList<RoomService>>> getServiceByIdRoom(@Path("id") String roomId);
     @GET("api/user")
     Call<List<User>> getUsers();
     /////

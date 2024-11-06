@@ -1,0 +1,14 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="4dp">
+
+    <ImageView
+        android:id="@+id/ivServiceImage"
+        android:layout_width="90dp"
+        android:layout_height="70dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg" />
+</androidx.cardview.widget.CardView>
