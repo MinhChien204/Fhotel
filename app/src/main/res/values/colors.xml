@@ -8,5 +8,5 @@
     <color name="purple_500">#6200EE</color>
     <color name="primary_blue">#5566FF</color> <!-- Màu bình thường của nút -->
     <color name="darker_blue">#3344CC</color>   <!-- Màu khi nhấn -->
-
+    <color name="light_gray">#F1F1F1</color>
 </resources>
