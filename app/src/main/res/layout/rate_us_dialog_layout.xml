@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -27,20 +26,19 @@
             android:layout_marginTop="-75dp"
             android:background="@drawable/round_back_while_stroke"
             android:padding="20dp">
-        
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/round_back_white_1000"/>
-        
-        <ImageView
-            android:id="@+id/ratingImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:src="@drawable/emoji_3s"
-            android:layout_centerInParent="true"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/round_back_white_1000"/>
+
+            <ImageView
+                android:id="@+id/ratingImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:src="@drawable/emoji_3s"
+                android:layout_centerInParent="true"/>
         </RelativeLayout>
 
         <TextView
@@ -50,7 +48,7 @@
             android:layout_marginTop="10dp"
             android:textColor="#CC000000"
             android:textStyle="bold"
-            android:textSize="25dp"
+            android:textSize="25sp"
             android:layout_gravity="center"/>
 
         <TextView
@@ -58,12 +56,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:text="If you are enjoy using our app..Would you mind rating us on the App Store or GooglePlay"/>
+            android:text="If you are enjoying using our app, would you mind rating us on the App Store or Google Play"/>
 
         <androidx.appcompat.widget.AppCompatRatingBar
             android:id="@+id/ratingBar"
@@ -74,6 +72,27 @@
             android:layout_marginBottom="20dp"
             android:rating="3"
             android:theme="@style/MyRatingBar" />
+
+        <!-- Comment Section -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write a review"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp">
+
+            <!-- EditText for user to input their review -->
+            <EditText
+                android:id="@+id/reviewEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:maxLines="5"
+                android:gravity="top|start"
+                android:padding="10dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,13 +110,13 @@
                 android:id="@+id/lateBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:text="May be, later"
+                android:text="Maybe, later"
                 android:textAllCaps="false"
                 android:textColor="#CC000000"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:background="@drawable/round_back_brown_6"/>
-            
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/rateNowBtn"
                 android:layout_width="wrap_content"
@@ -112,6 +131,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 </RelativeLayout>
