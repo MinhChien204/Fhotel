@@ -105,7 +105,11 @@
                 android:id="@+id/dates"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Dates: May 06, 2023 - May 08, 2023"
+                android:text="  Dates: May 06, 2023 - May 08, 2023"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:drawableStart="@drawable/calendar"
                 android:drawableEnd="@drawable/ic_edit"
                 android:layout_marginTop="8dp"/>
 
@@ -113,7 +117,11 @@
                 android:id="@+id/guests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="15dp"
                 android:text="Guests: 2 adults | 1 children"
+                android:drawableStart="@drawable/ic_person"
                 android:drawableEnd="@drawable/ic_edit"
                 android:layout_marginTop="8dp"/>
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/dialog_bg">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Date"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:paddingBottom="16dp" />
+
+
+
+    <!-- Calendar View -->
+    <CalendarView
+        android:id="@+id/calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp"
+        android:dateTextAppearance="?android:attr/textAppearanceSmall"
+        android:firstDayOfWeek="1"
+        android:focusedMonthDateColor="@color/black"
+        android:showWeekNumber="false"
+        android:weekDayTextAppearance="?android:attr/textAppearanceSmall" />
+
+    <!-- Action Button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_select_guest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/book_button_bg"
+        android:text="Select Guest"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
