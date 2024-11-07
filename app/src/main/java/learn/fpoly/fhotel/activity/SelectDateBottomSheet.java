@@ -34,7 +34,7 @@ public class SelectDateBottomSheet extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.bottomsheet_select_date, container, false);
 
         calendarView = view.findViewById(R.id.calendar_view);
-        btnSelectGuest =view.findViewById(R.id.btn_select_guest);
+        btnSelectGuest =view.findViewById(R.id.btn_select_date);
         currentCalendar = Calendar.getInstance();
 
 
@@ -57,11 +57,6 @@ public class SelectDateBottomSheet extends BottomSheetDialogFragment {
 
 
         return view;
-    }
-
-    private void changeMonth(int delta) {
-        currentCalendar.add(Calendar.MONTH, delta);
-        calendarView.setDate(currentCalendar.getTimeInMillis());
     }
 
 

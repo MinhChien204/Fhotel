@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_bg">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="serif"
+        android:padding="16dp"
+        android:text="Select Guest"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <!-- Adults Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Adults"
+            android:fontFamily="serif"
+            android:textStyle="bold"
+            android:textSize="18sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_adults_minus"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_minus_bg"
+            android:text="-"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/txt_adults_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:layout_marginHorizontal="8dp"
+            android:textSize="25sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_adults_plus"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_plus_background"
+            android:text="+"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="#fff" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:text="Childrens"
+            android:textStyle="bold"
+            android:textSize="18sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_childrens_minus"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_minus_bg"
+            android:text="-"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/txt_childrens_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:layout_marginHorizontal="8dp"
+            android:textSize="25sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_childrens_plus"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_plus_background"
+            android:text="+"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="#fff" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:text="Infants"
+            android:textStyle="bold"
+            android:textSize="18sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_infants_minus"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_minus_bg"
+            android:text="-"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/txt_infants_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:layout_marginHorizontal="8dp"
+            android:textSize="25sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_infants_plus"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_plus_background"
+            android:text="+"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="#fff" />
+    </LinearLayout>
+    <!-- Tương tự cho Children và Infants -->
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_select_done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/book_button_bg"
+        android:text="Add Guest"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp" />
+</LinearLayout>

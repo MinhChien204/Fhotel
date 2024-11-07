@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.activity.SelectDateBottomSheet;
+import learn.fpoly.fhotel.activity.SelectGuestBottomSheet;
 
 public class PaymentFragment extends Fragment {
     TextView tvdate,tvPerson;
@@ -34,7 +35,8 @@ public class PaymentFragment extends Fragment {
         tvPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                SelectGuestBottomSheet bottomSheet = new SelectGuestBottomSheet();
+                bottomSheet.show(getParentFragmentManager(), "SelectGuestBottomSheet");
             }
         });
         return view;

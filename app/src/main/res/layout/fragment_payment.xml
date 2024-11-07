@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".Fragment.PaymentFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -21,18 +21,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:contentDescription="Back button"
             android:padding="8dp"
-            android:src="@drawable/ic_arrow_back_black_24dp"
-            android:contentDescription="Back button" />
+            android:src="@drawable/ic_arrow_back_black_24dp" />
 
         <!-- Tiêu đề -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="serif"
             android:text="Xác Nhận Thanh Toán"
             android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:textSize="19sp" />
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
@@ -40,8 +41,8 @@
         android:layout_height="0dp"
         android:layout_above="@+id/fixed_footer"
         android:layout_below="@id/toolbar"
-        android:scrollbars="none"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,89 +50,160 @@
             android:orientation="vertical">
 
             <!-- Hotel Info Section -->
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
 
-                <ImageView
-                    android:id="@+id/hotel_image"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/ic_launcher_foreground"
-                    android:scaleType="centerCrop"
-                    android:layout_marginEnd="16dp"/>
-
+                <!-- LinearLayout để bố trí ngang -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-                    <TextView
-                        android:id="@+id/hotel_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Malon Greens"
-                        android:textStyle="bold"
-                        android:textSize="18sp"/>
+                    <!-- Image cho phòng -->
+                    <ImageView
+                        android:id="@+id/roomImage"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginEnd="8dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_launcher_foreground" />
 
-                    <TextView
-                        android:id="@+id/hotel_location"
-                        android:layout_width="wrap_content"
+                    <!-- LinearLayout dọc chứa thông tin khách sạn -->
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Mumbai, Maharashtra"
-                        android:textSize="14sp"
-                        android:textColor="@android:color/darker_gray"/>
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/hotel_guests"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2 adults | 1 children"
-                        android:textSize="14sp"
-                        android:textColor="@android:color/darker_gray"/>
+                        <!-- Hàng hiển thị đánh giá -->
+
+                        <!-- Số đánh giá -->
+                        <TextView
+                            android:id="@+id/ratingText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4.0 (115 Reviews)"
+                            android:textColor="#FF9800"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <!-- Tên khách sạn -->
+                        <TextView
+                            android:id="@+id/titleText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Malon Greens"
+                            android:textColor="#000"
+                            android:textSize="16sp" />
+
+                        <!-- Địa điểm -->
+                        <TextView
+                            android:id="@+id/locationText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            android:text="Mumbai, Maharashtra"
+                            android:textColor="#757575"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <!-- Thông tin sức chứa -->
+                        <TextView
+                            android:id="@+id/txt_pricepayment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$120"
+                            android:textColor="#757575"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
-            </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
 
             <!-- Booking Details Section -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="serif"
+                android:textSize="18dp"
                 android:text="Your Booking Details"
-                android:textStyle="bold"
-                android:layout_marginTop="24dp"/>
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/dates"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="  Dates: May 06, 2023 - May 08, 2023"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="15dp"
-                android:drawableStart="@drawable/calendar"
-                android:drawableEnd="@drawable/ic_edit"
-                android:layout_marginTop="8dp"/>
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="17.5dp"
+                    android:textColor="@color/black"
+                    android:layout_margin="5dp"
+                    android:text="Dates"/>
 
-            <TextView
-                android:id="@+id/guests"
+                <TextView
+                    android:id="@+id/dates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="7dp"
+                    android:drawableEnd="@drawable/ic_editpayment"
+                    android:fontFamily="@font/arimo_semibold"
+                    android:text="May 06, 2023 - May 08, 2023"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="15dp"
-                android:text="Guests: 2 adults | 1 children"
-                android:drawableStart="@drawable/ic_person"
-                android:drawableEnd="@drawable/ic_edit"
-                android:layout_marginTop="8dp"/>
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="17.5dp"
+                    android:textColor="@color/black"
+                    android:layout_margin="5dp"
+                    android:text="Guest"/>
+
+                <TextView
+                    android:id="@+id/guests"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawableEnd="@drawable/ic_editpayment"
+                    android:text="2 adults | 1 children"
+                    android:fontFamily="@font/arimo_semibold"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_margin="7dp"/>
+            </LinearLayout>
 
             <!-- Payment Options Section -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="serif"
+                android:textSize="18dp"
                 android:text="Choose how to pay"
-                android:textStyle="bold"
-                android:layout_marginTop="24dp"/>
+                android:textStyle="bold" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -154,93 +226,102 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="serif"
                 android:text="Pay with"
-                android:textStyle="bold"
-                android:layout_marginTop="24dp"/>
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/visa_icon"
                     android:layout_width="50dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/ic_visa"
-                    android:layout_marginEnd="8dp"/>
+                    android:layout_margin="10sp"
+                    android:src="@drawable/ic_visa" />
 
                 <ImageView
                     android:id="@+id/mastercard_icon"
                     android:layout_width="50dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/ic_mastercard"
-                    android:layout_marginEnd="8dp"/>
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_mastercard" />
 
                 <ImageView
                     android:id="@+id/paypal_icon"
                     android:layout_width="50dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/ic_paypal"
-                    android:layout_marginEnd="8dp"/>
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_paypal" />
 
                 <ImageView
                     android:id="@+id/gpay_icon"
                     android:layout_width="50dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/ic_gpay"
-                    android:layout_marginEnd="8dp"/>
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_gpay" />
 
                 <!-- Thêm một khoảng trống đẩy nút "Add" về cuối -->
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/add_payment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/search_bg"
                     android:backgroundTint="@color/purple_500"
                     android:text="Add"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/white"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginStart="8dp"/>
+                    android:textStyle="bold" />
             </LinearLayout>
-
 
 
             <!-- Price Details Section -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="serif"
                 android:text="Price Details"
-                android:textStyle="bold"
-                android:layout_marginTop="24dp"/>
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/price_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="$120 x 3 nights = $360"
-                android:layout_marginTop="8dp"/>
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/discount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Discount: $50"
-                android:layout_marginTop="8dp"/>
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/taxes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Occupancy taxes and fees: $10"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:text="Occupancy taxes and fees: $10" />
 
 
         </LinearLayout>
@@ -253,9 +334,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@android:color/white">
+        android:padding="16dp">
 
         <!-- Grand Total Section -->
         <LinearLayout
@@ -268,18 +349,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="serif"
                 android:text="Grand Total"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/totalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
+                android:text="$320.00"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="$320.00"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- Pay Now Button -->
@@ -288,12 +370,12 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="10dp"
-            android:text="Pay Now"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:textColor="@android:color/white"
             android:background="@drawable/search_bg"
-            android:backgroundTint="@color/purple_500"/>
+            android:backgroundTint="@color/purple_500"
+            android:text="Pay Now"
+            android:textColor="@android:color/white"
+            android:textSize="18dp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 
