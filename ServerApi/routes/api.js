@@ -128,9 +128,25 @@ router.delete("/delete_user/:id", async (req, res) => {
   });
 
   // CRUD Room
-
 // API hiển thị danh sách phòng
 router.get("/rooms", async (req, res) => {
+  //authorization thêm từ khóa Bearer token
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  // nếu không có token chuyển về 401
+  if(token==null) return res.sendStatus(401);
+  let payload;
+  JWT.verify(token,SECRETKEY,(err,_payload)=>{
+    //kiểm tra token, nếu không đúng hoặc hết hạn
+    //trả status code 403
+    //trả status hết hạn 301 khi token hết hạn
+    if(err instanceof JWT.TokenExpiredError) return res.status(401)
+    if(err) return res.status(403)
+      //Nếu đúng log ra toàn bộ dữ liệu
+    payload=_payload;
+  })
+  console.log(payload);
+  
   try {
       const rooms = await Room.find();
       res.status(200).json({
@@ -316,16 +332,26 @@ router.get("/hotels", async (req, res) => {
 //   }
 // });
 
-//API Login 
+//API Login with JsonWebToken
+const JWT  = require('jsonwebtoken');
+const SECRETKEY = 'FPTPOLYTECHNIC'
 router.post("/login",async (req, res) => {
   try {
     const {username,password} = req.body;
     const user = await users.findOne({ username,password})
     if(user){
+      //Token người dùng sẽ dược sử dụng gửi lên trên header mỗi lần gọi API
+      const token = JWT.sign({id: user._id},SECRETKEY,{expiresIn:'1h'});
+      //Khi token hết hạn , người dùng sẽ call 1 api khác để lấy token mới
+      //người dùng truyền refreshToken lên để nhận 1 cặp token ,refreshToken mới
+      const refreshToken = JWT.sign({id:user._id},SECRETKEY,{expiresIn:'1d'});
+      //expiresIn thời gian token
       res.json({
         status: 200,
         message: "Login successful",
         data: user,
+        "token":token,
+        "refreshToken":refreshToken
       });
     }else{
       res.json({

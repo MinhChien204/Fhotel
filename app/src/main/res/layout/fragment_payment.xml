@@ -213,12 +213,14 @@
                     android:id="@+id/pay_in_full"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/arimo_semibold"
                     android:text="Pay in full" />
 
                 <RadioButton
                     android:id="@+id/pay_part_now"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/arimo_semibold"
                     android:text="Pay part now, part later" />
             </RadioGroup>
 

@@ -10,8 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="@color/primary_blue"
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- Nút Back -->
@@ -20,7 +19,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:padding="8dp"
             android:src="@drawable/ic_arrow_back_black_24dp"
             android:contentDescription="Back button" />
 
@@ -29,15 +27,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="serif"
             android:text="Chi tiết người dùng"
             android:textColor="@android:color/white"
+            android:textStyle="bold"
             android:textSize="18sp" />
     </androidx.appcompat.widget.Toolbar>
 
     <ImageView
         android:id="@+id/imgRom_details"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="270dp"
         android:layout_marginTop="64dp"
         android:adjustViewBounds="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -144,15 +144,15 @@
 
     <ImageView
         android:id="@+id/ivFavorite"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/baseline_favorite_border_24" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonBooking"
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -201,5 +201,7 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
