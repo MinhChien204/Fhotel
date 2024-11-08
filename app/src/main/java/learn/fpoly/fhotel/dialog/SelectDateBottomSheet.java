@@ -1,4 +1,4 @@
-package learn.fpoly.fhotel.activity;
+package learn.fpoly.fhotel.dialog;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -7,17 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 import learn.fpoly.fhotel.R;
 

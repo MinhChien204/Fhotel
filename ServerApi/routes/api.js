@@ -136,15 +136,15 @@ router.get("/rooms", async (req, res) => {
   // nếu không có token chuyển về 401
   if(token==null) return res.sendStatus(401);
   let payload;
-  JWT.verify(token,SECRETKEY,(err,_payload)=>{
-    //kiểm tra token, nếu không đúng hoặc hết hạn
-    //trả status code 403
-    //trả status hết hạn 301 khi token hết hạn
-    if(err instanceof JWT.TokenExpiredError) return res.status(401)
-    if(err) return res.status(403)
-      //Nếu đúng log ra toàn bộ dữ liệu
-    payload=_payload;
-  })
+  // JWT.verify(token,SECRETKEY,(err,_payload)=>{
+  //   //kiểm tra token, nếu không đúng hoặc hết hạn
+  //   //trả status code 403
+  //   //trả status hết hạn 301 khi token hết hạn
+  //   if(err instanceof JWT.TokenExpiredError) return res.status(401)
+  //   if(err) return res.status(403)
+  //     //Nếu đúng log ra toàn bộ dữ liệu
+  //   payload=_payload;
+  // })
   console.log(payload);
   
   try {
@@ -333,25 +333,26 @@ router.get("/hotels", async (req, res) => {
 // });
 
 //API Login with JsonWebToken
-const JWT  = require('jsonwebtoken');
-const SECRETKEY = 'FPTPOLYTECHNIC'
+// const JWT  = require('jsonwebtoken');
+const upload = require('../config/common/upload');
+// const SECRETKEY = 'FPTPOLYTECHNIC'
 router.post("/login",async (req, res) => {
   try {
     const {username,password} = req.body;
     const user = await users.findOne({ username,password})
     if(user){
       //Token người dùng sẽ dược sử dụng gửi lên trên header mỗi lần gọi API
-      const token = JWT.sign({id: user._id},SECRETKEY,{expiresIn:'1h'});
+      // const token = JWT.sign({id: user._id},SECRETKEY,{expiresIn:'1h'});
       //Khi token hết hạn , người dùng sẽ call 1 api khác để lấy token mới
       //người dùng truyền refreshToken lên để nhận 1 cặp token ,refreshToken mới
-      const refreshToken = JWT.sign({id:user._id},SECRETKEY,{expiresIn:'1d'});
+      // const refreshToken = JWT.sign({id:user._id},SECRETKEY,{expiresIn:'1d'});
       //expiresIn thời gian token
       res.json({
         status: 200,
         message: "Login successful",
         data: user,
-        "token":token,
-        "refreshToken":refreshToken
+        // "token":token,
+        // "refreshToken":refreshToken
       });
     }else{
       res.json({
@@ -365,4 +366,64 @@ router.post("/login",async (req, res) => {
     
   }
 })
+
+//API Register and email
+const Transporter = require('../config/common/mail')
+router.post("/register-send-email", async (req, res) => {
+  try {
+    const data = req.body;
+    // const { file } = req;
+
+    // if (!file) {
+    //   return res.status(400).json({ message: "File avatar is required." });
+    // }
+
+    // const avatar = `${req.protocol}://${req.get("host")}/uploads/${file.filename}`;
+
+    const newUser = new users({
+      username: data.username,
+      password: data.password,
+      email: data.email,
+      name: data.name,
+      gioitinh: data.gioitinh,
+      address: data.address,
+      // avatar: avatar,
+      phonenumber: data.phonenumber,
+    });
+
+    const result = await newUser.save();
+
+    if (result) {
+      // Gửi email
+      const mailOptions = {
+        from: "chiennmph39754@fpt.edu.vn",
+        to: result.email,
+        subject: "Register Success",
+        text: `Chào mừng ${data.name} đã đăng ký tài khoản thành công`,
+      };
+
+      await Transporter.sendMail(mailOptions);
+
+      res.json({
+        status: 200,
+        message: "Thêm thành công",
+        data: result,
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        message: "Lỗi, thêm không thành công",
+        data: [],
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: 500,
+      message: "Đã xảy ra lỗi trong quá trình đăng ký",
+      error: error.message,
+    });
+  }
+});
+
 module.exports = router; 

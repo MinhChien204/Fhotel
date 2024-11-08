@@ -1,4 +1,4 @@
-package learn.fpoly.fhotel.activity;
+package learn.fpoly.fhotel.dialog;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

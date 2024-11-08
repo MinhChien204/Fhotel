@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import learn.fpoly.fhotel.R;
-import learn.fpoly.fhotel.activity.SelectDateBottomSheet;
-import learn.fpoly.fhotel.activity.SelectGuestBottomSheet;
+import learn.fpoly.fhotel.dialog.SelectDateBottomSheet;
+import learn.fpoly.fhotel.dialog.SelectGuestBottomSheet;
 
 public class PaymentFragment extends Fragment {
     TextView tvdate,tvPerson;
