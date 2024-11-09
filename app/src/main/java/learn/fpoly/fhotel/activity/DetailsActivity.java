@@ -1,6 +1,5 @@
 package learn.fpoly.fhotel.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import learn.fpoly.fhotel.Adapter.ServiceAdapter;
 import learn.fpoly.fhotel.Fragment.PaymentFragment;
@@ -25,7 +23,7 @@ import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
-import learn.fpoly.fhotel.Model.Response;
+import learn.fpoly.fhotel.response.Response;
 
 public class DetailsActivity extends AppCompatActivity {
     private ImageView ivBack, ivFavorite, imgRom_details,imageView8;

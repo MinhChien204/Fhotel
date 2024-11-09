@@ -1,4 +1,4 @@
-package learn.fpoly.fhotel.Model;
+package learn.fpoly.fhotel.response;
 
 public class Response<T> {
     private  int status;

@@ -130,22 +130,22 @@ router.delete("/delete_user/:id", async (req, res) => {
   // CRUD Room
 // API hiển thị danh sách phòng
 router.get("/rooms", async (req, res) => {
-  //authorization thêm từ khóa Bearer token
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  // nếu không có token chuyển về 401
-  if(token==null) return res.sendStatus(401);
-  let payload;
-  // JWT.verify(token,SECRETKEY,(err,_payload)=>{
-  //   //kiểm tra token, nếu không đúng hoặc hết hạn
-  //   //trả status code 403
-  //   //trả status hết hạn 301 khi token hết hạn
-  //   if(err instanceof JWT.TokenExpiredError) return res.status(401)
-  //   if(err) return res.status(403)
-  //     //Nếu đúng log ra toàn bộ dữ liệu
-  //   payload=_payload;
-  // })
-  console.log(payload);
+  // //authorization thêm từ khóa Bearer token
+  // const authHeader = req.headers['authorization'];
+  // const token = authHeader && authHeader.split(' ')[1];
+  // // nếu không có token chuyển về 401
+  // if(token==null) return res.sendStatus(401);
+  // let payload;
+  // // JWT.verify(token,SECRETKEY,(err,_payload)=>{
+  // //   //kiểm tra token, nếu không đúng hoặc hết hạn
+  // //   //trả status code 403
+  // //   //trả status hết hạn 301 khi token hết hạn
+  // //   if(err instanceof JWT.TokenExpiredError) return res.status(401)
+  // //   if(err) return res.status(403)
+  // //     //Nếu đúng log ra toàn bộ dữ liệu
+  // //   payload=_payload;
+  // // })
+  // console.log(payload);
   
   try {
       const rooms = await Room.find();
@@ -300,6 +300,35 @@ router.post("/room/:roomId/add_service", async (req, res) => {
   }
 });
 
+// API lấy danh sách dịch vụ
+router.get("/services", async (req, res) => {
+  try {
+      const services = await Service.find();
+      res.status(200).json({
+          status: 200,
+          message: "Services retrieved successfully",
+          data: services,
+      });
+  } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ message: "An error occurred while retrieving services" });
+  }
+});
+
+router.get("/roomservice", async (req, res) => {
+  try {
+      const rservices = await RoomService.find();
+      res.status(200).json({
+          status: 200,
+          message: "RoomService retrieved successfully",
+          data: rservices,
+      });
+  } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ message: "An error occurred while retrieving services" });
+  }
+});
+
 // CRUD Hotel
 
 // API hiển thị danh sách khách sạn
@@ -350,7 +379,7 @@ router.post("/login",async (req, res) => {
       res.json({
         status: 200,
         message: "Login successful",
-        data: user,
+        role: user.role,
         // "token":token,
         // "refreshToken":refreshToken
       });

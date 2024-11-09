@@ -3,7 +3,9 @@ package learn.fpoly.fhotel.Retrofit;
 import java.util.ArrayList;
 import java.util.List;
 
-import learn.fpoly.fhotel.Model.Response;
+import learn.fpoly.fhotel.Model.LoginRequest;
+import learn.fpoly.fhotel.response.LoginResponse;
+import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.Model.RoomService;
 import learn.fpoly.fhotel.Model.User;
@@ -37,5 +39,6 @@ public interface ApiService {
     Call<User> updateUser(@Path("id") String userId, @Body User user);
     @DELETE("api/delete_user/{id}")
     Call<Void> deleteUser(@Path("id") String userId);
-
+    @POST("api/login")
+    Call<LoginResponse> login(@Body LoginRequest loginRequest);
 }
