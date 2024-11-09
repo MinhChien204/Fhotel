@@ -10,7 +10,7 @@ const Users = new Scheme({
     address:{type:String},
     avartar: { type: String },
     available: { type: Boolean, default: false },
-    phonenumber:{type:Number},
+    phonenumber:{type:String},
     role: { type: Number,  required: true }
 }, {
     timestamps: true
