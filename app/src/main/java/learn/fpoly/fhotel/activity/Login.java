@@ -20,31 +20,31 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 public class Login extends AppCompatActivity {
-    AppCompatButton btnLOGIN;
-    TextView signup;
+    AppCompatButton btn_LOGIN;
+    TextView txt_register_now;
     HttpRequest httpRequest;
-    EditText edtUser,edtPass;
+    EditText edt_Email_login,edt_password_login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        edtUser=findViewById(R.id.edtUser);
-        edtPass=findViewById(R.id.edtPass);
-        btnLOGIN = findViewById(R.id.btnLOGIN);
-        signup = findViewById(R.id.txtDangki_dn);
+        edt_Email_login=findViewById(R.id.edt_Email_login);
+        edt_password_login=findViewById(R.id.edt_password_login);
+        btn_LOGIN = findViewById(R.id.btn_LOGIN);
+        txt_register_now = findViewById(R.id.txt_register_now);
         httpRequest = new HttpRequest();
-        btnLOGIN.setOnClickListener(new View.OnClickListener() {
+        btn_LOGIN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String username = edtUser.getText().toString().trim();
-                String password = edtPass.getText().toString().trim();
+                String username = edt_Email_login.getText().toString().trim();
+                String password = edt_password_login.getText().toString().trim();
 
 
                 handleLogin(username, password);
             }
         });
-        signup.setOnClickListener(new View.OnClickListener() {
+        txt_register_now.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Login.this , Register.class);

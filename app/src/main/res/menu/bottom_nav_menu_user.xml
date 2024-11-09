@@ -3,19 +3,19 @@
 
     <item
         android:id="@+id/navHome_u"
-        android:icon="@drawable/home"
+        android:icon="@drawable/ic_home"
         android:title="Trang chủ" />
     <item
         android:id="@+id/navNotification_u"
-        android:icon="@drawable/notification"
+        android:icon="@drawable/baseline_notifications_24"
         android:title="Thông báo" />
     <item
-        android:id="@+id/navBooking_u"
-        android:icon="@drawable/notes"
+        android:id="@+id/navUuDai_u"
+        android:icon="@drawable/baseline_notifications_24"
         android:title="Booking" />
     <item
-        android:id="@+id/navUudai_u"
-        android:icon="@drawable/promotion"
+        android:id="@+id/nav"
+        android:icon="@drawable/baseline_notifications_24"
         android:title="Ưu đãi" />
     <item
         android:id="@+id/navTaiKhoan_u"

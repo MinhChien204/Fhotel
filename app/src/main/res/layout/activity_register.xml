@@ -7,205 +7,148 @@
     tools:context=".activity.Register">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:background="@drawable/top_backgruod_login"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@android:color/white">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="50dp"
-        android:textStyle="bold"
-        android:textAllCaps="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView5"
-        android:layout_width="180dp"
-        android:layout_height="90dp"
-        app:cardCornerRadius="15dp"
-        app:cardElevation="21dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="@+id/cardView"
-        app:layout_constraintStart_toStartOf="@+id/cardView"
-        app:layout_constraintTop_toTopOf="@+id/cardView">
-
+        <!-- App Logo and Name -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/car_backgroud_login"
-            android:backgroundTint="@color/white">
-            <!--            <ImageView-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:src="@drawable/login2"-->
-            <!--                android:scaleType="centerCrop"-->
-            <!--                android:padding="13dp">-->
-
-            <!--            </ImageView>-->
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="match_parent"
-        android:layout_height="510dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="30sp"
-        app:cardElevation="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
             <TextView
+                android:id="@+id/appName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="50dp"
-                android:text="REGISTER"
-                android:textColor="#FF9800"
-                android:textSize="40dp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/re_User"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="10dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/re_edtUser"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/baseline_people_outline_24"
-                    android:drawablePadding="10dp"
-                    android:hint="Nhập username"
-                    android:inputType="textVisiblePassword"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/re_Email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="10dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/re_edtEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/baseline_email_24"
-                    android:drawablePadding="10dp"
-                    android:hint="Email"
-                    android:inputType="textVisiblePassword"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/re_Pass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="10dp"
-                app:passwordToggleEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/re_edtPass"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/baseline_key_24"
-                    android:drawablePadding="10dp"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/re_Cfpass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="10dp"
-                app:passwordToggleEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/re_edtCfpass"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/baseline_key_24"
-                    android:drawablePadding="10dp"
-                    android:hint="Confirm Password"
-                    android:inputType="textPassword"
-                    android:textColor="@color/black"
-                    android:textSize="22sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnREGISTER"
-                android:layout_width="169dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:text="FHOTELL"
+                android:textStyle="bold"
+                android:textSize="32sp"
+                android:textColor="#4C68D7"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/button_backgruod_login"
-                android:text="REGISTER"
-                android:textColor="@color/white"
-                android:textSize="27dp" />
+                android:fontFamily="sans-serif-medium" />
 
+            <!-- Login Prompt -->
+            <TextView
+                android:id="@+id/registerTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register Now!"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:textColor="#000000"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:id="@+id/registerSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter your information below"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:textColor="#808080" />
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        >
-        <TextView
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/edt_username_register"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Already have an account?"
-            android:textColor="#FF5722"
-            android:textSize="23dp"
-            android:textStyle="bold" />
+            android:hint="  Username"
+            android:inputType="textEmailAddress"
+            android:drawableStart="@drawable/user"
+            android:padding="15dp"
+            android:background="@drawable/rounded_edittext"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="40dp"/>
 
+        <EditText
+            android:id="@+id/edt_email_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="  Email"
+            android:inputType="textPassword"
+            android:drawableStart="@drawable/baseline_email_24"
+            android:padding="15dp"
+            android:background="@drawable/rounded_edittext"
+            android:layout_marginBottom="20dp" />
+
+        <EditText
+            android:id="@+id/edt_password_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="  Password"
+            android:inputType="textPassword"
+            android:drawableStart="@drawable/baseline_key_24"
+            android:padding="15dp"
+            android:background="@drawable/rounded_edittext"
+            android:layout_marginBottom="20dp"/>
+
+        <EditText
+            android:id="@+id/edt_mobile_number_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="  Mobile Number"
+            android:inputType="textPassword"
+            android:drawableStart="@drawable/phone"
+            android:padding="15dp"
+            android:background="@drawable/rounded_edittext"
+            android:layout_marginBottom="10dp"/>
         <TextView
-            android:id="@+id/txtDangnhap_dk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Login "
-            android:textColor="#00BCD4"
-            android:textSize="25dp"
-            android:textStyle="bold" />
+            android:text="Gender"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            />
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:textColor="#333333"
+                android:buttonTint="#52A95E"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:textColor="#333333"
+                android:buttonTint="#52A95E"
+                />
+        </RadioGroup>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_REGISTER"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:background="@drawable/rounded_button_blue"
+            android:textColor="#FFFFFF"
+            android:padding="12dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="24dp">
+            <TextView
+                android:id="@+id/noAccountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Already a member?"
+                android:textColor="#808080" />
+            <TextView
+                android:id="@+id/txt_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Login"
+                android:textColor="#4C68D7" />
+        </LinearLayout>
     </LinearLayout>
 
 

@@ -15,24 +15,24 @@ import androidx.core.view.WindowInsetsCompat;
 import learn.fpoly.fhotel.R;
 
 public class Register extends AppCompatActivity {
-    AppCompatButton btnREGISTER;
-    TextView login;
+    AppCompatButton btn_REGISTER;
+    TextView txt_login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
 
-        btnREGISTER = findViewById(R.id.btnREGISTER);
-        login = findViewById(R.id.txtDangnhap_dk);
-        btnREGISTER.setOnClickListener(new View.OnClickListener() {
+        btn_REGISTER = findViewById(R.id.btn_REGISTER);
+        txt_login = findViewById(R.id.txt_login);
+        btn_REGISTER.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Register.this , Login.class);
                 startActivity(intent);
             }
         });
-        login.setOnClickListener(new View.OnClickListener() {
+        txt_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Register.this , Login.class);

@@ -85,6 +85,12 @@
             android:text="Resend code 00:52s"
             android:textColor="#6666FF" />
         <!-- Verify Button -->
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="400dp"
+            android:layout_marginLeft="37dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/forgot_password" />
         <Button
             android:id="@+id/btnVerify"
             android:layout_width="match_parent"
