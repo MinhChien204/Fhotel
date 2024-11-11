@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -40,6 +41,17 @@ public class Login extends AppCompatActivity {
                 String username = edt_Email_login.getText().toString().trim();
                 String password = edt_password_login.getText().toString().trim();
 
+                if (username.isEmpty()) {
+                    edt_Email_login.setError("Vui lòng nhập username");
+                    edt_Email_login.requestFocus();
+                    return;
+                }
+
+                if (password.isEmpty()) {
+                    edt_password_login.setError("Vui lòng nhập mật khẩu");
+                    edt_password_login.requestFocus();
+                    return;
+                }
 
                 handleLogin(username, password);
             }
@@ -68,12 +80,14 @@ public class Login extends AppCompatActivity {
                         switch (idUser) {
                             case 0:
                                 // Chuyển sang TrangChuAdmin nếu idUser = 0
+                                Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
                                 Intent adminIntent = new Intent(Login.this, TrangChuAdmin.class);
                                 startActivity(adminIntent);
                                 break;
 
                             case 1:
                                 // Chuyển sang Home_User nếu idUser = 1
+                                Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
                                 Intent userIntent = new Intent(Login.this, Home_User.class);
                                 startActivity(userIntent);
                                 break;
@@ -85,9 +99,15 @@ public class Login extends AppCompatActivity {
                         finish();
                     } else {
                         Log.d("Login", "Login failed: " + userResponse.getMessenger());
+                        edt_Email_login.setError("Tài khoản hoặc mật khẩu không đúng");
+                        edt_Email_login.requestFocus();
+                        edt_password_login.requestFocus();
                     }
                 } else {
                     Log.d("Login", "Response unsuccessful or empty");
+                    edt_Email_login.setError("Tài khoản không tồn tại");
+                    edt_Email_login.requestFocus();
+                    edt_password_login.requestFocus();
                 }
             }
 
