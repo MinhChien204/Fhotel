@@ -121,7 +121,6 @@
             android:layout_height="wrap_content"
             android:hint="Date of Birth"
             android:layout_marginTop="16dp"
-            app:endIconDrawable="@drawable/calendar"
             app:endIconMode="custom"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 

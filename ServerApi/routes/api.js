@@ -333,7 +333,7 @@ router.get("/roomservice", async (req, res) => {
 
 // API hiển thị danh sách khách sạn
 router.get("/hotels", async (req, res) => {
-  try {
+  try { 
       let hotels = await Hotel.find();
       res.status(200).json({
           status: 200,
