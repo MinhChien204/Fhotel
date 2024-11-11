@@ -101,12 +101,11 @@ public class Login extends AppCompatActivity {
                         Log.d("Login", "Login failed: " + userResponse.getMessenger());
                         edt_Email_login.setError("Tài khoản hoặc mật khẩu không đúng");
                         edt_Email_login.requestFocus();
-                        edt_password_login.requestFocus();
                     }
                 } else {
                     Log.d("Login", "Response unsuccessful or empty");
-                    edt_Email_login.setError("Tài khoản không tồn tại");
-                    edt_Email_login.requestFocus();
+                    edt_password_login.setError("Tài khoản hoặc mật khẩu không chính xác");
+                    edt_Email_login.setError("Tài khoản hoặc mật khẩu không chính xác");
                     edt_password_login.requestFocus();
                 }
             }

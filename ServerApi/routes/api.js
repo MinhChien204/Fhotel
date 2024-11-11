@@ -376,24 +376,24 @@ router.post("/login",async (req, res) => {
       //người dùng truyền refreshToken lên để nhận 1 cặp token ,refreshToken mới
       // const refreshToken = JWT.sign({id:user._id},SECRETKEY,{expiresIn:'1d'});
       //expiresIn thời gian token
-      res.json({
-        status: 200,
-        message: "Login successful",
-        role: user.role,
-        // "token":token,
-        // "refreshToken":refreshToken
-      });
-    }else{
-      res.json({
-        status: 400,
-        message: "Login failed",
-        data:[]
-      })
+        res.status(200).json({
+          status:200,
+          message: "Login successful",
+          role: user.role,
+          // "token":token,
+          // "refreshToken":refreshToken
+        });
+      } else {
+        res.status(400).json({
+          status:400,
+          message: "Login failed: Incorrect username or password",
+          data: []
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal server error" });
     }
-  } catch (error) {
-    console.log(error);
-    
-  }
 })
 
 //API Register and email
