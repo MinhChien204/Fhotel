@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -77,12 +78,13 @@ private ServiceAdapter serviceAdapter;
         btnBookingHotel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Khởi tạo PaymentFragment và chuyển đến Fragment này
                 PaymentFragment paymentFragment = new PaymentFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, paymentFragment)
-                        .addToBackStack(null)
-                        .commit();
+
+                // Use FragmentTransaction to replace the fragment container with PaymentFragment
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, paymentFragment);
+                transaction.addToBackStack(null);  // Add to backstack to allow back navigation
+                transaction.commit();
             }
         });
     }

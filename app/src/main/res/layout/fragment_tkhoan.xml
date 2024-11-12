@@ -296,11 +296,12 @@
                 android:background="#E0E0E0" />
 
             <LinearLayout
+                android:id="@+id/btnLogOut"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/button_background"
-                android:backgroundTint="#5566FF"
+                android:background="@drawable/book_button_bg"
+                android:backgroundTint="@color/primary_blue"
                 android:gravity="center"
                 android:orientation="horizontal">
 

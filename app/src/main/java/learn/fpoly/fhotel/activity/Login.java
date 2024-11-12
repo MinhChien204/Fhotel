@@ -22,7 +22,7 @@ import retrofit2.Callback;
 
 public class Login extends AppCompatActivity {
     AppCompatButton btn_LOGIN;
-    TextView txt_register_now;
+    TextView txt_register_now,txt_forgot_Password;
     HttpRequest httpRequest;
     EditText edt_Email_login,edt_password_login;
     @Override
@@ -33,7 +33,17 @@ public class Login extends AppCompatActivity {
         edt_password_login=findViewById(R.id.edt_password_login);
         btn_LOGIN = findViewById(R.id.btn_LOGIN);
         txt_register_now = findViewById(R.id.txt_register_now);
+        txt_forgot_Password = findViewById(R.id.txt_forgot_Password);
         httpRequest = new HttpRequest();
+
+        txt_forgot_Password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Login.this , Forgot_password.class);
+                startActivity(intent);
+            }
+        });
+
         btn_LOGIN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

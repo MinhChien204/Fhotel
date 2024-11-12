@@ -49,4 +49,5 @@ public class PaymentFragment extends Fragment {
         });
         return view;
     }
+
 }

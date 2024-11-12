@@ -18,6 +18,6 @@
         android:title="Ưu đãi" />
     <item
         android:id="@+id/navTaiKhoan_u"
-        android:icon="@drawable/user"
+        android:icon="@drawable/person"
         android:title="Tài khoản" />
 </menu>
