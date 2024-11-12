@@ -3,14 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.NotificationAdminFragment">
+    tools:context=".Fragment.NotificationFragment">
 
-    <TextView
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textSize="20dp"
-        android:text="NotificationAdmin Fragment" />
+        android:layout_height="60dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Notifications"
+            android:textColor="@color/black"
+            android:fontFamily="serif"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.Toolbar>
 </FrameLayout>

@@ -2,7 +2,9 @@ package learn.fpoly.fhotel.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,6 +37,29 @@ public class Login extends AppCompatActivity {
         txt_register_now = findViewById(R.id.txt_register_now);
         txt_forgot_Password = findViewById(R.id.txt_forgot_Password);
         httpRequest = new HttpRequest();
+
+//        edt_password_login.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                if(motionEvent.getAction()==MotionEvent.ACTION_UP){
+//                    int drawableEnd = 2;
+//                    if (motionEvent.getRawX() >= (edt_password_login.getRight() - edt_password_login.getCompoundDrawables()[drawableEnd].getBounds().width())) {
+//                        if (edt_password_login.getTransformationMethod() instanceof PasswordTransformationMethod) {
+//                            edt_password_login.setTransformationMethod(null);
+//                            edt_password_login.setCompoundDrawablesWithIntrinsicBounds(
+//                                    R.drawable.baseline_key_24, 0, R.drawable.visibility_on, 0);
+//                        }else{
+//                            edt_password_login.setTransformationMethod(new PasswordTransformationMethod());
+//                            edt_password_login.setCompoundDrawablesWithIntrinsicBounds(
+//                                    R.drawable.baseline_key_24, 0, R.drawable.ic_visibility_off, 0); // Show "eye-closed" icon
+//                        }
+//                        }
+//                    edt_password_login.setSelection(edt_password_login.length()); // Move cursor to end
+//                    return true;
+//                    }
+//                return false;
+//            }
+//        });
 
         txt_forgot_Password.setOnClickListener(new View.OnClickListener() {
             @Override

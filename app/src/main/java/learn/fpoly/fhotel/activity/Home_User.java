@@ -1,10 +1,8 @@
 package learn.fpoly.fhotel.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -14,20 +12,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import learn.fpoly.fhotel.Fragment.BookingFragment;
 import learn.fpoly.fhotel.Fragment.Fragment_TrangChu;
-import learn.fpoly.fhotel.Fragment.NotificationAdminFragment;
+import learn.fpoly.fhotel.Fragment.NotificationFragment;
 import learn.fpoly.fhotel.Fragment.TkhoanFragment;
 import learn.fpoly.fhotel.Fragment.UudaiFragment;
 import learn.fpoly.fhotel.R;
-import learn.fpoly.fhotel.chatbot.ChatBotActivity;
 
 public class Home_User extends AppCompatActivity {
     public BottomNavigationView bottomNavigationView;
     private FrameLayout frameLayout;
-    private FloatingActionButton floatingActionButton;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -37,15 +32,6 @@ public class Home_User extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView_u);
         frameLayout = findViewById(R.id.framelayout_u);
-        floatingActionButton =findViewById(R.id.fab_chatbot);
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Home_User.this, ChatBotActivity.class);
-                startActivity(intent);
-            }
-        });
 
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
@@ -57,7 +43,7 @@ public class Home_User extends AppCompatActivity {
                 if (itemID == R.id.navHome_u) {
                     selectedFragment = new Fragment_TrangChu();
                 } else if (itemID == R.id.navNotification_u) {
-                    selectedFragment = new NotificationAdminFragment();
+                    selectedFragment = new NotificationFragment();
                 } else if (itemID == R.id.navBooking_u) {
                     selectedFragment = new BookingFragment();
                 }
@@ -87,4 +73,5 @@ public class Home_User extends AppCompatActivity {
         fragmentTransaction.replace(R.id.framelayout_u, fragment);
         fragmentTransaction.commit();
     }
+
 }

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import learn.fpoly.fhotel.R;
 
 
-public class NotificationAdminFragment extends Fragment {
+public class NotificationFragment extends Fragment {
 
 
     @Override

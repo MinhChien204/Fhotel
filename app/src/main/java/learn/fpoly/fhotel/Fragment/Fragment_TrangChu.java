@@ -1,5 +1,6 @@
 package learn.fpoly.fhotel.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,9 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +20,8 @@ import java.util.List;
 import learn.fpoly.fhotel.Adapter.RecentsAdapter;
 import learn.fpoly.fhotel.Adapter.TopPlacesAdapter;
 import learn.fpoly.fhotel.Model.Room;
+import learn.fpoly.fhotel.activity.Home_User;
+import learn.fpoly.fhotel.chatbot.ChatBotActivity;
 import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest; // Import your Retrofit client
@@ -29,6 +35,7 @@ public class Fragment_TrangChu extends Fragment {
     private RecentsAdapter recentsAdapter;
     private TopPlacesAdapter topPlacesAdapter;
     private HttpRequest httpRequest;
+    private FloatingActionButton floatingActionButton;
 
     public Fragment_TrangChu() {
         // Required empty public constructor
@@ -44,10 +51,19 @@ public class Fragment_TrangChu extends Fragment {
         // Khởi tạo RecyclerView
         recentRecycler = view.findViewById(R.id.recent_recycler);
         topPlacesRecycler = view.findViewById(R.id.top_places_recycler);
+        floatingActionButton =view.findViewById(R.id.fab_chatbot);
 
         // Gọi API để lấy dữ liệu
         fetchRecentsData(view);
         fetchTopPlacesData(view);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ChatBotActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
