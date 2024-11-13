@@ -397,17 +397,10 @@ router.post("/login",async (req, res) => {
 })
 
 //API Register and email
-const Transporter = require('../config/common/mail')
+// const Transporter = require('../config/common/mail')
 router.post("/register-send-email", async (req, res) => {
   try {
     const data = req.body;
-    // const { file } = req;
-
-    // if (!file) {
-    //   return res.status(400).json({ message: "File avatar is required." });
-    // }
-
-    // const avatar = `${req.protocol}://${req.get("host")}/uploads/${file.filename}`;
 
     const newUser = new users({
       username: data.username,
@@ -416,23 +409,13 @@ router.post("/register-send-email", async (req, res) => {
       name: data.name,
       gioitinh: data.gioitinh,
       address: data.address,
-      // avatar: avatar,
       phonenumber: data.phonenumber,
+      role: data.role,
     });
 
     const result = await newUser.save();
 
     if (result) {
-      // Gửi email
-      const mailOptions = {
-        from: "chiennmph39754@fpt.edu.vn",
-        to: result.email,
-        subject: "Register Success",
-        text: `Chào mừng ${data.name} đã đăng ký tài khoản thành công`,
-      };
-
-      await Transporter.sendMail(mailOptions);
-
       res.json({
         status: 200,
         message: "Thêm thành công",
@@ -454,5 +437,6 @@ router.post("/register-send-email", async (req, res) => {
     });
   }
 });
+
 
 module.exports = router; 
