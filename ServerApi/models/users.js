@@ -6,12 +6,12 @@ const Users = new Scheme({
     password: { type: String },
     email: { type: String, unique: true },
     name: { type: String },
-    gioitinh:{type:String},
+    gender:{type:String},
     address:{type:String},
     avartar: { type: String },
     available: { type: Boolean, default: false },
     phonenumber:{type:String},
-    role: { type: Number,  required: true }
+    role: { type: Number,  required: true,default: 1 }
 }, {
     timestamps: true
 }

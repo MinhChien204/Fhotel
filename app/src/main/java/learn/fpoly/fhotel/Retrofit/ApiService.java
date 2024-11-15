@@ -9,12 +9,18 @@ import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.Model.RoomService;
 import learn.fpoly.fhotel.Model.User;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface ApiService {
@@ -41,4 +47,13 @@ public interface ApiService {
     Call<Void> deleteUser(@Path("id") String userId);
     @POST("api/login")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
+    @FormUrlEncoded
+    @POST("api/register")
+    Call<Response<User>> register(
+            @Field("username") String username,
+            @Field("password") String password,
+            @Field("email") String email,
+            @Field("phonenumber") String phonenumber
+    );
+
 }

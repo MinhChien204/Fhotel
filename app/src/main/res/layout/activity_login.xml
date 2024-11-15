@@ -18,37 +18,39 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
+
             <TextView
                 android:id="@+id/appName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="FHOTEL"
-                android:textStyle="bold"
-                android:textSize="32sp"
-                android:textColor="@color/primary_blue"
                 android:layout_marginTop="20dp"
-                android:fontFamily="sans-serif-medium" />
+                android:fontFamily="serif"
+                android:text="FHOTEL"
+                android:textColor="@color/primary_blue"
+                android:textSize="32sp"
+                android:textStyle="bold" />
 
             <!-- Login Prompt -->
             <TextView
                 android:id="@+id/loginTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Let's get you Login!"
-                android:textSize="28sp"
-                android:textStyle="bold"
                 android:layout_marginTop="16dp"
+                android:fontFamily="serif"
+                android:text="Let's get you Login!"
                 android:textColor="#000000"
-                android:fontFamily="sans-serif-medium" />
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/loginSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Enter your information below"
-                android:textSize="16sp"
                 android:layout_marginTop="4dp"
-                android:textColor="#808080" />
+                android:fontFamily="serif"
+                android:text="Enter your information below"
+                android:textColor="#808080"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <!-- Social Login Buttons -->
@@ -143,14 +145,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <TextView
+        <TextView
             android:id="@+id/txt_forgot_Password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forgot Password?"
-            android:textColor="#4C68D7"
             android:layout_gravity="end"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:fontFamily="serif"
+            android:text="Forgot Password?"
+            android:textColor="#4C68D7" />
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_LOGIN"
             android:layout_width="match_parent"
@@ -167,16 +170,20 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_marginTop="24dp">
+
             <TextView
                 android:id="@+id/noAccountText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="serif"
                 android:text="Don't have an account?"
                 android:textColor="#808080" />
+
             <TextView
                 android:id="@+id/txt_register_now"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="serif"
                 android:text=" Register Now"
                 android:textColor="#4C68D7" />
         </LinearLayout>
