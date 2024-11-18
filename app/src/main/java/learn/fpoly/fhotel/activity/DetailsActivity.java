@@ -1,10 +1,12 @@
 package learn.fpoly.fhotel.activity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,10 +31,12 @@ import learn.fpoly.fhotel.response.Response;
 public class DetailsActivity extends AppCompatActivity {
     private ImageView ivBack, ivFavorite, imgRom_details,imageView8;
     private Button btnBookingHotel;
-    private TextView txtdescription_details, txtprice_details, txtRating_details, txtNamerom_details;
+    private TextView txtdescription_details, txtprice_details, txtNamerom_details;
+    private RatingBar txtRating_details;
     private HttpRequest httpRequest;
 private RecyclerView rvServices;
 private ServiceAdapter serviceAdapter;
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +49,7 @@ private ServiceAdapter serviceAdapter;
         rvServices.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         // Ánh xạ các view từ layout
         txtNamerom_details = findViewById(R.id.txtNamerom_details);
-        txtRating_details = findViewById(R.id.txtRating_details);
+        txtRating_details = findViewById(R.id.ratingBarDetail);
         txtdescription_details = findViewById(R.id.txtdescription_details);
         txtprice_details = findViewById(R.id.txtprice_details);
         ivBack = findViewById(R.id.ivBack);
@@ -104,7 +108,7 @@ private ServiceAdapter serviceAdapter;
                         Log.d("room", "onResponse: " + room);
                         // Gán dữ liệu phòng vào các View
                         txtNamerom_details.setText(room.getName());
-                        txtRating_details.setText(String.valueOf(room.getRating()));
+                        txtRating_details.setRating(Float.parseFloat(String.valueOf(room.getRating())));
                         txtdescription_details.setText(room.getDescription());
                         txtprice_details.setText(String.valueOf(room.getPrice()));
                         // Nếu có hình ảnh, hãy gán nó vào imgRom_details

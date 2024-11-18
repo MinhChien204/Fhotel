@@ -14,7 +14,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:background="@color/primary_blue"
+            android:background="@color/primaryColor"
             android:layout_height="50dp">
 
             <TextView
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:background="#5566FF"
+            android:background="@color/primaryColor"
             android:padding="16dp">
 
             <ImageView
@@ -302,7 +302,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/book_button_bg"
-                android:backgroundTint="@color/primary_blue"
+                android:backgroundTint="@color/primaryColor"
                 android:gravity="center"
                 android:orientation="horizontal">
 
