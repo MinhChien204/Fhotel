@@ -1,6 +1,9 @@
 package learn.fpoly.fhotel.response;
 
+import com.google.gson.annotations.SerializedName;
+
 public class LoginResponse {
+    private String id;
     private String messenger;
     private int role;
     private int status;
@@ -10,12 +13,22 @@ public class LoginResponse {
     public LoginResponse() {
     }
 
-    public LoginResponse(String messenger, int role, int status, String accessToken, String refreshToken) {
+
+    public LoginResponse(String id, String messenger, int role, int status, String accessToken, String refreshToken) {
+        this.id = id;
         this.messenger = messenger;
         this.role = role;
         this.status = status;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getMessenger() {

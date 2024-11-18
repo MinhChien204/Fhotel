@@ -14,9 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import learn.fpoly.fhotel.R;
+import learn.fpoly.fhotel.activity.Change_password;
 import learn.fpoly.fhotel.activity.Home_User;
 import learn.fpoly.fhotel.activity.Login;
 import learn.fpoly.fhotel.activity.MainActivity;
+import learn.fpoly.fhotel.chatbot.ChatBotActivity;
 
 
 public class TkhoanFragment extends Fragment {
@@ -32,6 +34,15 @@ public class TkhoanFragment extends Fragment {
 
         btnLogOut = view.findViewById(R.id.btnLogOut);
         editProfile = view.findViewById(R.id.editProfile);
+        editPassword = view.findViewById(R.id.editPassword);
+        editPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Change_password.class);
+                startActivity(intent);
+
+            }
+        });
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override

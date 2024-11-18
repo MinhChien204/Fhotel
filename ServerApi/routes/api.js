@@ -91,6 +91,27 @@ router.get("/detail_user/:id", async (req, res) => {
       .json({ message: "An error occurred while retrieving user" });
   }
 });
+/// get user by id
+router.get("/getuserbyid/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await users.findById(id);
+    if (user) {
+      res.status(200).json({
+        status: 200,
+        message: "User retrieved successfully",
+        data: user,
+      });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while retrieving user" });
+  }
+});
 
 //API update user
 router.put("/update_user/:id", async (req, res) => {
@@ -450,6 +471,9 @@ router.post("/login", async (req, res) => {
         status: 200,
         message: "Login successful",
         role: user.role,
+        id: user.id
+
+
         // "token":token,
         // "refreshToken":refreshToken
       });
@@ -478,10 +502,10 @@ router.post("/register",async (req, res) => {
         username: data.username,
         password: data.password,
         email: data.email,
-        // name: data.name,
-        // gioitinh: data.gioitinh,
-        // address: data.address,
         phonenumber: data.phonenumber,
+        name: data.name,
+        gender: data.gender,
+        address: data.address,
         role: data.role,
         // avartar: avatar,
       });

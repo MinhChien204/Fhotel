@@ -38,9 +38,14 @@ public interface ApiService {
     /////
     @GET("api/detail_user/{id}")
     Call<User> getUserDetails(@Path("id") String userId);
-    /////
+    ///////
+    @GET("api/getuserbyid/{id}")
+    Call <Response<User>> getuserbyid(@Path("id") String userId);
+    //////
     @POST("api/add_user")
     Call<User> createUser(@Body User user);
+    @PUT("api/update_user/:id")
+    Call<User> chage_pass(@Path("id") String userId);
     @PUT("api/update_user/{id}")
     Call<User> updateUser(@Path("id") String userId, @Body User user);
     @DELETE("api/delete_user/{id}")
@@ -53,7 +58,10 @@ public interface ApiService {
             @Field("username") String username,
             @Field("password") String password,
             @Field("email") String email,
-            @Field("phonenumber") String phonenumber
+            @Field("phonenumber") String phonenumber,
+            @Field("name") String name,
+            @Field("gender") String gender,
+            @Field("address") String address
     );
 
 }

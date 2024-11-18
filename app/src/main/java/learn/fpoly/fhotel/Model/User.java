@@ -1,19 +1,19 @@
 package learn.fpoly.fhotel.Model;
 
 public class User {
-    private String _id, username, password, email, name,gioitinh, phonenumber, address, avartar, available;
+    private String _id, username, password, email, name,gender, phonenumber, address, avartar, available;
     private String createdAt, updatedAt;
 
     public User() {
     }
 
-    public User(String _id, String username, String password, String email, String name, String gioitinh, String phonenumber, String address, String avartar, String available, String createdAt, String updatedAt) {
+    public User(String _id, String username, String password, String email, String name, String gender, String phonenumber, String address, String avartar, String available, String createdAt, String updatedAt) {
         this._id = _id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.name = name;
-        this.gioitinh = gioitinh;
+        this.gender = gender;
         this.phonenumber = phonenumber;
         this.address = address;
         this.avartar = avartar;
@@ -62,12 +62,12 @@ public class User {
         this.name = name;
     }
 
-    public String getGioitinh() {
-        return gioitinh;
+    public String getGender() {
+        return gender;
     }
 
-    public void setGioitinh(String gioitinh) {
-        this.gioitinh = gioitinh;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getPhonenumber() {
