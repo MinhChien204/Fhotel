@@ -11,4 +11,5 @@
     <color name="light_gray">#F1F1F1</color>
     <color name="dialog_color_1">#FDD736</color>
     <color name="dialog_color_2">#3B5796</color>
+    <color name="primaryColor">#313552</color>
 </resources>

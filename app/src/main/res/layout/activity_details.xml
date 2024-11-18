@@ -1,13 +1,13 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_container">
 
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/maindt"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,7 +21,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary_blue"
+        android:background="@color/primaryColor"
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- Nút Back -->
@@ -70,6 +70,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+                <RatingBar
+                    android:id="@+id/ratingBarDetail"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:isIndicator="false"
+                    android:numStars="5"
+                    android:progressBackgroundTint="@android:color/darker_gray"
+                    android:progressTint="@android:color/holo_orange_light"
+                    android:rating="4.5"
+                    android:scaleX="1.0"
+                    android:scaleY="1.1"
+                    android:secondaryProgressTint="@android:color/holo_orange_light"
+                    android:stepSize="0.5" />
+                <TextView
+                    android:id="@+id/ratingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.5 (115 Reviews)"
+                    android:textColor="#FF9800"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
                 <TextView
                     android:id="@+id/txtNamerom_details"
                     android:layout_width="wrap_content"
@@ -78,80 +103,61 @@
                     android:textColor="@android:color/background_dark"
                     android:textSize="18sp" />
 
-                <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="120dp">
-                    <ImageView
-                        android:id="@+id/imageView5"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:background="@drawable/star"
-                        android:layout_marginEnd="16dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/txtNamerom_details"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/txtNamerom_details"
-                        app:srcCompat="@drawable/baseline_arrow_right_alt_24" />
+                    android:text="Available flight :"
+                    android:textColor="#044363"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/txtNamerom_details"
+                    app:layout_constraintTop_toBottomOf="@+id/txtNamerom_details" />
 
-                    <TextView
-                        android:id="@+id/txtRating_details"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="2dp"
-                        android:text="4.5"
-                        android:textSize="11sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView5"
-                        app:layout_constraintTop_toTopOf="@+id/imageView5" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="18 April, 2020"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView8"
+                    app:layout_constraintStart_toEndOf="@+id/textView8"
+                    app:layout_constraintTop_toTopOf="@+id/textView8" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Price range : "
+                    android:textColor="#044363"
+                    app:layout_constraintStart_toStartOf="@+id/textView8"
+                    app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
 
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Available flight :"
-                android:textColor="#044363"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@+id/txtNamerom_details"
-                app:layout_constraintTop_toBottomOf="@+id/txtNamerom_details" />
+                <TextView
+                    android:id="@+id/txtprice_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="$3,00 - $8,00"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView9"
+                    app:layout_constraintStart_toEndOf="@+id/textView9"
+                    app:layout_constraintTop_toTopOf="@+id/textView9" />
 
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Price range : "
-                android:textColor="#044363"
-                app:layout_constraintStart_toStartOf="@+id/textView8"
-                app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="18 April, 2020"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView8"
-                app:layout_constraintStart_toEndOf="@+id/textView8"
-                app:layout_constraintTop_toTopOf="@+id/textView8" />
-
-            <TextView
-                android:id="@+id/txtprice_details"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="$3,00 - $8,00"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView9"
-                app:layout_constraintStart_toEndOf="@+id/textView9"
-                app:layout_constraintTop_toTopOf="@+id/textView9" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView12"

@@ -12,12 +12,20 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import learn.fpoly.fhotel.Model.OnGuestSelectedListener;
 import learn.fpoly.fhotel.R;
 
 public class SelectGuestBottomSheet extends BottomSheetDialogFragment {
     private int adults = 1, children = 0, infants = 0;
     private TextView txtAdults, txtChildren, txtInfants;
-    private Button btnAdultsMinus, btnAdultsPlus, btnChildrenMinus, btnChildrenPlus, btnInfantsMinus, btnInfantsPlus,btnadd;
+    private Button btnAdultsMinus, btnAdultsPlus, btnChildrenMinus, btnChildrenPlus, btnInfantsMinus, btnInfantsPlus, btnAdd;
+
+    private OnGuestSelectedListener listener; // Interface
+
+    public void setOnGuestSelectedListener(OnGuestSelectedListener listener) {
+        this.listener = listener;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,7 +43,7 @@ public class SelectGuestBottomSheet extends BottomSheetDialogFragment {
         btnInfantsMinus = view.findViewById(R.id.btn_infants_minus);
         btnInfantsPlus = view.findViewById(R.id.btn_infants_plus);
 
-        btnadd =view.findViewById(R.id.btn_select_done);
+        btnAdd =view.findViewById(R.id.btn_select_done);
 
 
         // Cập nhật số lượng
@@ -52,11 +60,11 @@ public class SelectGuestBottomSheet extends BottomSheetDialogFragment {
         btnInfantsMinus.setOnClickListener(v -> updateCount(txtInfants, --infants));
         btnInfantsPlus.setOnClickListener(v -> updateCount(txtInfants, ++infants));
 
-        btnadd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
+        btnAdd.setOnClickListener(view1 -> {
+            if (listener != null) {
+                listener.onGuestSelected(adults, children, infants);
             }
+            dismiss();
         });
 
         return view;

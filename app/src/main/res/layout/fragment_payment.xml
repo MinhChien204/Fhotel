@@ -12,7 +12,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_500"
+        android:background="@color/primaryColor"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <!-- Nút Back -->
@@ -85,15 +85,34 @@
                         <!-- Hàng hiển thị đánh giá -->
 
                         <!-- Số đánh giá -->
-                        <TextView
-                            android:id="@+id/ratingText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="4.0 (115 Reviews)"
-                            android:textColor="#FF9800"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal">
+                          <RatingBar
+                              android:id="@+id/ratingBarPayment"
+                              style="@style/Widget.AppCompat.RatingBar.Small"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:isIndicator="false"
+                              android:numStars="5"
+                              android:progressBackgroundTint="@android:color/darker_gray"
+                              android:progressTint="@android:color/holo_orange_light"
+                              android:rating="4.5"
+                              android:scaleX="1.0"
+                              android:scaleY="1.1"
+                              android:secondaryProgressTint="@android:color/holo_orange_light"
+                              android:stepSize="0.5" />
+                          <TextView
+                              android:id="@+id/ratingText"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="4.5 (115 Reviews)"
+                              android:textColor="#FF9800"
+                              android:textSize="12sp"
+                              android:textStyle="bold" />
 
+                      </LinearLayout>
                         <!-- Tên khách sạn -->
                         <TextView
                             android:id="@+id/titleText"
@@ -107,18 +126,18 @@
 
                         <!-- Địa điểm -->
                         <TextView
-                            android:id="@+id/locationText"
+                            android:id="@+id/capacityText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="2dp"
-                            android:text="Mumbai, Maharashtra"
+                            android:text="40m2 - 50m2"
                             android:textColor="#757575"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <!-- Thông tin sức chứa -->
                         <TextView
-                            android:id="@+id/txt_pricepayment"
+                            android:id="@+id/priceText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$120"
@@ -161,6 +180,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="7dp"
+                    android:hint="dd / mm / yyyy"
                     android:drawableEnd="@drawable/ic_editpayment"
                     android:fontFamily="@font/arimo_semibold"
                     android:textColor="@color/black"
@@ -186,6 +206,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:drawableEnd="@drawable/ic_editpayment"
+                    android:hint="Adults | Children | Infants"
                     android:fontFamily="@font/arimo_semibold"
                     android:textColor="@color/black"
                     android:textSize="15dp"
@@ -278,7 +299,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/search_bg"
-                    android:backgroundTint="@color/purple_500"
+                    android:backgroundTint="@color/primaryColor"
                     android:text="Add"
                     android:textColor="@color/white"
                     android:textSize="14sp"
@@ -328,7 +349,6 @@
     </ScrollView>
 
     <!-- Fixed Footer -->
-    <!-- Fixed Footer -->
     <LinearLayout
         android:id="@+id/fixed_footer"
         android:layout_width="match_parent"
@@ -371,7 +391,7 @@
             android:layout_height="55dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/search_bg"
-            android:backgroundTint="@color/purple_500"
+            android:backgroundTint="@color/primaryColor"
             android:text="Pay Now"
             android:textColor="@android:color/white"
             android:textSize="18dp"
