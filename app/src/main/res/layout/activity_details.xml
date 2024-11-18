@@ -1,17 +1,20 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:id="@+id/fragment_container">
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/maindt"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".activity.DetailsActivity">
 
-    <!-- FrameLayout chứa Fragment -->
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+
 
     <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
@@ -42,11 +45,12 @@
             android:textSize="18sp" />
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- Nội dung có thể cuộn -->
+    <!-- Scrollable Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/bottom_layout"
         android:layout_marginBottom="8dp">
 
         <LinearLayout
@@ -61,164 +65,144 @@
                 android:layout_height="270dp"
                 android:adjustViewBounds="true"
                 app:srcCompat="@drawable/bg" />
-                <LinearLayout
-                    android:layout_width="match_parent"
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/txtNamerom_details"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="16dp">
+                    android:text="Mughal Gardens, Srinagar"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="18sp" />
 
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/txtNamerom_details"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Mughal Gardens, Srinagar"
-                            android:textColor="@android:color/background_dark"
-                            android:textSize="18sp" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginStart="120dp">
-                            <ImageView
-                                android:id="@+id/imageView5"
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:background="@drawable/star"
-                                android:layout_marginEnd="16dp"
-                                app:layout_constraintBottom_toBottomOf="@+id/txtNamerom_details"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/txtNamerom_details"
-                                app:srcCompat="@drawable/baseline_arrow_right_alt_24" />
-
-                            <TextView
-                                android:id="@+id/txtRating_details"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="2dp"
-                                android:text="4.5"
-                                android:textSize="11sp"
-                                app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-                                app:layout_constraintEnd_toStartOf="@+id/imageView5"
-                                app:layout_constraintTop_toTopOf="@+id/imageView5" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/textView8"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Available flight :"
-                            android:textColor="#044363"
-                            android:textSize="14sp"
-                            app:layout_constraintStart_toStartOf="@+id/txtNamerom_details"
-                            app:layout_constraintTop_toBottomOf="@+id/txtNamerom_details" />
-
-                        <TextView
-                            android:id="@+id/textView10"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:text="18 April, 2020"
-                            android:textSize="12sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/textView8"
-                            app:layout_constraintStart_toEndOf="@+id/textView8"
-                            app:layout_constraintTop_toTopOf="@+id/textView8" />
-
-                    </LinearLayout>
-
-                  <LinearLayout
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal">
-                      <TextView
-                          android:id="@+id/textView9"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="4dp"
-                          android:text="Price range : "
-                          android:textColor="#044363"
-                          app:layout_constraintStart_toStartOf="@+id/textView8"
-                          app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-
-
-                      <TextView
-                          android:id="@+id/txtprice_details"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginStart="16dp"
-                          android:text="$3,00 - $8,00"
-                          android:textSize="12sp"
-                          app:layout_constraintBottom_toBottomOf="@+id/textView9"
-                          app:layout_constraintStart_toEndOf="@+id/textView9"
-                          app:layout_constraintTop_toTopOf="@+id/textView9" />
-
-                  </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="120dp">
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/star"
+                        android:layout_marginEnd="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/txtNamerom_details"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/txtNamerom_details"
+                        app:srcCompat="@drawable/baseline_arrow_right_alt_24" />
 
                     <TextView
-                        android:id="@+id/textView12"
+                        android:id="@+id/txtRating_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="Photogellery"
-                        android:textColor="@android:color/background_dark"
-                        app:layout_constraintStart_toStartOf="@+id/textView9"
-                        app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvServices"
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginHorizontal="10dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/textView12" />
-
-
-                    <TextView
-                        android:id="@+id/textView13"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="Description"
-                        android:textColor="@android:color/background_dark" />
-
-                    <TextView
-                        android:id="@+id/txtdescription_details"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="8dp"
-                        android:text="Mughal Gardens which have truly changed the face of the Mughal Empire is one of the most popular and the most visited tourist attractions of Srinagar."
-                        android:lineSpacingExtra="4dp" />
+                        android:layout_marginEnd="2dp"
+                        android:text="4.5"
+                        android:textSize="11sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+                        app:layout_constraintEnd_toStartOf="@+id/imageView5"
+                        app:layout_constraintTop_toTopOf="@+id/imageView5" />
                 </LinearLayout>
+            </LinearLayout>
 
+
+
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Available flight :"
+                android:textColor="#044363"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/txtNamerom_details"
+                app:layout_constraintTop_toBottomOf="@+id/txtNamerom_details" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Price range : "
+                android:textColor="#044363"
+                app:layout_constraintStart_toStartOf="@+id/textView8"
+                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="18 April, 2020"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView8"
+                app:layout_constraintStart_toEndOf="@+id/textView8"
+                app:layout_constraintTop_toTopOf="@+id/textView8" />
+
+            <TextView
+                android:id="@+id/txtprice_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="$3,00 - $8,00"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView9"
+                app:layout_constraintStart_toEndOf="@+id/textView9"
+                app:layout_constraintTop_toTopOf="@+id/textView9" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Photogellery"
+                android:textColor="@android:color/background_dark"
+                app:layout_constraintStart_toStartOf="@+id/textView9"
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvServices"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textView12" />
+
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Description"
+                android:textColor="@android:color/background_dark" />
+
+            <TextView
+                android:id="@+id/txtdescription_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Mughal Gardens which have truly changed the face of the Mughal Empire is one of the most popular and the most visited tourist attractions of Srinagar."
+                android:lineSpacingExtra="4dp" />
         </LinearLayout>
     </ScrollView>
 
-    <!-- Layout cố định dưới cùng -->
+    <!-- Fixed Bottom Layout -->
     <LinearLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_margin="16dp">
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Biểu tượng Yêu thích -->
         <ImageView
@@ -229,15 +213,16 @@
             android:src="@drawable/baseline_favorite_border_24"
             android:contentDescription="Favorite icon" />
 
-        <!-- Nút đặt phòng -->
+        <!-- Start Booking Button -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonBooking"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/book_button_bg"
-            android:backgroundTint="@color/primary_blue"
             android:text="Start Booking Your Trip"
             android:textColor="#FFFFFF" />
     </LinearLayout>
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

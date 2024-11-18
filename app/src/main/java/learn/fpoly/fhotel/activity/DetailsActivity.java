@@ -79,27 +79,17 @@ private ServiceAdapter serviceAdapter;
         btnBookingHotel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Hiển thị FrameLayout để chứa Fragment
-                findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
-
-                // Khởi tạo PaymentFragment
                 PaymentFragment paymentFragment = new PaymentFragment();
 
-                // Sử dụng FragmentTransaction để thay thế Fragment
+                // Use FragmentTransaction to replace the fragment container with PaymentFragment
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
                 // Thay thế Fragment hiện tại bằng PaymentFragment
                 transaction.replace(R.id.fragment_container, paymentFragment);
-
-                // Thêm vào backstack để có thể quay lại
-                transaction.addToBackStack(null);
-
-                // Commit để áp dụng thay đổi
+                transaction.addToBackStack(null);  // Add to backstack to allow back navigation
                 transaction.commit();
             }
         });
-
-
     }
 
     public void fetchRoomById(String roomId) {
@@ -148,7 +138,7 @@ private ServiceAdapter serviceAdapter;
                         // Update RecyclerView with fetched services
                         serviceAdapter.updateData(services); // Assuming you have an updateData method in ServiceAdapter
 
-//                        Toast.makeText(DetailsActivity.this, "Services loaded successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DetailsActivity.this, "Services loaded successfully", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(DetailsActivity.this, "Services not found: " + roomResponse.getMessenger(), Toast.LENGTH_SHORT).show();
                     }

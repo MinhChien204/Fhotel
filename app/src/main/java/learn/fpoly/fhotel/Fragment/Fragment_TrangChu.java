@@ -27,6 +27,7 @@ import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest; // Import your Retrofit client
 import retrofit2.Call;
 import retrofit2.Callback;
+import android.widget.TextView;
 
 
 public class Fragment_TrangChu extends Fragment {
@@ -36,6 +37,7 @@ public class Fragment_TrangChu extends Fragment {
     private TopPlacesAdapter topPlacesAdapter;
     private HttpRequest httpRequest;
     private FloatingActionButton floatingActionButton;
+    private TextView txtSeeall;
 
     public Fragment_TrangChu() {
         // Required empty public constructor
@@ -44,6 +46,7 @@ public class Fragment_TrangChu extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment__trang_chu, container, false);
+        txtSeeall = view.findViewById(R.id.txtSeeall);
 
         // Khởi tạo ApiService
         httpRequest = new HttpRequest();
@@ -60,6 +63,13 @@ public class Fragment_TrangChu extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ChatBotActivity.class);
+                startActivity(intent);
+            }
+        });
+        txtSeeall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ChatBotActivity.class);
                 startActivity(intent);
             }

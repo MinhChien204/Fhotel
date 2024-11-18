@@ -14,6 +14,7 @@ public class Room {
     private String room_code;
     private String status;
 
+
     // Constructor
 
     public Room(String id, String name, Double price, Double rating, String description, String image, int capacity, String room_code, String status) {
