@@ -15,45 +15,40 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
 
+import learn.fpoly.fhotel.Model.OnDateSelectedListener;
 import learn.fpoly.fhotel.R;
 
 public class SelectDateBottomSheet extends BottomSheetDialogFragment {
 
     private CalendarView calendarView;
-    private Calendar currentCalendar;
-    Button btnSelectGuest;
+    private Button btnSelectDate;
+    private OnDateSelectedListener listener;
 
-    @SuppressLint("WrongViewCast")
-    @Nullable
+    // Đặt listener
+    public void setOnDateSelectedListener(OnDateSelectedListener listener) {
+        this.listener = listener;
+    }
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottomsheet_select_date, container, false);
 
         calendarView = view.findViewById(R.id.calendar_view);
-        btnSelectGuest =view.findViewById(R.id.btn_select_date);
-        currentCalendar = Calendar.getInstance();
+        btnSelectDate = view.findViewById(R.id.btn_select_date);
 
-
-        btnSelectGuest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                // Handle date selection
-                String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                // Do something with the selected date, e.g., display it or store it
+        calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
+            // Lưu ngày đã chọn
+            String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+            if (listener != null) {
+                // Gửi ngày đã chọn về PaymentFragment qua listener
+                listener.onDateSelected(selectedDate);
             }
         });
 
-
-
+        btnSelectDate.setOnClickListener(v -> dismiss());
 
         return view;
     }
-
-
 }
+

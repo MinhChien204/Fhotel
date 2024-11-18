@@ -163,7 +163,6 @@
                     android:layout_margin="7dp"
                     android:drawableEnd="@drawable/ic_editpayment"
                     android:fontFamily="@font/arimo_semibold"
-                    android:text="May 06, 2023 - May 08, 2023"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
             </LinearLayout>
@@ -187,7 +186,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:drawableEnd="@drawable/ic_editpayment"
-                    android:text="2 adults | 1 children"
                     android:fontFamily="@font/arimo_semibold"
                     android:textColor="@color/black"
                     android:textSize="15dp"

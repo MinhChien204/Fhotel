@@ -96,7 +96,7 @@ public class Fragment_TrangChu extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     ArrayList<Room> topPlacesDataList = response.body().getData();
                     setTopPlacesRecycler(view, topPlacesDataList);
-                    Toast.makeText(getContext(),"Get data success",Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getContext(),"Get data success",Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getContext(), "Failed to load top places", Toast.LENGTH_SHORT).show();
                 }

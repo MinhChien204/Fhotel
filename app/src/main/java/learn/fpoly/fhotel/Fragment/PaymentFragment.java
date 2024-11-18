@@ -25,14 +25,14 @@ public class PaymentFragment extends Fragment {
         tvdate = view.findViewById(R.id.dates);
         tvPerson = view.findViewById(R.id.guests);
         btnback =view.findViewById(R.id.ivBackPayment);
-        tvdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Hiển thị bottom sheet dialog
-                SelectDateBottomSheet bottomSheet = new SelectDateBottomSheet();
-                bottomSheet.show(getParentFragmentManager(), "SelectDateBottomSheet");
-
-            }
+        tvdate.setOnClickListener(v -> {
+            // Tạo và hiển thị bottom sheet chọn ngày
+            SelectDateBottomSheet bottomSheet = new SelectDateBottomSheet();
+            bottomSheet.setOnDateSelectedListener(date -> {
+                // Cập nhật TextView với ngày đã chọn
+                tvdate.setText(date);
+            });
+            bottomSheet.show(getParentFragmentManager(), "SelectDateBottomSheet");
         });
         tvPerson.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,7 +44,12 @@ public class PaymentFragment extends Fragment {
         btnback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                requireActivity().onBackPressed();
+                if (getFragmentManager().getBackStackEntryCount() > 0) {
+                    // Nếu có Fragment trong back stack, pop nó
+                    getFragmentManager().popBackStack();
+                } else {
+                    // Nếu không có Fragment, quay lại mặc định
+                }
             }
         });
         return view;
