@@ -53,8 +53,8 @@
                 android:id="@+id/edit_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignBottom="@id/profile_image"
-                android:layout_alignEnd="@id/profile_image"
+                android:layout_alignBottom="@id/image_prf"
+                android:layout_alignEnd="@id/image_prf"
                 android:src="@drawable/ic_edit" />
         </RelativeLayout>
 
@@ -112,8 +112,7 @@
             <EditText
                 android:id="@+id/Address_prf"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="phone" />
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Date of Birth Input with Calendar Icon -->
@@ -129,7 +128,11 @@
                 android:id="@+id/date_pof"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false" />
+                android:hint="Date of Birth"
+                android:focusable="false"
+                android:clickable="true"
+                android:inputType="none" />
+
 
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -171,6 +174,7 @@
 
         <!-- Update Button -->
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnUpdateUser"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="32dp"

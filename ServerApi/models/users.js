@@ -8,9 +8,10 @@ const Users = new Scheme({
     name: { type: String },
     gender:{type:String},
     address:{type:String},
-    avartar: { type: String },
+    avatar: { type: String },
     available: { type: Boolean, default: false },
     phonenumber:{type:String},
+    birthday:{type:String},
     role: { type: Number,  required: true,default: 1 }
 }, {
     timestamps: true

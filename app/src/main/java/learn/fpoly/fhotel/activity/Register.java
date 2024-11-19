@@ -105,12 +105,8 @@ public class Register extends AppCompatActivity {
                     edt_phonenumber_register.requestFocus();
                     return;
                 }
-                    int role = 1;
-                String gender ="female";
-                String name="";
-                String address = "";
                 // Make API call to register
-                Call<Response<User>> call = apiService.register(username, password, email, phone,name,gender,address);
+                Call<Response<User>> call = apiService.register(username, password, email, phone);
                 call.enqueue(new Callback<Response<User>>() {
                     @Override
                     public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {

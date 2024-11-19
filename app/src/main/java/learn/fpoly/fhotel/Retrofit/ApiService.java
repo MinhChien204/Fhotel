@@ -44,10 +44,10 @@ public interface ApiService {
     //////
     @POST("api/add_user")
     Call<User> createUser(@Body User user);
-    @PUT("api/update_user/:id")
+    @PUT("api/update_user/{id}")
     Call<User> chage_pass(@Path("id") String userId);
     @PUT("api/update_user/{id}")
-    Call<User> updateUser(@Path("id") String userId, @Body User user);
+    Call<Response<User>> updateUser(@Path("id") String userId, @Body User user);
     @DELETE("api/delete_user/{id}")
     Call<Void> deleteUser(@Path("id") String userId);
     @POST("api/login")
@@ -58,10 +58,12 @@ public interface ApiService {
             @Field("username") String username,
             @Field("password") String password,
             @Field("email") String email,
-            @Field("phonenumber") String phonenumber,
-            @Field("name") String name,
-            @Field("gender") String gender,
-            @Field("address") String address
+            @Field("phonenumber") String phonenumber
     );
-
+    @Multipart
+    @PUT("api/upload_user_image/{id}")
+    Call<Response<User>> uploadUserImage(
+            @Path("id") String userId, // user id
+            @Part MultipartBody.Part image
+    );
 }

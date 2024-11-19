@@ -1,13 +1,13 @@
 package learn.fpoly.fhotel.Model;
 
 public class User {
-    private String _id, username, password, email, name,gender, phonenumber, address, avartar, available;
+    private String _id, username, password, email, name,gender, phonenumber, address, avatar, available,birthday;
     private String createdAt, updatedAt;
 
     public User() {
     }
 
-    public User(String _id, String username, String password, String email, String name, String gender, String phonenumber, String address, String avartar, String available, String createdAt, String updatedAt) {
+    public User(String _id, String username, String password, String email, String name, String gender, String phonenumber, String address, String avatar, String available, String birthday, String createdAt, String updatedAt) {
         this._id = _id;
         this.username = username;
         this.password = password;
@@ -16,10 +16,19 @@ public class User {
         this.gender = gender;
         this.phonenumber = phonenumber;
         this.address = address;
-        this.avartar = avartar;
+        this.avatar = avatar;
         this.available = available;
+        this.birthday = birthday;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public String get_id() {
@@ -86,12 +95,12 @@ public class User {
         this.address = address;
     }
 
-    public String getAvartar() {
-        return avartar;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvartar(String avartar) {
-        this.avartar = avartar;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getAvailable() {

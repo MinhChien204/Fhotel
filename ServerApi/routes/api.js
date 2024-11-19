@@ -42,10 +42,11 @@ router.post("/add_user", async (req, res) => {
       password,
       email,
       name,
-      gioitinh,
+      gender,
+      birthday,
       phonenumber,
       address,
-      avartar,
+      avatar,
     } = req.body;
 
     const newUser = new users({
@@ -53,15 +54,16 @@ router.post("/add_user", async (req, res) => {
       password,
       email,
       name,
-      gioitinh,
+      gender,
+      birthday,
       phonenumber,
       address,
-      avartar,
+      avatar,
     });
 
     const result = await newUser.save();
     res.status(201).json({
-      status: 200,
+      status: 201,
       message: "User added successfully",
       data: result,
     });
@@ -118,33 +120,31 @@ router.put("/update_user/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const {
-      username,
-      password,
       email,
       name,
-      gioitinh,
+      gender,
+      birthday,
       phonenumber,
       address,
-      avartar,
+      avatar,
     } = req.body;
 
     const updateUser = await users.findByIdAndUpdate(
       id,
       {
-        username,
-        password,
         email,
         name,
-        gioitinh,
+        gender,
+        birthday,
         phonenumber,
         address,
-        avartar,
+        avatar,
       },
       { new: true }
     );
 
     if (updateUser) {
-      res.json({
+      res.status(200).json({
         status: 200,
         message: "User updated successfully",
         data: updateUser,
@@ -157,6 +157,42 @@ router.put("/update_user/:id", async (req, res) => {
     res.status(500).json({ message: "An error occurred while updating user" });
   }
 });
+
+router.put("/upload_user_image/:id", upload.single("avatar"), async (req, res) => { 
+  try {
+    const { id } = req.params;
+    let imagePath = req.file ? req.file.path : null; // Kiểm tra xem tệp có được gửi không
+
+    if (imagePath) {
+      // Sửa dấu gạch chéo ngược thành gạch chéo xuôi
+      imagePath = imagePath.replace(/\\/g, "/"); // Chuyển đổi tất cả gạch chéo ngược thành gạch chéo xuôi
+      imagePath = imagePath.replace('public/', '');  // Xóa phần 'public/' nếu có
+
+      // Cập nhật đường dẫn ảnh vào cơ sở dữ liệu
+      const updateUser = await users.findByIdAndUpdate(
+        id,
+        { avatar: imagePath },
+        { new: true }
+      );
+
+      if (updateUser) {
+        res.status(200).json({
+          status: 200,
+          message: "Image uploaded successfully",
+          data: updateUser,
+        });
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    } else {
+      res.status(400).json({ message: "No image uploaded" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while uploading image", error: error.message });
+  }
+});
+
 
 //API delete user
 router.delete("/delete_user/:id", async (req, res) => {
@@ -503,11 +539,12 @@ router.post("/register",async (req, res) => {
         password: data.password,
         email: data.email,
         phonenumber: data.phonenumber,
-        name: data.name,
-        gender: data.gender,
-        address: data.address,
+        name: "",
+        gender: "",
+        address: "",
+        birthday:"",
         role: data.role,
-        // avartar: avatar,
+        avatar: "",
       });
 
       const result = await newUser.save();
