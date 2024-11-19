@@ -158,6 +158,39 @@ router.put("/update_user/:id", async (req, res) => {
   }
 });
 
+// API xác minh mật khẩu cũ và cập nhật mật khẩu mới
+router.put("/update_password/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { oldPassword, newPassword } = req.body;
+
+    // Tìm người dùng theo ID
+    const user = await users.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    // Kiểm tra mật khẩu cũ
+    if (user.password !== oldPassword) {
+      return res.status(400).json({ message: "Current password is incorrect" });
+    }
+
+    // Cập nhật mật khẩu mới
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({
+      message: "Password updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while updating password", error: error.message });
+  }
+});
+
+
 router.put("/upload_user_image/:id", upload.single("avatar"), async (req, res) => { 
   try {
     const { id } = req.params;

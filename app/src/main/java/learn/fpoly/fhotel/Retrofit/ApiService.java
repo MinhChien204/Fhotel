@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learn.fpoly.fhotel.Model.LoginRequest;
+import learn.fpoly.fhotel.Model.PasswordUpdateRequest;
 import learn.fpoly.fhotel.response.LoginResponse;
 import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.Model.Room;
@@ -65,5 +66,10 @@ public interface ApiService {
     Call<Response<User>> uploadUserImage(
             @Path("id") String userId, // user id
             @Part MultipartBody.Part image
+    );
+    @PUT("api/update_password/{id}")
+    Call<Response<User>> updatePassword(
+            @Path("id") String userId,
+            @Body PasswordUpdateRequest passwordUpdateRequest
     );
 }
