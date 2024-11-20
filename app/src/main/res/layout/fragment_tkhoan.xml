@@ -14,7 +14,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:background="@color/primaryColor"
+            android:background="#5569FF"
             android:layout_height="50dp">
 
             <TextView
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:background="@color/primaryColor"
+            android:background="#5569FF"
             android:padding="16dp">
 
             <ImageView
@@ -74,11 +74,11 @@
 
             <ImageView
                 android:id="@+id/edit_profile_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_edit"
+                android:src="@drawable/compose"
                 app:tint="#FFFFFF" />
         </RelativeLayout>
 
@@ -109,8 +109,8 @@
                 android:paddingVertical="12dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/edittext" />
 
@@ -120,7 +120,7 @@
                     android:layout_weight="1"
                     android:text="Edit Profile"
                     android:textColor="#000000"
-                    android:textSize="23sp" />
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -142,10 +142,10 @@
                 android:paddingVertical="12dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/lock" />
+                    android:src="@drawable/pas" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -153,7 +153,7 @@
                     android:layout_weight="1"
                     android:text="Change Password"
                     android:textColor="#000000"
-                    android:textSize="23sp" />
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -174,18 +174,18 @@
                 android:paddingVertical="12dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/edittext" />
+                    android:src="@drawable/payment" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Paymant Method"
+                    android:text="Payment Method"
                     android:textColor="#000000"
-                    android:textSize="23sp" />
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -206,10 +206,10 @@
                 android:paddingVertical="12dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/edittext" />
+                    android:src="@drawable/booking" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -217,7 +217,7 @@
                     android:layout_weight="1"
                     android:text="My Bookings"
                     android:textColor="#000000"
-                    android:textSize="23sp" />
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -239,10 +239,10 @@
                 android:paddingVertical="12dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/edittext" />
+                    android:src="@drawable/insurance" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -250,7 +250,7 @@
                     android:layout_weight="1"
                     android:text="Privacy Policy"
                     android:textColor="#000000"
-                    android:textSize="23sp" />
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -271,10 +271,10 @@
                 android:paddingVertical="12dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/edittext" />
+                    android:src="@drawable/term" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -282,7 +282,7 @@
                     android:layout_weight="1"
                     android:text="Terms &amp; Conditions"
                     android:textColor="#000000"
-                    android:textSize="23sp" />
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -302,7 +302,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/book_button_bg"
-                android:backgroundTint="@color/primaryColor"
+                android:backgroundTint="#5569FF"
                 android:gravity="center"
                 android:orientation="horizontal">
 
