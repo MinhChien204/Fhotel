@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:scrollbars="none"
+    android:padding="15dp">
 
 
     <LinearLayout
@@ -48,7 +48,7 @@
             android:layout_marginBottom="16dp">
 
             <ImageView
-                android:id="@+id/profile_image"
+                android:id="@+id/image_prf"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_alignParentStart="true"
@@ -58,7 +58,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/profile" />
             <ImageView
-                android:id="@+id/edit_profile_picture"
+                android:id="@+id/edit_icon"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginTop="-20dp"
@@ -69,7 +69,7 @@
                 android:src="@drawable/ic_edit" />
         </LinearLayout>
         <EditText
-            android:id="@+id/et_name_Profile"
+            android:id="@+id/txten_prf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name"
@@ -80,7 +80,7 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/et_email_Profile"
+            android:id="@+id/mail_pro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email Address"
@@ -91,7 +91,7 @@
             android:inputType="textEmailAddress" />
 
         <EditText
-            android:id="@+id/et_mobile_Profile"
+            android:id="@+id/Phone_prf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Mobile Number"
@@ -109,7 +109,7 @@
             android:layout_marginBottom="16dp">
 
             <EditText
-                android:id="@+id/et_dob_Profile"
+                android:id="@+id/date_pof"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -136,7 +136,7 @@
             android:orientation="vertical">
 
             <RadioButton
-                android:id="@+id/rb_male_Profile"
+                android:id="@+id/Male_prf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Male"
@@ -144,7 +144,7 @@
                 android:textColor="#000000" />
 
             <RadioButton
-                android:id="@+id/rb_female_Profile"
+                android:id="@+id/Famal_prf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Female"
