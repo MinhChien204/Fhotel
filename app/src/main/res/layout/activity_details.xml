@@ -227,7 +227,7 @@
             android:layout_weight="1"
             android:background="@drawable/book_button_bg"
             android:text="Start Booking Your Trip"
-            android:textColor="#FFFFFF" />
+            android:textColor="#3F51B5" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

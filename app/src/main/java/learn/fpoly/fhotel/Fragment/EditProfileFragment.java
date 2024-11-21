@@ -32,6 +32,7 @@ import java.util.Calendar;
 import learn.fpoly.fhotel.Model.User;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
+import learn.fpoly.fhotel.activity.Home_User;
 import learn.fpoly.fhotel.response.Response;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -43,7 +44,7 @@ public class EditProfileFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private HttpRequest httpRequest;
-    private EditText mail_pro, txten_prf, date_pof, Phone_prf;
+    private EditText mail_pro, txten_prf, date_pof, Address_prf, Phone_prf;
     private ImageView image_prf, edit_icon;
     private RadioButton Male_prf, Famal_prf;
     private Button btnUpdateUser;
@@ -57,12 +58,13 @@ public class EditProfileFragment extends Fragment {
         mail_pro = view.findViewById(R.id.mail_pro);
         txten_prf = view.findViewById(R.id.txten_prf);
         date_pof = view.findViewById(R.id.date_pof);
+        Address_prf = view.findViewById(R.id.Address_prf);
         Phone_prf = view.findViewById(R.id.Phone_prf);
         image_prf = view.findViewById(R.id.image_prf);
         edit_icon = view.findViewById(R.id.edit_icon);
         Male_prf = view.findViewById(R.id.Male_prf);
         Famal_prf = view.findViewById(R.id.Famal_prf);
-        btnUpdateUser = view.findViewById(R.id.btn_update_Profile);
+        btnUpdateUser = view.findViewById(R.id.btnUpdateUser);
 
         httpRequest = new HttpRequest();
 
@@ -80,9 +82,7 @@ public class EditProfileFragment extends Fragment {
         edit_icon.setOnClickListener(v -> openImagePicker());
 
         // Khi nhấn vào trường ngày sinh
-        date_pof.setOnClickListener(v -> showDatePickerDialog());
-
-        // Khi nhấn nút Update
+        date_pof.setOnClickListener(v -> showDatePickerDialog()); // Khi nhấn nút Update
         btnUpdateUser.setOnClickListener(v -> updateUser());
 
         return view;
@@ -145,12 +145,13 @@ public class EditProfileFragment extends Fragment {
                     if (user != null) {
                         mail_pro.setText(user.getEmail());
                         txten_prf.setText(user.getName());
+                        Address_prf.setText(user.getAddress());
                         Phone_prf.setText(user.getPhonenumber());
                         date_pof.setText(user.getBirthday());
                         if (user.getGender().equalsIgnoreCase("female")) {
                             Famal_prf.setChecked(true);
                         } else {
-                            Male_prf.setChecked(true);
+                        Male_prf.setChecked(true);
                         }
                         String avatarUrl = "http://10.0.2.2:3000/" + user.getAvatar();  // Thêm URL gốc vào đường dẫn ảnh
                         Log.d("ava", "onResponse: "+avatarUrl);
@@ -174,6 +175,7 @@ public class EditProfileFragment extends Fragment {
         String email = mail_pro.getText().toString().trim();
         String name = txten_prf.getText().toString().trim();
         String birthday = date_pof.getText().toString().trim();
+        String address = Address_prf.getText().toString().trim();
         String phonenumber = Phone_prf.getText().toString().trim();
         String gender = Male_prf.isChecked() ? "male" : "female";
 
@@ -181,6 +183,7 @@ public class EditProfileFragment extends Fragment {
         user.setEmail(email);
         user.setName(name);
         user.setBirthday(birthday);
+        user.setAddress(address);
         user.setPhonenumber(phonenumber);
         user.setGender(gender);
 
@@ -190,6 +193,8 @@ public class EditProfileFragment extends Fragment {
             public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(getContext(), "User updated successfully!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), Home_User.class);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(getContext(), "Failed to update user!", Toast.LENGTH_SHORT).show();
                 }
@@ -214,8 +219,8 @@ public class EditProfileFragment extends Fragment {
                 @Override
                 public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(getContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(getContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT).show();
+                }
                 }
 
                 @Override
@@ -224,6 +229,7 @@ public class EditProfileFragment extends Fragment {
                 }
             });
         } catch (Exception e) {
+            Log.e("dcmmm", "uploadImageToServer: ", e);
             e.printStackTrace();
             Toast.makeText(getContext(), "Failed to upload image", Toast.LENGTH_SHORT).show();
         }
