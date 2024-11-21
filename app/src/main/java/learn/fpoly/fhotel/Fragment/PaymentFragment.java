@@ -53,16 +53,6 @@ public class PaymentFragment extends Fragment {
 
         httpRequest = new HttpRequest(); // Khởi tạo HttpRequest
 
-        // Gọi API để lấy dữ liệu
-//        String roomId = getIntent().getStringExtra("room_id");
-//        Log.d("dcm", "onCreate: " + roomId);
-
-        // Kiểm tra nếu ID hợp lệ và gọi API
-//        if (roomId != null && !roomId.isEmpty()) {
-//            fetchRoomById(roomId);
-//        } else {
-//            Toast.makeText(getContext(), "Invalid Room ID", Toast.LENGTH_SHORT).show();
-//        }
 
         // Xử lý sự kiện chọn ngày
         tvdate.setOnClickListener(v -> {
@@ -85,6 +75,25 @@ public class PaymentFragment extends Fragment {
             }
         });
 
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            String roomName = arguments.getString("room_name");
+            float roomRating = arguments.getFloat("room_rating", 0);
+            String roomPrice = arguments.getString("room_price");
+            String roomImageURL = arguments.getString("room_image");
+            String roomCapacity = arguments.getString("room_capacity");
+
+            // Gán dữ liệu vào các View
+            tvnameKS.setText(roomName);
+            tvpriceKS.setText(roomPrice);
+            ratingBar.setRating(roomRating);
+            tvcapacityKS.setText(roomCapacity);
+
+            // Hiển thị ảnh với Glide
+            Glide.with(this)
+                    .load(roomImageURL)
+                    .into(roomImage);
+        }
         return view;
     }
 
@@ -98,40 +107,4 @@ public class PaymentFragment extends Fragment {
         bottomSheet.show(getChildFragmentManager(), "SelectGuestBottomSheet");
     }
 
-    // Gọi API để lấy thông tin phòng
-    public void fetchRoomById(String roomId) {
-        Call<Response<Room>> call = httpRequest.callAPI().getRoomById(roomId);
-        call.enqueue(new Callback<Response<Room>>() {
-            @Override
-            public void onResponse(Call<Response<Room>> call, retrofit2.Response<Response<Room>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Response<Room> roomResponse = response.body();
-                    if (roomResponse.getStatus() == 200) {
-                        Room room = roomResponse.getData();
-
-                        // Gán dữ liệu vào các View
-                        tvnameKS.setText(room.getName());
-                        tvpriceKS.setText("$" + room.getPrice());
-                        tvcapacityKS.setText(room.getCapacity() + "m2");
-
-//                        ratingBar.setRating(room.getRating());
-
-                        // Tải ảnh với Glide
-                        Glide.with(PaymentFragment.this)
-                                .load(room.getImage())
-                                .into(roomImage);
-                    } else {
-                        Toast.makeText(getContext(), "Room not found: " + roomResponse.getMessenger(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Room not found", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Response<Room>> call, Throwable t) {
-                Toast.makeText(getContext(), "Room Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 }

@@ -9,7 +9,7 @@
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:background="@color/primary_blue"
+        android:background="@color/primaryColor"
         android:layout_height="60dp">
 
         <ImageView
@@ -24,6 +24,7 @@
             android:textStyle="bold"
             android:textSize="20dp"
             android:text="ChatBot"
+            android:textColor="#fff"
             android:fontFamily="serif"
             android:layout_gravity="center"/>
 

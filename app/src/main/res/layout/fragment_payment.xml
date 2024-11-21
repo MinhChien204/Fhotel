@@ -120,7 +120,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="2dp"
                             android:fontFamily="sans-serif-medium"
-                            android:text="Malon Greens"
                             android:textColor="#000"
                             android:textSize="16sp" />
 
@@ -130,7 +129,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="2dp"
-                            android:text="40m2 - 50m2"
                             android:textColor="#757575"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -140,7 +138,6 @@
                             android:id="@+id/priceText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="$120"
                             android:textColor="#757575"
                             android:textSize="14sp"
                             android:textStyle="bold" />

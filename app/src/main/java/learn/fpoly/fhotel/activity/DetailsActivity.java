@@ -31,11 +31,12 @@ import learn.fpoly.fhotel.response.Response;
 public class DetailsActivity extends AppCompatActivity {
     private ImageView ivBack, ivFavorite, imgRom_details,imageView8;
     private Button btnBookingHotel;
-    private TextView txtdescription_details, txtprice_details, txtNamerom_details;
+    private TextView txtdescription_details, txtprice_details, txtNamerom_details,txt_capacity;
     private RatingBar txtRating_details;
     private HttpRequest httpRequest;
 private RecyclerView rvServices;
 private ServiceAdapter serviceAdapter;
+    private Room room;
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ private ServiceAdapter serviceAdapter;
         txtRating_details = findViewById(R.id.ratingBarDetail);
         txtdescription_details = findViewById(R.id.txtdescription_details);
         txtprice_details = findViewById(R.id.txtprice_details);
+        txt_capacity =findViewById(R.id.tvcapacity);
         ivBack = findViewById(R.id.ivBack);
         ivFavorite = findViewById(R.id.ivFavorite);
         btnBookingHotel = findViewById(R.id.buttonBooking);
@@ -85,6 +87,16 @@ private ServiceAdapter serviceAdapter;
             public void onClick(View view) {
                 PaymentFragment paymentFragment = new PaymentFragment();
 
+                Bundle bundle = new Bundle();
+                bundle.putString("room_name", txtNamerom_details.getText().toString());
+                bundle.putFloat("room_rating", txtRating_details.getRating());
+                bundle.putString("room_description", txtdescription_details.getText().toString());
+                bundle.putString("room_price", txtprice_details.getText().toString());
+                bundle.putString("room_image", room.getImage()); // Lấy URL ảnh từ đối tượng room
+                bundle.putString("room_capacity", txt_capacity.getText().toString());
+                // Gán Bundle cho Fragment
+                paymentFragment.setArguments(bundle);
+
                 // Use FragmentTransaction to replace the fragment container with PaymentFragment
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -104,13 +116,14 @@ private ServiceAdapter serviceAdapter;
                 if (response.isSuccessful() && response.body() != null) {
                     Response<Room> roomResponse = response.body(); // Lấy đối tượng Response
                     if (roomResponse.getStatus() == 200) { // Kiểm tra status
-                        Room room = roomResponse.getData(); // Lấy dữ liệu Room
+                        room = roomResponse.getData(); // Lấy dữ liệu Room
                         Log.d("room", "onResponse: " + room);
                         // Gán dữ liệu phòng vào các View
                         txtNamerom_details.setText(room.getName());
                         txtRating_details.setRating(Float.parseFloat(String.valueOf(room.getRating())));
                         txtdescription_details.setText(room.getDescription());
                         txtprice_details.setText(String.valueOf(room.getPrice()));
+                        txt_capacity.setText(String.valueOf(room.getCapacity()) +"  person");
                         // Nếu có hình ảnh, hãy gán nó vào imgRom_details
                         Glide.with(DetailsActivity.this)
                                 .load(room.getImage()) // Thay `getImageUrl()` bằng phương thức lấy URL ảnh

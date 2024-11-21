@@ -124,10 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="18 April, 2020"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView8"
-                    app:layout_constraintStart_toEndOf="@+id/textView8"
-                    app:layout_constraintTop_toTopOf="@+id/textView8" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -157,6 +154,29 @@
                     app:layout_constraintStart_toEndOf="@+id/textView9"
                     app:layout_constraintTop_toTopOf="@+id/textView9" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Available flight :"
+                    android:textColor="#044363"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/txtNamerom_details"
+                    app:layout_constraintTop_toBottomOf="@+id/txtNamerom_details" />
+
+                <TextView
+                    android:id="@+id/tvcapacity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="4 person"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <TextView
@@ -226,8 +246,9 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/book_button_bg"
+            android:backgroundTint="@color/primaryColor"
             android:text="Start Booking Your Trip"
-            android:textColor="#3F51B5" />
+            android:textColor="#fff" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
