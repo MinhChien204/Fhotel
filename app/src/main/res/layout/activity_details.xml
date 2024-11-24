@@ -88,7 +88,7 @@
                     android:id="@+id/ratingText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4.5 (115 Reviews)"
+                    android:text="(115 Reviews)"
                     android:textColor="#FF9800"
                     android:textSize="12sp"
                     android:textStyle="bold" />

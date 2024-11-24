@@ -11,6 +11,7 @@ const users = require("../models/users");
 const Room = require("../models/Room");
 const RoomService = require("../models/roomservice");
 const Service = require("../models/service");
+const Voucher = require("../models/vouchers");
 
 // CRUD Hotel
 //APi hiển thi danh sách khách sạn
@@ -607,5 +608,93 @@ router.post("/register",async (req, res) => {
 );
 
 //API voucher
+router.post('/add_voucher', async (req, res) => {
+  try {
+    const voucher = new Voucher(req.body);
+    await voucher.save();
+    res.status(201).json(voucher);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
 
+// Lấy danh sách voucher
+router.get('/voucher', async (req, res) => {
+  try {
+    const vouchers = await Voucher.find();
+    res.status(200).json(vouchers);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Lấy chi tiết voucher theo ID
+router.get("/detail_voucher/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const voucher = await Voucher.findById(id);
+    if (voucher) {
+      res.status(200).json({
+        status: 200,
+        message: "voucher retrieved successfully",
+        data: voucher,
+      });
+    } else {
+      res.status(404).json({ message: "voucher not found" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while retrieving voucher" });
+  }
+});
+
+// Cập nhật voucher
+router.put("/update_voucher/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      code,discount,expirationDate,isActive
+    } = req.body;
+
+    const update_voucher = await Voucher.findByIdAndUpdate(
+      id,
+      {
+        code,discount,expirationDate,isActive
+      },
+      { new: true }
+    );
+
+    if (update_voucher) {
+      res.status(200).json({
+        status: 200,
+        message: "voucher updated successfully",
+        data: update_voucher,
+      });
+    } else {
+      res.status(404).json({ message: "voucher not found" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while updating voucher" });
+  }
+});
+
+// Xóa voucher
+router.delete("/delete_voucher/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteVoucher = await Voucher.findByIdAndDelete(id);
+
+    if (deleteVoucher) {
+      res.status(200).json({ message: "voucher deleted successfully" });
+    } else {
+      res.status(404).json({ message: "voucher not found" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while deleting voucher" });
+  }
+});
 module.exports = router;
