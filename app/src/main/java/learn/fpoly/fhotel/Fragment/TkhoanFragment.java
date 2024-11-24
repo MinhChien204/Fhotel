@@ -23,7 +23,7 @@ import learn.fpoly.fhotel.chatbot.ChatBotActivity;
 
 public class TkhoanFragment extends Fragment {
 
-    LinearLayout editProfile, editPassword, payment, booking, privacy, terms,btnLogOut;
+    LinearLayout editProfile, editPassword, payment, booking, privacy, terms,btnLogOut,voucher;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -34,6 +34,7 @@ public class TkhoanFragment extends Fragment {
 
         btnLogOut = view.findViewById(R.id.btnLogOut);
         editProfile = view.findViewById(R.id.editProfile);
+        voucher = view.findViewById(R.id.linearlayoutVoucher);
         editPassword = view.findViewById(R.id.editPassword);
         editPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +49,12 @@ public class TkhoanFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 replaceFragment(new EditProfileFragment());
+            }
+        });
+        voucher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new VoucherFragment());
             }
         });
 
