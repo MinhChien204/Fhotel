@@ -5,6 +5,7 @@ import java.util.List;
 
 import learn.fpoly.fhotel.Model.LoginRequest;
 import learn.fpoly.fhotel.Model.PasswordUpdateRequest;
+import learn.fpoly.fhotel.Model.Service;
 import learn.fpoly.fhotel.response.LoginResponse;
 import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.Model.Room;
@@ -28,12 +29,40 @@ public interface ApiService {
     String DOMAIN ="http://10.0.2.2:3000/";
     @GET("api/rooms")
     Call<Response<ArrayList<Room>>> getRooms();
-    //API user
     @GET("api/room/{id}")
     Call<Response<Room>> getRoomById(@Path("id") String roomId);
+    @Multipart
+    @POST("api/add_room")
+    Call<Response<Room>> addRoom(
+            @Part("name") RequestBody name,
+            @Part("price") RequestBody price,
+            @Part("description") RequestBody description,
+            @Part("rating") RequestBody rating,
+            @Part("capacity") RequestBody capacity,
+            @Part("room_code") RequestBody room_code,
+            @Part MultipartBody.Part image // Để gửi ảnh
+    );
+    @DELETE("api/delete_room/{id}")
+    Call<Void> deleteRoom(@Path("id") String roomId);
+
+
+    @GET("api/services")
+    Call<Response<ArrayList<Service>>> getServices();
+    @GET("api/service/{id}")
+    Call<Response<Service>> getServiceById(@Path("id") String serId);
+    @Multipart
+    @POST("api/add-service")
+    Call<Response<Service>> addService(
+            @Part("name") RequestBody name,
+            @Part("price") RequestBody price,
+            @Part("description") RequestBody description,
+            @Part MultipartBody.Part image // Để gửi ảnh
+    );
+    @DELETE("api/delete-service/{id}")
+    Call<Void> deleteService(@Path("id") String serviceId);
+
+
     //
-    @GET("api/room/{id}/services")
-    Call<Response<ArrayList<RoomService>>> getServiceByIdRoom(@Path("id") String roomId);
     @GET("api/user")
     Call<List<User>> getUsers();
     /////

@@ -192,7 +192,7 @@ router.put("/update_password/:id", async (req, res) => {
 });
 
 
-router.put("/upload_user_image/:id", upload.single("avatar"), async (req, res) => { 
+router.put("/upload_user_image/:id", upload.single("avatar"), async (req, res) => {
   try {
     const { id } = req.params;
     let imagePath = req.file ? req.file.path : null; // Kiểm tra xem tệp có được gửi không
@@ -245,77 +245,74 @@ router.delete("/delete_user/:id", async (req, res) => {
   }
 });
 
-// CRUD Room
-// API hiển thị danh sách phòng
-router.get("/rooms", async (req, res) => {
-  // //authorization thêm từ khóa Bearer token
-  // const authHeader = req.headers['authorization'];
-  // const token = authHeader && authHeader.split(' ')[1];
-  // // nếu không có token chuyển về 401
-  // if(token==null) return res.sendStatus(401);
-  // let payload;
-  // // JWT.verify(token,SECRETKEY,(err,_payload)=>{
-  // //   //kiểm tra token, nếu không đúng hoặc hết hạn
-  // //   //trả status code 403
-  // //   //trả status hết hạn 301 khi token hết hạn
-  // //   if(err instanceof JWT.TokenExpiredError) return res.status(401)
-  // //   if(err) return res.status(403)
-  // //     //Nếu đúng log ra toàn bộ dữ liệu
-  // //   payload=_payload;
-  // // })
-  // console.log(payload);
-
+router.get('/rooms', async (req, res) => {
   try {
-    const rooms = await Room.find();
+    const rooms = await Room.find()
+
+    // Nếu thành công, trả về kết quả
     res.status(200).json({
       status: 200,
-      message: "Rooms retrieved successfully",
-      data: rooms,
+      message: 'Rooms fetched successfully',
+      data: rooms
     });
+
   } catch (error) {
-    console.error("Error:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while retrieving rooms" });
+    console.error("Error fetching rooms:", error);
+    res.status(500).json({
+      message: 'An error occurred while fetching rooms'
+    });
   }
 });
 
 // API thêm phòng mới
-router.post("/add_room", async (req, res) => {
+
+router.post('/add_room', upload.array('image', 5), async (req, res) => {
   try {
-    const {
-      name,
-      price,
-      rating,
-      description,
-      image,
-      capacity,
-      status,
-      room_code,
-    } = req.body;
+    const data = req.body; // Lấy dữ liệu từ body
+    const { files } = req; // Lấy danh sách file được upload
 
+    // Tạo URLs cho ảnh
+    const urlsImage = files.map((file) => {
+      return `http://10.0.2.2:3000/uploads/${file.filename}`;
+    });
+
+    // Tạo Room mới với dữ liệu
     const newRoom = new Room({
-      name,
-      price,
-      rating,
-      description,
-      image,
-      capacity,
-      status,
-      room_code,
+      name: data.name,
+      price: data.price,
+      rating: data.rating,
+      description: data.description,
+      capacity: data.capacity,
+      status: data.status,
+      room_code: data.room_code,
+      image: urlsImage // Lưu mảng URLs của ảnh
     });
 
-    const result = await newRoom.save();
-    res.status(201).json({
-      status: 200,
-      message: "Room added successfully",
-      data: result,
-    });
+    const result = await newRoom.save(); // Lưu vào MongoDB
+
+    if (result) {
+      res.status(200).json({
+        status: 200,
+        message: "Thêm Room thành công",
+        data: result
+      });
+    } else {
+      res.status(400).json({
+        status: 400,
+        message: "Thêm Room không thành công",
+        data: []
+      });
+    }
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ message: "An error occurred while adding room" });
+    console.error(error);
+    res.status(500).json({
+      status: 500,
+      message: "Có lỗi xảy ra",
+      error
+    });
   }
 });
+
 
 // API xem chi tiết phòng
 router.get("/room/:id", async (req, res) => {
@@ -334,11 +331,10 @@ router.get("/room/:id", async (req, res) => {
     }
   } catch (error) {
     console.error("Error:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while retrieving room" });
+    res.status(500).json({ message: "An error occurred while retrieving room" });
   }
 });
+
 
 // API cập nhật phòng
 router.put("/update_room/:id", async (req, res) => {
@@ -402,17 +398,13 @@ router.delete("/delete_room/:id", async (req, res) => {
   }
 });
 
-// API lấy danh sách dịch vụ theo phòng
-router.get("/room/:id/services", async (req, res) => {
+
+
+
+// API lấy danh sách dịch vụ
+router.get("/services", async (req, res) => {
   try {
-    const { id } = req.params;
-    const roomServices = await RoomService.find({ roomId: id }).populate(
-      "serviceId"
-    );
-
-    // Lấy danh sách dịch vụ từ roomServices
-    const services = roomServices.map((rs) => rs.serviceId);
-
+    const services = await Service.find();
     res.status(200).json({
       status: 200,
       message: "Services retrieved successfully",
@@ -422,12 +414,111 @@ router.get("/room/:id/services", async (req, res) => {
     console.error("Error:", error);
     res
       .status(500)
-      .json({
-        message: "An error occurred while retrieving services",
-        error: error.message,
-      });
+      .json({ message: "An error occurred while retrieving services" });
   }
 });
+
+// add
+router.post("/add-service", upload.array('image', 3), async (req, res) => {
+  try {
+    const data = req.body;
+    // Kiểm tra dữ liệu trong request
+    console.log("Request Body:", req.body);
+    console.log("Uploaded File:", req.file);
+    const { files } = req
+
+    // Lưu đường dẫn ảnh vào database
+    const urlsImage = files.map((file) => {
+      return `http://10.0.2.2:3000/uploads/${file.filename}`;
+    });
+
+    // Tạo mới Service
+    const newService = new Service({
+      name: data.name,
+      price: data.price,
+      description: data.description,
+      image: urlsImage, // Lưu đường dẫn ảnh
+    });
+
+    // Lưu vào cơ sở dữ liệu
+    const savedService = await newService.save();
+
+    res.status(201).json({
+      status: 201,
+      message: "Service added successfully",
+      data: savedService,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      status: 500,
+      message: "An error occurred while adding the service",
+    });
+  }
+});
+// API xóa dịch vụ theo ID
+router.delete("/delete-service/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("Delete request for ID:", id); // Log để kiểm tra id nhận được
+
+    const service = await Service.findById(id);
+    if (!service) {
+      return res.status(404).json({
+        status: 404,
+        message: "Service not found",
+      });
+    }
+
+    const deletedService = await Service.findByIdAndDelete(id);
+    res.status(200).json({
+      status: 200,
+      message: "Service deleted successfully",
+      data: deletedService,
+    });
+  } catch (error) {
+    console.error("Error deleting service:", error);
+    res.status(500).json({
+      status: 500,
+      message: "Internal server error",
+    });
+  }
+});
+
+// API lấy thông tin chi tiết dịch vụ theo ID
+router.get("/service/:id", async (req, res) => {
+  try {
+    const { id } = req.params; // Lấy ID từ đường dẫn
+    console.log("Fetching service details for ID:", id); // Log kiểm tra
+
+    // Tìm dịch vụ trong cơ sở dữ liệu
+    const service = await Service.findById(id);
+
+    if (!service) {
+      // Nếu không tìm thấy dịch vụ
+      return res.status(404).json({
+        status: 404,
+        message: "Service not found",
+      });
+    }
+
+    // Trả về chi tiết dịch vụ nếu tìm thấy
+    res.status(200).json({
+      status: 200,
+      message: "Service details retrieved successfully",
+      data: service,
+    });
+  } catch (error) {
+    console.error("Error fetching service details:", error);
+    res.status(500).json({
+      status: 500,
+      message: "An error occurred while retrieving the service details",
+    });
+  }
+});
+
+
+
 
 router.post("/room/:roomId/add_service", async (req, res) => {
   try {
@@ -453,23 +544,6 @@ router.post("/room/:roomId/add_service", async (req, res) => {
         message: "An error occurred while adding service to room",
         error: error.message,
       });
-  }
-});
-
-// API lấy danh sách dịch vụ
-router.get("/services", async (req, res) => {
-  try {
-    const services = await Service.find();
-    res.status(200).json({
-      status: 200,
-      message: "Services retrieved successfully",
-      data: services,
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while retrieving services" });
   }
 });
 
@@ -562,49 +636,49 @@ router.post("/login", async (req, res) => {
 
 //API Register and email
 // const Transporter = require('../config/common/mail')
-router.post("/register",async (req, res) => {
-    try {
-      const data = req.body;
-      // const { file } = req;
-      // const avatar = `${req.protocol}://${req.get("host")}/uploads/${file.filename}`;
+router.post("/register", async (req, res) => {
+  try {
+    const data = req.body;
+    // const { file } = req;
+    // const avatar = `${req.protocol}://${req.get("host")}/uploads/${file.filename}`;
 
-      const newUser = new users({
-        username: data.username,
-        password: data.password,
-        email: data.email,
-        phonenumber: data.phonenumber,
-        name: "",
-        gender: "",
-        address: "",
-        birthday:"",
-        role: data.role,
-        avatar: "",
+    const newUser = new users({
+      username: data.username,
+      password: data.password,
+      email: data.email,
+      phonenumber: data.phonenumber,
+      name: "",
+      gender: "",
+      address: "",
+      birthday: "",
+      role: data.role,
+      avatar: "",
+    });
+
+    const result = await newUser.save();
+
+    if (result) {
+      res.json({
+        status: 200,
+        message: "Thêm thành công",
+        data: result,
       });
-
-      const result = await newUser.save();
-
-      if (result) {
-        res.json({
-          status: 200,
-          message: "Thêm thành công",
-          data: result,
-        });
-      } else {
-        res.status(400).json({
-          status: 400,
-          message: "Lỗi, thêm không thành công",
-          data: [],
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({
-        status: 500,
-        message: "Đã xảy ra lỗi trong quá trình đăng ký",
-        error: error.message,
+    } else {
+      res.status(400).json({
+        status: 400,
+        message: "Lỗi, thêm không thành công",
+        data: [],
       });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: 500,
+      message: "Đã xảy ra lỗi trong quá trình đăng ký",
+      error: error.message,
+    });
   }
+}
 );
 
 //API voucher

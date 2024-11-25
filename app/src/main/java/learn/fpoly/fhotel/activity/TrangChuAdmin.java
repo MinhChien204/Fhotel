@@ -15,6 +15,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import learn.fpoly.fhotel.Fragment.HoaDonAdminFragment;
 import learn.fpoly.fhotel.Fragment.NotificationFragment;
+import learn.fpoly.fhotel.Fragment.QuanLiRoomFragment;
+import learn.fpoly.fhotel.Fragment.QuanLiServiceFragment;
 import learn.fpoly.fhotel.Fragment.QuanLiUserFragment;
 import learn.fpoly.fhotel.Fragment.ThongKeAdminFragment;
 import learn.fpoly.fhotel.R;
@@ -22,6 +24,7 @@ import learn.fpoly.fhotel.R;
 public class TrangChuAdmin extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FrameLayout frameLayout;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +42,10 @@ public class TrangChuAdmin extends AppCompatActivity {
                     loadFragment(new QuanLiUserFragment(), false);
                 } else if (itemID == R.id.navHoaDon) {
                     loadFragment(new HoaDonAdminFragment(), false);
+                } else if (itemID == R.id.navQlService) {
+                    loadFragment(new QuanLiServiceFragment(), false);
                 } else if (itemID == R.id.navNotification) {
-                    loadFragment(new NotificationFragment(), false);
+                    loadFragment(new QuanLiRoomFragment(), false);
                 } else {
                     loadFragment(new ThongKeAdminFragment(), false);
                 }

@@ -41,10 +41,10 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
     public void onBindViewHolder(@NonNull TopPlacesViewHolder holder, int position) {
 
         holder.room_name.setText(topPlacesDataList.get(position).getName());
-        holder.room_code.setText(topPlacesDataList.get(position).getRoomCode());
+        holder.room_code.setText(topPlacesDataList.get(position).getRoom_code());
         holder.price_room.setText(String.valueOf(topPlacesDataList.get(position).getPrice()));
         Glide.with(context)
-                .load(topPlacesDataList.get(position).getImage()) // URL của hình ảnh
+                .load(topPlacesDataList.get(position).getImage().get(0)) // URL của hình ảnh
                 .into(holder.room_image); // ImageView để hiển thị ảnh
 
     }

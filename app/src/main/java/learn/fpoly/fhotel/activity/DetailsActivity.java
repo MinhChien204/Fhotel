@@ -1,6 +1,5 @@
 package learn.fpoly.fhotel.activity;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,157 +17,168 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import learn.fpoly.fhotel.Adapter.ServiceAdapter;
 import learn.fpoly.fhotel.Fragment.PaymentFragment;
 import learn.fpoly.fhotel.Model.Room;
-import learn.fpoly.fhotel.Model.RoomService;
+import learn.fpoly.fhotel.Model.Service;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
+import learn.fpoly.fhotel.response.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
-import learn.fpoly.fhotel.response.Response;
 
-public class DetailsActivity extends AppCompatActivity {
-    private ImageView ivBack, ivFavorite, imgRom_details,imageView8;
+public class DetailsActivity extends AppCompatActivity implements ServiceAdapter.OnServiceSelectedListener {
+    private ImageView ivBack, imgRoomDetails;
     private Button btnBookingHotel;
-    private TextView txtdescription_details, txtprice_details, txtNamerom_details,txt_capacity;
-    private RatingBar txtRating_details;
+    private TextView txtDescription, txtPrice, txtNameRoom, txtCapacity;
+    private RatingBar ratingBarDetails;
+    private RecyclerView rvServices;
+
+    private ServiceAdapter serviceAdapter;
     private HttpRequest httpRequest;
-private RecyclerView rvServices;
-private ServiceAdapter serviceAdapter;
     private Room room;
-    @SuppressLint("WrongViewCast")
+    private float totalServicePrice = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        initViews();
+        setupRecyclerView();
 
-        // Khởi tạo HttpRequest
-        httpRequest = new HttpRequest();
-        rvServices = findViewById(R.id.rvServices);
-        rvServices.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        // Ánh xạ các view từ layout
-        txtNamerom_details = findViewById(R.id.txtNamerom_details);
-        txtRating_details = findViewById(R.id.ratingBarDetail);
-        txtdescription_details = findViewById(R.id.txtdescription_details);
-        txtprice_details = findViewById(R.id.txtprice_details);
-        txt_capacity =findViewById(R.id.tvcapacity);
-        ivBack = findViewById(R.id.ivBack);
-        ivFavorite = findViewById(R.id.ivFavorite);
-        btnBookingHotel = findViewById(R.id.buttonBooking);
-        imgRom_details = findViewById(R.id.imgRom_details);
-        serviceAdapter = new ServiceAdapter(this, new ArrayList<>());
-        rvServices.setAdapter(serviceAdapter);
-
-        // Nhận dữ liệu room_id từ Intent
         String roomId = getIntent().getStringExtra("room_id");
-        Log.d("dcm", "onCreate: " + roomId);
-
-        // Kiểm tra nếu ID hợp lệ và gọi API
-        if (roomId != null && !roomId.isEmpty()) {
-            fetchRoomById(roomId);
-            fetchServiceByRoomId(roomId);
-        } else {
-            Toast.makeText(this, "Invalid Room ID", Toast.LENGTH_SHORT).show();
+        if (roomId == null || roomId.isEmpty()) {
+            showToast("Invalid Room ID");
+            return;
         }
 
-        // Xử lý sự kiện quay lại
-        ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();  // Quay lại màn hình trước
-            }
-        });
+        fetchRoomById(roomId);
+        fetchServices();
 
-        // Xử lý sự kiện khi nhấn nút đặt phòng
-        btnBookingHotel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PaymentFragment paymentFragment = new PaymentFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("room_name", txtNamerom_details.getText().toString());
-                bundle.putFloat("room_rating", txtRating_details.getRating());
-                bundle.putString("room_description", txtdescription_details.getText().toString());
-                bundle.putString("room_price", txtprice_details.getText().toString());
-                bundle.putString("room_image", room.getImage()); // Lấy URL ảnh từ đối tượng room
-                bundle.putString("room_capacity", txt_capacity.getText().toString());
-                // Gán Bundle cho Fragment
-                paymentFragment.setArguments(bundle);
-
-                // Use FragmentTransaction to replace the fragment container with PaymentFragment
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-                // Thay thế Fragment hiện tại bằng PaymentFragment
-                transaction.replace(R.id.fragment_container, paymentFragment);
-                transaction.addToBackStack(null);  // Add to backstack to allow back navigation
-                transaction.commit();
-            }
-        });
+        ivBack.setOnClickListener(v -> onBackPressed());
+        btnBookingHotel.setOnClickListener(v -> openPaymentFragment());
     }
 
-    public void fetchRoomById(String roomId) {
-        Call<Response<Room>> call = httpRequest.callAPI().getRoomById(roomId);
-        call.enqueue(new Callback<Response<Room>>() {
+    private void initViews() {
+        ivBack = findViewById(R.id.ivBack);
+        imgRoomDetails = findViewById(R.id.imgRom_details);
+        btnBookingHotel = findViewById(R.id.buttonBooking);
+        txtNameRoom = findViewById(R.id.txtNamerom_details);
+        ratingBarDetails = findViewById(R.id.ratingBarDetail);
+        txtDescription = findViewById(R.id.txtdescription_details);
+        txtPrice = findViewById(R.id.txtprice_details);
+        txtCapacity = findViewById(R.id.tvcapacity);
+        rvServices = findViewById(R.id.rvServices);
+        httpRequest = new HttpRequest();
+    }
+
+    private void setupRecyclerView() {
+        rvServices.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        serviceAdapter = new ServiceAdapter(this, new ArrayList<>(), this);
+        rvServices.setAdapter(serviceAdapter);
+    }
+
+    private void fetchRoomById(String roomId) {
+        httpRequest.callAPI().getRoomById(roomId).enqueue(new Callback<Response<Room>>() {
             @Override
             public void onResponse(Call<Response<Room>> call, retrofit2.Response<Response<Room>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Response<Room> roomResponse = response.body(); // Lấy đối tượng Response
-                    if (roomResponse.getStatus() == 200) { // Kiểm tra status
-                        room = roomResponse.getData(); // Lấy dữ liệu Room
-                        Log.d("room", "onResponse: " + room);
-                        // Gán dữ liệu phòng vào các View
-                        txtNamerom_details.setText(room.getName());
-                        txtRating_details.setRating(Float.parseFloat(String.valueOf(room.getRating())));
-                        txtdescription_details.setText(room.getDescription());
-                        txtprice_details.setText(String.valueOf(room.getPrice()));
-                        txt_capacity.setText(String.valueOf(room.getCapacity()) +"  person");
-                        // Nếu có hình ảnh, hãy gán nó vào imgRom_details
-                        Glide.with(DetailsActivity.this)
-                                .load(room.getImage()) // Thay `getImageUrl()` bằng phương thức lấy URL ảnh
-                                .into(imgRom_details);
-                    } else {
-                        Toast.makeText(DetailsActivity.this, "Room not found: " + roomResponse.getMessenger(), Toast.LENGTH_SHORT).show();
-                    }
+                if (response.isSuccessful() && response.body() != null && response.body().getStatus() == 200) {
+                    room = response.body().getData();
+                    updateRoomDetails();
                 } else {
-                    Toast.makeText(DetailsActivity.this, "Room not found", Toast.LENGTH_SHORT).show();
+                    logAndToastError("Failed to load room details", response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<Response<Room>> call, Throwable t) {
-                Toast.makeText(DetailsActivity.this, "Failed to load room details: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                logAndToastError("Failed to load room details", t.getMessage());
             }
         });
     }
-    public void fetchServiceByRoomId(String roomId) {
-        Call<Response<ArrayList<RoomService>>> call = httpRequest.callAPI().getServiceByIdRoom(roomId);
-        call.enqueue(new Callback<Response<ArrayList<RoomService>>>() {
+
+    private void fetchServices() {
+        httpRequest.callAPI().getServices().enqueue(new Callback<Response<ArrayList<Service>>>() {
             @Override
-            public void onResponse(Call<Response<ArrayList<RoomService>>> call, retrofit2.Response<Response<ArrayList<RoomService>>> response) {
+            public void onResponse(Call<Response<ArrayList<Service>>> call, retrofit2.Response<Response<ArrayList<Service>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Response<ArrayList<RoomService>> roomResponse = response.body();
-                    if (roomResponse.getStatus() == 200) {
-                        ArrayList<RoomService> services = roomResponse.getData();
-
-                        // Update RecyclerView with fetched services
-                        serviceAdapter.updateData(services); // Assuming you have an updateData method in ServiceAdapter
-
-                        Toast.makeText(DetailsActivity.this, "Services loaded successfully", Toast.LENGTH_SHORT).show();
+                    List<Service> services = response.body().getData();
+                    if (services != null && !services.isEmpty()) {
+                        serviceAdapter.setServices(services);
+                        serviceAdapter.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(DetailsActivity.this, "Services not found: " + roomResponse.getMessenger(), Toast.LENGTH_SHORT).show();
+                        showToast("No services available");
                     }
                 } else {
-                    Toast.makeText(DetailsActivity.this, "Failed to load services", Toast.LENGTH_SHORT).show();
+                    logAndToastError("Failed to load services", response.message());
                 }
             }
 
             @Override
-            public void onFailure(Call<Response<ArrayList<RoomService>>> call, Throwable t) {
-                Toast.makeText(DetailsActivity.this, "Failed to load services: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<Response<ArrayList<Service>>> call, Throwable t) {
+                logAndToastError("Failed to load services", t.getMessage());
             }
         });
     }
+
+    private void updateRoomDetails() {
+        if (room == null) return;
+
+        txtNameRoom.setText(room.getName());
+        ratingBarDetails.setRating(Float.parseFloat(String.valueOf(room.getRating())));
+        txtDescription.setText(room.getDescription());
+        txtPrice.setText(String.format("$%.2f", room.getPrice()));
+        txtCapacity.setText(String.format("%d persons", room.getCapacity()));
+
+        Glide.with(this)
+                .load(room.getImage().get(0))
+                .into(imgRoomDetails);
+    }
+
+    @Override
+    public void onServiceSelected(List<Service> selectedServices) {
+        totalServicePrice = 0;
+        for (Service service : selectedServices) {
+            totalServicePrice += service.getPrice();
+        }
+        // Cập nhật giá phòng + dịch vụ
+        float totalPrice = (float) (room.getPrice() + totalServicePrice);
+        txtPrice.setText(String.format("$%.2f", totalPrice));
+    }
+
+    private void openPaymentFragment() {
+        if (room == null) {
+            showToast("Room details not loaded yet.");
+            return;
+        }
+
+        PaymentFragment paymentFragment = new PaymentFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("room_name", room.getName());
+        bundle.putFloat("room_rating", Float.parseFloat(String.valueOf(room.getRating())));
+        bundle.putString("room_description", room.getDescription());
+        bundle.putString("room_price", String.format("$%.2f", room.getPrice() + totalServicePrice));
+        bundle.putString("room_image", room.getImage().get(0));
+        bundle.putString("room_capacity", String.format("%d persons", room.getCapacity()));
+
+        paymentFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, paymentFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void logAndToastError(String message, String errorDetail) {
+        Log.e("DetailsActivity", message + " " + errorDetail);
+        showToast(message);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 }
+

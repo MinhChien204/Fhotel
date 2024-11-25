@@ -1,6 +1,7 @@
 package learn.fpoly.fhotel.Model;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class Room {
     @SerializedName("_id")
@@ -9,15 +10,12 @@ public class Room {
     private Double price;
     private Double rating;
     private String description;
-    private String image;
+    private List<String> image; // Thay đổi kiểu dữ liệu thành List<String>
     private int capacity;
     private String room_code;
     private String status;
 
-
-    // Constructor
-
-    public Room(String id, String name, Double price, Double rating, String description, String image, int capacity, String room_code, String status) {
+    public Room(String id, String name, Double price, Double rating, String description, List<String> image, int capacity, String room_code, String status) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -28,8 +26,6 @@ public class Room {
         this.room_code = room_code;
         this.status = status;
     }
-
-    // Getters và Setters
 
     public String getId() {
         return id;
@@ -51,7 +47,7 @@ public class Room {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -59,7 +55,7 @@ public class Room {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -71,11 +67,11 @@ public class Room {
         this.description = description;
     }
 
-    public String getImage() {
+    public List<String> getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(List<String> image) {
         this.image = image;
     }
 
@@ -87,11 +83,11 @@ public class Room {
         this.capacity = capacity;
     }
 
-    public String getRoomCode() {
+    public String getRoom_code() {
         return room_code;
     }
 
-    public void setRoomCode(String room_code) {
+    public void setRoom_code(String room_code) {
         this.room_code = room_code;
     }
 
@@ -102,5 +98,4 @@ public class Room {
     public void setStatus(String status) {
         this.status = status;
     }
-
 }

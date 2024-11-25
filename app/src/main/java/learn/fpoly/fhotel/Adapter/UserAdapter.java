@@ -49,9 +49,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         User user = list.get(position);
 
         Glide.with(holder.itemView.getContext()).load(user.getAvatar()).into(holder.imgUser);
-        holder.txtUserName.setText("Name:"+user.getName());
-        holder.txtUserPhone.setText("Phone:"+user.getPhonenumber());
-        holder.txtUserAddress.setText("Address:"+user.getAddress());
+        holder.txtUserName.setText("Name:" + user.getName());
+        holder.txtUserPhone.setText("Phone:" + user.getPhonenumber());
+        holder.txtUserAddress.setText("Address:" + user.getAddress());
 
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +71,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public class UserViewHolder extends RecyclerView.ViewHolder {
         ImageView imgUser, imgDelete;
         TextView txtUserName, txtUserPhone, txtUserAddress;
+
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             imgUser = itemView.findViewById(R.id.imgAvatarUser);

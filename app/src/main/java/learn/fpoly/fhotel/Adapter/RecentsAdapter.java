@@ -43,10 +43,10 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
     public void onBindViewHolder(@NonNull RecentsViewHolder holder, int position) {
         Room room = recentsDataList.get(position);
         holder.room_name.setText(room.getName());
-        holder.room_code.setText(room.getRoomCode());
+        holder.room_code.setText(room.getRoom_code());
         holder.price_room.setText(String.valueOf(room.getPrice()));
         Glide.with(context)
-                .load(recentsDataList.get(position).getImage()) // URL của hình ảnh
+                .load(recentsDataList.get(position).getImage().get(0))
                 .into(holder.room_image); // ImageView để hiển thị ảnh
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
