@@ -12,8 +12,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primaryColor"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:background="@color/primaryColor">
 
         <!-- Nút Back -->
         <ImageView
@@ -290,8 +289,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:src="@drawable/promotion"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -316,6 +315,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:text="$120 * 2 nights = $240"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 

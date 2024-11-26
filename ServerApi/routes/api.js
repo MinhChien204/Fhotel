@@ -12,7 +12,10 @@ const Room = require("../models/Room");
 const RoomService = require("../models/roomservice");
 const Service = require("../models/service");
 const Voucher = require("../models/vouchers");
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = 'Fhotel'; 
 // CRUD Hotel
 //APi hiển thi danh sách khách sạn
 router.get("/hotel", async (req, res) => {
@@ -524,88 +527,101 @@ router.get("/hotels", async (req, res) => {
 // });
 
 //API Login with JsonWebToken
-// const JWT  = require('jsonwebtoken');
-// const SECRETKEY = 'FPTPOLYTECHNIC'
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-    const user = await users.findOne({ username, password });
+    const user = await users.findOne({ username });
+
     if (user) {
-      //Token người dùng sẽ dược sử dụng gửi lên trên header mỗi lần gọi API
-      // const token = JWT.sign({id: user._id},SECRETKEY,{expiresIn:'1h'});
-      //Khi token hết hạn , người dùng sẽ call 1 api khác để lấy token mới
-      //người dùng truyền refreshToken lên để nhận 1 cặp token ,refreshToken mới
-      // const refreshToken = JWT.sign({id:user._id},SECRETKEY,{expiresIn:'1d'});
-      //expiresIn thời gian token
-      res.status(200).json({
+      // So sánh mật khẩu
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (isPasswordValid) {
+        // Tạo JWT
+        const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
+        const refreshToken = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '1d' });
+
+        // Kiểm tra role
+        if (user.role === 0) { // Role 0: Admin
+          res.status(200).json({
+            status: 200,
+            message: "Login thành công: Admin",
+            role: user.role,
+            id: user._id,
+            token: token,
+            refreshToken: refreshToken,
+          });
+        } else {
+          res.status(403).json({
+            status: 403,
+            message: "Bạn không có quyền truy cập quản trị viên",
+          });
+        }
+      } else {
+        res.status(400).json({
+          status: 400,
+          message: "Mật khẩu không chính xác",
+        });
+      }
+    } else {
+      res.status(400).json({
+        status: 400,
+        message: "Tên đăng nhập không tồn tại",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Lỗi máy chủ nội bộ",
+    });
+  }
+});
+//API Register and email
+// const Transporter = require('../config/common/mail')
+router.post("/register", async (req, res) => {
+  try {
+    const data = req.body;
+
+    // Mã hóa mật khẩu
+    const hashedPassword = await bcrypt.hash(data.password, saltRounds);
+
+    const newUser = new users({
+      username: data.username,
+      password: hashedPassword, // Lưu mật khẩu đã mã hóa
+      email: data.email,
+      phonenumber: data.phonenumber,
+      name: "",
+      gender: "",
+      address: "",
+      birthday: "",
+      role: data.role,
+      avatar: "",
+    });
+
+    const result = await newUser.save();
+
+    if (result) {
+      res.json({
         status: 200,
-        message: "Login successful",
-        role: user.role,
-        id: user.id
-
-
-        // "token":token,
-        // "refreshToken":refreshToken
+        message: "Đăng ký thành công",
+        data: result,
       });
     } else {
       res.status(400).json({
         status: 400,
-        message: "Login failed: Incorrect username or password",
+        message: "Đăng ký không thành công",
         data: [],
       });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      status: 500,
+      message: "Đã xảy ra lỗi trong quá trình đăng ký",
+      error: error.message,
+    });
   }
 });
-
-//API Register and email
-// const Transporter = require('../config/common/mail')
-router.post("/register",async (req, res) => {
-    try {
-      const data = req.body;
-      // const { file } = req;
-      // const avatar = `${req.protocol}://${req.get("host")}/uploads/${file.filename}`;
-
-      const newUser = new users({
-        username: data.username,
-        password: data.password,
-        email: data.email,
-        phonenumber: data.phonenumber,
-        name: "",
-        gender: "",
-        address: "",
-        birthday:"",
-        role: data.role,
-        avatar: "",
-      });
-
-      const result = await newUser.save();
-
-      if (result) {
-        res.json({
-          status: 200,
-          message: "Thêm thành công",
-          data: result,
-        });
-      } else {
-        res.status(400).json({
-          status: 400,
-          message: "Lỗi, thêm không thành công",
-          data: [],
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({
-        status: 500,
-        message: "Đã xảy ra lỗi trong quá trình đăng ký",
-        error: error.message,
-      });
-    }
-  }
-);
 
 //API voucher
 router.post('/add_voucher', async (req, res) => {
