@@ -88,6 +88,7 @@ private ServiceAdapter serviceAdapter;
                 PaymentFragment paymentFragment = new PaymentFragment();
 
                 Bundle bundle = new Bundle();
+                bundle.putString("room_id", roomId);
                 bundle.putString("room_name", txtNamerom_details.getText().toString());
                 bundle.putFloat("room_rating", txtRating_details.getRating());
                 bundle.putString("room_description", txtdescription_details.getText().toString());
