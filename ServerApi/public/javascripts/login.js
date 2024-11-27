@@ -20,15 +20,45 @@ const loginUser = async () => {
         const result = await response.json();
 
         if (response.ok) {
-            alert('Login thành công');
-            window.location.href = '/dashbroad';
+            // Kiểm tra role từ API
+            if (result.role === 0) { // Nếu là admin (role = 0)
+                // Hiển thị thông báo đăng nhập thành công
+                Swal.fire({
+                    title: 'Đăng nhập thành công!',
+                    text: 'Chào mừng bạn đến với Dashboard.',
+                    icon: 'success',
+                    confirmButtonText: 'Đi tới Dashboard',
+                }).then(() => {
+                    // Chuyển hướng đến Dashboard
+                    window.location.href = '/dashbroad';
+                });
+            } else {
+                // Hiển thị thông báo không đủ quyền
+                Swal.fire({
+                    title: 'Bạn không đủ quyền',
+                    text: 'Chỉ quản trị viên mới được phép đăng nhập.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK',
+                });
+            }
         } else {
-            alert(result.message || 'Login không thành công');
+            // Hiển thị thông báo lỗi nếu đăng nhập không thành công
+            Swal.fire({
+                title: 'Đăng nhập không thành công',
+                text: result.message || 'Vui lòng kiểm tra lại thông tin.',
+                icon: 'error',
+                confirmButtonText: 'Thử lại',
+            });
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Đã xảy ra lỗi khi gửi yêu cầu');
-    } 
+        Swal.fire({
+            title: 'Đã xảy ra lỗi!',
+            text: 'Vui lòng thử lại sau.',
+            icon: 'error',
+            confirmButtonText: 'Đóng',
+        });
+    }
 };
 
 loginForm.addEventListener('submit', event => {

@@ -15,7 +15,7 @@ const Voucher = require("../models/vouchers");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'Fhotel'; 
+const SECRET_KEY = process.env.SECRET_KEY; 
 // CRUD Hotel
 //APi hiển thi danh sách khách sạn
 router.get("/hotel", async (req, res) => {
@@ -532,48 +532,34 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
     const user = await users.findOne({ username });
 
-    if (user) {
-      // So sánh mật khẩu
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-
-      if (isPasswordValid) {
-        // Tạo JWT
-        const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
-        const refreshToken = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '1d' });
-
-        // Kiểm tra role
-        if (user.role === 0) { // Role 0: Admin
-          res.status(200).json({
-            status: 200,
-            message: "Login thành công: Admin",
-            role: user.role,
-            id: user._id,
-            token: token,
-            refreshToken: refreshToken,
-          });
-        } else {
-          res.status(403).json({
-            status: 403,
-            message: "Bạn không có quyền truy cập quản trị viên",
-          });
-        }
-      } else {
-        res.status(400).json({
-          status: 400,
-          message: "Mật khẩu không chính xác",
-        });
-      }
-    } else {
-      res.status(400).json({
-        status: 400,
-        message: "Tên đăng nhập không tồn tại",
-      });
+    if (!user) {
+      return res.status(400).json({ message: "Tên đăng nhập không tồn tại" });
     }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Lỗi máy chủ nội bộ",
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Mật khẩu không chính xác" });
+    }
+
+    const token = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, {
+      expiresIn: "1h",
     });
+    const refreshToken = jwt.sign({ id: user._id }, SECRET_KEY, {
+      expiresIn: "1d",
+    });
+
+    res.status(200).json({
+      status: 200,
+      message: "Login thành công",
+      role: user.role,
+      id: user._id,
+      token: token,
+      refreshToken: refreshToken,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi máy chủ nội bộ" });
   }
 });
 //API Register and email

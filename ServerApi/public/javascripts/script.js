@@ -74,3 +74,53 @@ switchMode.addEventListener('change', function () {
 		document.body.classList.remove('dark');
 	}
 })
+
+function logout() {
+	// Xóa token khỏi localStorage
+	localStorage.removeItem("token");
+
+	// Gửi request logout đến server (nếu bạn cần thu hồi token trên server)
+	fetch("/logout", {
+	  method: "POST",
+	  headers: {
+		"Authorization": `Bearer ${localStorage.getItem("token")}`,
+	  },
+	})
+	.then(response => response.json())
+	.then(data => {
+	  console.log(data.message); // Thông báo đăng xuất thành công từ server
+
+	  // Hiển thị thông báo đăng xuất thành công bằng SweetAlert2
+	  Swal.fire({
+		title: 'Đăng xuất thành công!',
+		text: 'Bạn sẽ được chuyển đến trang đăng nhập.',
+		icon: 'success',
+		confirmButtonText: 'OK'
+	  }).then(() => {
+		// Điều hướng đến trang login sau khi đóng thông báo
+		window.location.href = "/"; // Điều hướng đến trang login
+	  });
+	})
+	.catch(error => {
+	  console.error("Error during logout:", error);
+	  // Hiển thị thông báo lỗi khi không thể đăng xuất
+	  Swal.fire({
+		title: 'Có lỗi xảy ra!',
+		text: 'Không thể đăng xuất. Vui lòng thử lại sau.',
+		icon: 'error',
+		confirmButtonText: 'OK'
+	  });
+	});
+  }
+
+  // Hàm để tải nội dung khi click vào các mục trong sidebar
+const loadContent = async (page) => {
+	try {
+	  const response = await fetch(`/${page}`);  // Gọi tới API hoặc trang cho nội dung tương ứng
+	  const content = await response.text();    // Lấy nội dung trả về
+	  document.getElementById('content').innerHTML = content; // Cập nhật nội dung vào phần content
+	} catch (error) {
+	  console.error('Error loading content:', error);
+	}
+  };
+  
