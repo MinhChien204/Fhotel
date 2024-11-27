@@ -791,28 +791,56 @@ router.get("/user/:userId/bookings", async (req, res) => {
 
 
 // Cập nhật trạng thái booking
-router.put("/update_booking/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
+router.put("/update-status-booking/:id", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
 
-    const updatedBooking = await Booking.findByIdAndUpdate(
+  try {
+    
+    if (!["pending", "confirmed", "cancelled"].includes(status)) {
+      return res.status(400).json({ message: "Trạng thái không hợp lệ" });
+    }
+
+    const booking = await Booking.findByIdAndUpdate(
       id,
       { status },
       { new: true }
     );
 
-    if (!updatedBooking) {
-      return res.status(404).json({ message: "Booking not found" });
+    if (!booking) {
+      return res.status(404).json({ message: "Không tìm thấy booking" });
     }
 
     res.status(200).json({
-      message: "Booking status updated successfully",
-      data: updatedBooking,
+      message: "Bookings update successfully",
+      data: booking,
     });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ message: "An error occurred while updating booking" });
+    res.status(500).json({ message: "Lỗi server", error });
+  }
+});
+
+router.put("/update-status-room/:id", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const room = await Room.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!room) {
+      return res.status(404).json({ message: "Không tìm thấy room" });
+    }
+
+    res.status(200).json({
+      message: "room update successfully",
+      data: room,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi server", error });
   }
 });
 
@@ -833,6 +861,17 @@ router.delete("/cancel_booking/:id", async (req, res) => {
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ message: "An error occurred while cancelling booking" });
+  }
+});
+
+// API lấy tất cả các booking
+router.get('/bookings', async (req, res) => {
+  try {
+    const bookings = await Booking.find();
+    res.status(200).json(bookings); // Trả về danh sách các booking dưới dạng JSON
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' }); // Nếu có lỗi server
   }
 });
 

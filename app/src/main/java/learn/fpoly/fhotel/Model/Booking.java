@@ -3,7 +3,7 @@ package learn.fpoly.fhotel.Model;
 import com.google.gson.annotations.SerializedName;
 
 public class Booking {
-    @SerializedName("id")
+    @SerializedName("_id")
     private String id;
 
     @SerializedName("userId")
@@ -28,7 +28,9 @@ public class Booking {
 
     public Booking() {
     }
-
+    public Booking(String status) {
+        this.status = status;
+    }
 
     public Booking(String userId, String roomId, String startDate, String endDate, double totalPrice) {
         this.userId = userId;

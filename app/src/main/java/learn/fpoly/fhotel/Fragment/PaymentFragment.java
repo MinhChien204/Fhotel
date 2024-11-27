@@ -2,6 +2,7 @@ package learn.fpoly.fhotel.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -24,8 +25,10 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import learn.fpoly.fhotel.Model.Booking;
+import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
+import learn.fpoly.fhotel.activity.Home_User;
 import learn.fpoly.fhotel.dialog.SelectDateBottomSheet;
 import learn.fpoly.fhotel.dialog.SelectGuestBottomSheet;
 import retrofit2.Call;
@@ -37,7 +40,7 @@ public class PaymentFragment extends Fragment {
     ImageView btnback, roomImage;
     Button btnpay;
     RatingBar ratingBar;
-    private String userId;
+    private String userId, roomId;
     private int numberOfNights = 0; // Số đêm mặc định
     private float roomPricePerNight = 120; // Giá phòng mỗi đêm mặc định
     @SuppressLint("MissingInflatedId")
@@ -60,69 +63,73 @@ public class PaymentFragment extends Fragment {
         ratingBar = view.findViewById(R.id.ratingBarPayment);
         btnpay = view.findViewById(R.id.pay_now_button);
 
+        totalPrice.setText("$0.00");
+        tvPriceDetails.setText("Room Price: $0.00\nNumber of nights: 0\nTotal Price: $0.00");
+
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", null);
 
-        // Xử lý sự kiện chọn ngày
-        tvdate.setOnClickListener(v -> {
-            // Tạo và hiển thị bottom sheet chọn ngày
-            SelectDateBottomSheet bottomSheet = new SelectDateBottomSheet();
-            bottomSheet.setOnDateSelectedListener(dateRange -> {
-                // Cập nhật TextView với ngày đã chọn
-                tvdate.setText(dateRange);
+        // Extract the roomId from the bundle
 
-                numberOfNights = calculateNights(dateRange);
-
-                if (numberOfNights > 0) {
-                    // Nếu có số đêm hợp lệ, cập nhật tổng giá
-                    updatePriceDetails();
-                } else {
-                    Toast.makeText(getContext(), "Invalid date range selected", Toast.LENGTH_SHORT).show();
-                }
-            });
-            bottomSheet.show(getParentFragmentManager(), "SelectDateBottomSheet");
-        });
-
-        // Xử lý sự kiện chọn khách
-        tvPerson.setOnClickListener(view1 -> showSelectGuestBottomSheet());
-
-        //booking
-        btnpay.setOnClickListener(v -> {
-            // Lấy thông tin cần thiết
-            String startDate = tvdate.getText().toString().split("To:")[0].replace("From:", "").trim();
-            String endDate = tvdate.getText().toString().split("To:")[1].trim();
-            float total = Float.parseFloat(totalPrice.getText().toString().replace("$", "").trim());
-            String roomId = getArguments().getString("room_id");  // Lấy roomId
-            // Kiểm tra thông tin hợp lệ
-            if (startDate.isEmpty() || endDate.isEmpty() || total <= 0) {
-                Toast.makeText(getContext(), "Invalid booking details", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Tạo đối tượng booking
-            Booking booking = new Booking(userId, roomId, startDate, endDate, total);
-
-            // Gọi API để tạo booking
-            createBooking(booking);
-        });
-
-
-        // Xử lý sự kiện nút Back
-        btnback.setOnClickListener(view1 -> {
-            if (getFragmentManager() != null && getFragmentManager().getBackStackEntryCount() > 0) {
-                getFragmentManager().popBackStack();
-            }
-        });
 
         Bundle arguments = getArguments();
         if (arguments != null) {
+            roomId = arguments.getString("room_id");
+            Log.d("roomid nek", "onCreateView: "+roomId);
             String roomName = arguments.getString("room_name");
             float roomRating = arguments.getFloat("room_rating", 0);
             String roomPrice = arguments.getString("room_price");
             String roomImageURL = arguments.getString("room_image");
             String roomCapacity = arguments.getString("room_capacity");
+            // Xử lý sự kiện chọn ngày
+            tvdate.setOnClickListener(v -> {
+                // Tạo và hiển thị bottom sheet chọn ngày
+                SelectDateBottomSheet bottomSheet = new SelectDateBottomSheet();
+                bottomSheet.setOnDateSelectedListener(dateRange -> {
+                    // Cập nhật TextView với ngày đã chọn
+                    tvdate.setText(dateRange);
 
-            // Gán dữ liệu vào các View
+                    numberOfNights = calculateNights(dateRange);
+
+                    if (numberOfNights > 0) {
+                        // Nếu có số đêm hợp lệ, cập nhật tổng giá
+                        updatePriceDetails();
+                    } else {
+                        Toast.makeText(getContext(), "Invalid date range selected", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                bottomSheet.show(getParentFragmentManager(), "SelectDateBottomSheet");
+            });
+
+            tvPerson.setOnClickListener(view1 -> showSelectGuestBottomSheet());
+
+            btnpay.setOnClickListener(v -> {
+                String dateRange = tvdate.getText().toString().trim();
+                if (dateRange.isEmpty() || !dateRange.contains("To:")) {
+                    Toast.makeText(getContext(), "Vui lòng chọn ngày đặt phòng!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String startDate = dateRange.split("To:")[0].replace("From:", "").trim();
+                String endDate = dateRange.split("To:")[1].trim();
+                float total = Float.parseFloat(totalPrice.getText().toString().replace("$", "").trim());
+                if (total <= 0) {
+                    Toast.makeText(getContext(), "Invalid booking details", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Booking booking = new Booking(userId, roomId, startDate, endDate, total);
+
+                createBooking(booking);
+            });
+
+
+            btnback.setOnClickListener(view1 -> {
+                if (getFragmentManager() != null && getFragmentManager().getBackStackEntryCount() > 0) {
+                    getFragmentManager().popBackStack();
+                }
+            });
+
+
             tvnameKS.setText(roomName);
             tvpriceKS.setText(roomPrice);
             ratingBar.setRating(roomRating);
@@ -210,12 +217,14 @@ public class PaymentFragment extends Fragment {
             @Override
             public void onResponse(Call<Response<Booking>> call, retrofit2.Response<Response<Booking>> response) {
                 if (response.isSuccessful()) {
-                    // Nếu booking thành công, hiển thị thông báo
+                    updateRoomAvailability(roomId, "unavailable");
                     Toast.makeText(getContext(), "Booking successful!", Toast.LENGTH_SHORT).show();
-                    // Có thể chuyển hướng đến màn hình khác
+                    Intent intent = new Intent(getActivity(), Home_User.class);
+                    intent.putExtra("fragment_to_load", R.id.navBooking_u);
+                    startActivity(intent);
+                    getActivity().finish();
                 } else {
-                    // Nếu có lỗi, hiển thị thông báo
-                    Toast.makeText(getContext(), "Booking failed: Không được đặt cùng số ngày ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Đã có người đặt cùng ngày phòng này", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -225,7 +234,26 @@ public class PaymentFragment extends Fragment {
             }
         });
     }
+    private void updateRoomAvailability(String roomId, String status) {
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Room>> call = httpRequest.callAPI().updateRoomStatus(roomId, new Room(status));
 
+        call.enqueue(new Callback<Response<Room>>() {
+            @Override
+            public void onResponse(Call<Response<Room>> call, retrofit2.Response<Response<Room>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("PaymentFragment", "Room status updated to: " + status);
+                } else {
+                    Log.e("PaymentFragment", "Failed to update room status");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Room>> call, Throwable t) {
+                Log.e("PaymentFragment", "Error updating room status: " + t.getMessage());
+            }
+        });
+    }
 
 
 

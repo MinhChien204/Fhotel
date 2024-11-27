@@ -17,6 +17,10 @@ public class Room {
 
     // Constructor
 
+    public Room(String status) {
+        this.status = status;
+    }
+
     public Room(String id, String name, Double price, Double rating, String description, String image, int capacity, String room_code, String status) {
         this.id = id;
         this.name = name;

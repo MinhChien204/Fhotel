@@ -31,7 +31,7 @@ import learn.fpoly.fhotel.response.Response;
 public class DetailsActivity extends AppCompatActivity {
     private ImageView ivBack, ivFavorite, imgRom_details,imageView8;
     private Button btnBookingHotel;
-    private TextView txtdescription_details, txtprice_details, txtNamerom_details,txt_capacity;
+    private TextView txtdescription_details, txtprice_details, txtNamerom_details,txt_capacity,txtstatusRoom;
     private RatingBar txtRating_details;
     private HttpRequest httpRequest;
 private RecyclerView rvServices;
@@ -54,6 +54,7 @@ private ServiceAdapter serviceAdapter;
         txtdescription_details = findViewById(R.id.txtdescription_details);
         txtprice_details = findViewById(R.id.txtprice_details);
         txt_capacity =findViewById(R.id.tvcapacity);
+        txtstatusRoom =findViewById(R.id.textView10);
         ivBack = findViewById(R.id.ivBack);
         ivFavorite = findViewById(R.id.ivFavorite);
         btnBookingHotel = findViewById(R.id.buttonBooking);
@@ -63,16 +64,6 @@ private ServiceAdapter serviceAdapter;
 
         // Nhận dữ liệu room_id từ Intent
         String roomId = getIntent().getStringExtra("room_id");
-        Log.d("dcm", "onCreate: " + roomId);
-
-        // Kiểm tra nếu ID hợp lệ và gọi API
-        if (roomId != null && !roomId.isEmpty()) {
-            fetchRoomById(roomId);
-            fetchServiceByRoomId(roomId);
-        } else {
-            Toast.makeText(this, "Invalid Room ID", Toast.LENGTH_SHORT).show();
-        }
-
         // Xử lý sự kiện quay lại
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,12 +114,26 @@ private ServiceAdapter serviceAdapter;
                         txtNamerom_details.setText(room.getName());
                         txtRating_details.setRating(Float.parseFloat(String.valueOf(room.getRating())));
                         txtdescription_details.setText(room.getDescription());
+                        txtstatusRoom.setText(room.getStatus());
                         txtprice_details.setText(String.valueOf(room.getPrice()));
-                        txt_capacity.setText(String.valueOf(room.getCapacity()) +"  person");
-                        // Nếu có hình ảnh, hãy gán nó vào imgRom_details
+                        txt_capacity.setText(String.valueOf(room.getCapacity()) + " person");
                         Glide.with(DetailsActivity.this)
-                                .load(room.getImage()) // Thay `getImageUrl()` bằng phương thức lấy URL ảnh
+                                .load(room.getImage())
                                 .into(imgRom_details);
+
+                        // Kiểm tra trạng thái phòng
+                        if (room.getStatus().equals("unavailable")) {
+                            btnBookingHotel.setText("Room Was Booked");
+                            btnBookingHotel.setBackgroundColor(getResources().getColor(R.color.black));
+                            btnBookingHotel.setBackgroundResource(R.drawable.book_button_bg);
+                            btnBookingHotel.setEnabled(false);
+                        } else {
+                            // Trạng thái phòng có sẵn, giữ nút Booking
+                            btnBookingHotel.setText("Start Booking Your Trip");
+                            btnBookingHotel.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+                            btnBookingHotel.setBackgroundResource(R.drawable.book_button_bg);
+                            btnBookingHotel.setEnabled(true);
+                        }
                     } else {
                         Toast.makeText(DetailsActivity.this, "Room not found: " + roomResponse.getMessenger(), Toast.LENGTH_SHORT).show();
                     }
@@ -143,6 +148,7 @@ private ServiceAdapter serviceAdapter;
             }
         });
     }
+
     public void fetchServiceByRoomId(String roomId) {
         Call<Response<ArrayList<RoomService>>> call = httpRequest.callAPI().getServiceByIdRoom(roomId);
         call.enqueue(new Callback<Response<ArrayList<RoomService>>>() {
@@ -170,5 +176,18 @@ private ServiceAdapter serviceAdapter;
                 Toast.makeText(DetailsActivity.this, "Failed to load services: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //de lam moi du lieu moi khi focus vao man nay
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String roomId = getIntent().getStringExtra("room_id");
+        if (roomId != null && !roomId.isEmpty()) {
+            fetchRoomById(roomId);
+            fetchServiceByRoomId(roomId);
+        } else {
+            Toast.makeText(this, "Invalid Room ID", Toast.LENGTH_SHORT).show();
+        }
     }
 }

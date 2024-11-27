@@ -112,7 +112,7 @@
                     android:id="@+id/textView8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Available flight :"
+                    android:text="Trạng thái:"
                     android:textColor="#044363"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="@+id/txtNamerom_details"
@@ -123,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="18 April, 2020"
+                    android:text=""
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -164,7 +164,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Available flight :"
+                    android:text="Sức chứa :"
                     android:textColor="#044363"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="@+id/txtNamerom_details"

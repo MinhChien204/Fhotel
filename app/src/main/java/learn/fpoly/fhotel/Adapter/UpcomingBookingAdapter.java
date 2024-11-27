@@ -1,11 +1,16 @@
 package learn.fpoly.fhotel.Adapter;
 
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,12 +20,20 @@ import java.util.List;
 
 import learn.fpoly.fhotel.Model.Booking;
 import learn.fpoly.fhotel.R;
+import learn.fpoly.fhotel.Retrofit.HttpRequest;
+import learn.fpoly.fhotel.activity.DetailsActivity;
+import learn.fpoly.fhotel.response.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class UpcomingBookingAdapter extends RecyclerView.Adapter<UpcomingBookingAdapter.BookingViewHolder> {
 
     private List<Booking> bookings;
 
-    public UpcomingBookingAdapter(List<Booking> bookings) {
+    private Context context;
+
+    public UpcomingBookingAdapter(Context context, List<Booking> bookings) {
+        this.context = context;
         this.bookings = bookings;
     }
 
@@ -47,12 +60,60 @@ public class UpcomingBookingAdapter extends RecyclerView.Adapter<UpcomingBooking
         }
 
         // Gán trạng thái đặt phòng
-        holder.tvBookingStatus.setText("Status: " + booking.getStatus());
+        holder.tvBookingStatus.setText("Trạng thái: " + booking.getStatus());
 
         // Gán các thông tin khác
-        holder.tvStartDate.setText("Start: " + booking.getStartDate());
-        holder.tvEndDate.setText("End: " + booking.getEndDate());
+        holder.tvStartDate.setText("Ngày bắt đầu: " + booking.getStartDate());
+        holder.tvEndDate.setText("Ngày kết thúc: " + booking.getEndDate());
         holder.tvTotalPrice.setText("$" + booking.getTotalPrice());
+
+        // Sự kiện khi nhấn vào item (chuyển đến màn chi tiết phòng)
+        holder.itemView.setOnClickListener(v -> {
+            // Lấy roomId từ booking
+            String roomId = booking.getRoom().getId(); // Giả sử Booking có thông tin về phòng
+
+            if (roomId != null && !roomId.isEmpty()) {
+                // Chuyển sang màn hình chi tiết phòng
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("room_id", roomId);  // Truyền room_id qua Intent
+                context.startActivity(intent);
+            } else {
+                Toast.makeText(context, "Thông tin phòng không hợp lệ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Sự kiện khi nhấn dài (có thể là để hủy booking)
+        holder.itemView.setOnLongClickListener(v -> {
+            String status = booking.getStatus().trim();
+            String bookingId = booking.getId();
+
+            if (bookingId == null || bookingId.isEmpty()) {
+                Toast.makeText(v.getContext(), "ID booking không hợp lệ", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (!status.equals("pending") && !status.equals("confirmed") && !status.equals("cancelled")) {
+                Toast.makeText(v.getContext(), "Trạng thái không hợp lệ", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            // Hiển thị Dialog để xác nhận
+            if (status.equals("pending")) {
+                new AlertDialog.Builder(v.getContext())
+                        .setTitle("Xác nhận hủy đặt phòng")
+                        .setMessage("Bạn có chắc chắn muốn hủy đặt phòng?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            String cancel = "cancelled";
+                            updateBookingStatus(bookingId, cancel);  // Gọi hàm cập nhật trạng thái
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+            } else {
+                Toast.makeText(v.getContext(), "Chỉ có thể hủy booking đang xử lý (pending)", Toast.LENGTH_SHORT).show();
+            }
+
+            return true;  // Trả về true để không gọi thêm hành động nhấn bình thường
+        });
     }
 
     @Override
@@ -74,5 +135,42 @@ public class UpcomingBookingAdapter extends RecyclerView.Adapter<UpcomingBooking
             tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
         }
     }
+
+    private void updateBookingStatus(String bookingId, String newStatus) {
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Booking>> call = httpRequest.callAPI().updateBookingStatus(bookingId, new Booking(newStatus));
+
+        call.enqueue(new Callback<Response<Booking>>() {
+            @Override
+            public void onResponse(Call<Response<Booking>> call, retrofit2.Response<Response<Booking>> response) {
+                if (response.isSuccessful()) {
+                    // Kiểm tra và cập nhật thông tin của booking chỉ cần thiết
+                    for (int i = 0; i < bookings.size(); i++) {
+                        Booking currentBooking = bookings.get(i);
+                        if (currentBooking.getId().equals(response.body().getData().getId())) {
+                            // Cập nhật chỉ trạng thái của booking, giữ nguyên các dữ liệu khác
+                            currentBooking.setStatus(response.body().getData().getStatus());
+                            // Nếu cần, có thể cập nhật thêm các thông tin khác như ngày bắt đầu, ngày kết thúc...
+                            notifyItemChanged(i);  // Cập nhật riêng phần tử này trong RecyclerView
+                            break;
+                        }
+                    }
+
+                    Toast.makeText(context, "Trạng thái đã được cập nhật!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Không thể cập nhật trạng thái", Toast.LENGTH_SHORT).show();
+                    Log.d("BookingStatus", "Response: " + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Booking>> call, Throwable t) {
+                Log.d("stbk", "onFailure: "+t);
+                Toast.makeText(context, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 }
 

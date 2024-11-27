@@ -52,25 +52,23 @@ public class UpcomingBookingFragment extends Fragment {
     }
 
     private void getBookings(String userId) {
-        // Khởi tạo Retrofit
         HttpRequest httpRequest = new HttpRequest();
         Call<Response<List<Booking>>> call = httpRequest.callAPI().getUserBookings(userId);
 
-        // Gửi yêu cầu đến server
         call.enqueue(new Callback<Response<List<Booking>>>() {
             @Override
             public void onResponse(Call<Response<List<Booking>>> call, retrofit2.Response<Response<List<Booking>>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body().getStatus() != 404) {
                     List<Booking> bookings = response.body().getData();
                     if (bookings != null && !bookings.isEmpty()) {
                         // Cập nhật RecyclerView với dữ liệu booking
-                        UpcomingBookingAdapter adapter = new UpcomingBookingAdapter(bookings);
+                        UpcomingBookingAdapter adapter = new UpcomingBookingAdapter(getContext(),bookings);
                         rcvListUpcomingBooking.setAdapter(adapter);
                     } else {
                         Toast.makeText(getContext(), "No upcoming bookings.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Failed to fetch bookings.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No room was found.", Toast.LENGTH_SHORT).show();
                 }
             }
 

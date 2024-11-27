@@ -59,9 +59,14 @@ public class Home_User extends AppCompatActivity {
             }
         });
 
-        // Set fragment mặc định khi mở Activity lần đầu
-        if (savedInstanceState == null) {
-            loadFragment(new Fragment_TrangChu());
+        if (getIntent() != null && getIntent().hasExtra("fragment_to_load")) {
+            int fragmentId = getIntent().getIntExtra("fragment_to_load", R.id.navHome_u);
+            bottomNavigationView.setSelectedItemId(fragmentId); // Chọn item trong BottomNavigationView
+        } else {
+            // Set fragment mặc định khi mở Activity lần đầu
+            if (savedInstanceState == null) {
+                loadFragment(new Fragment_TrangChu());
+            }
         }
     }
 
