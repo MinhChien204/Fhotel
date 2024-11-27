@@ -1,8 +1,8 @@
 package learn.fpoly.fhotel.Fragment;
 
-import static android.content.Intent.getIntent;
-
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -22,23 +23,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import learn.fpoly.fhotel.Model.Room;
+import learn.fpoly.fhotel.Model.Booking;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
-import learn.fpoly.fhotel.activity.DetailsActivity;
 import learn.fpoly.fhotel.dialog.SelectDateBottomSheet;
 import learn.fpoly.fhotel.dialog.SelectGuestBottomSheet;
-import learn.fpoly.fhotel.response.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
+import learn.fpoly.fhotel.response.Response;
 
 public class PaymentFragment extends Fragment {
-    TextView tvdate, tvPerson, tvnameKS, tvpriceKS, tvcapacityKS;
+    TextView tvdate, tvPerson, tvnameKS, tvpriceKS, tvcapacityKS, totalPrice, tvPriceDetails;
     ImageView btnback, roomImage;
-    HttpRequest httpRequest;
+    Button btnpay;
     RatingBar ratingBar;
-
-    private TextView priceDetailsTextView;
+    private String userId;
     private int numberOfNights = 0; // Số đêm mặc định
     private float roomPricePerNight = 120; // Giá phòng mỗi đêm mặc định
     @SuppressLint("MissingInflatedId")
@@ -55,11 +54,14 @@ public class PaymentFragment extends Fragment {
         tvnameKS = view.findViewById(R.id.titleText);
         tvpriceKS = view.findViewById(R.id.priceText);
         tvcapacityKS = view.findViewById(R.id.capacityText);
+        totalPrice = view.findViewById(R.id.totalPrice);
+        tvPriceDetails = view.findViewById(R.id.price_details);
         roomImage = view.findViewById(R.id.roomImage);
         ratingBar = view.findViewById(R.id.ratingBarPayment);
+        btnpay = view.findViewById(R.id.pay_now_button);
 
-        httpRequest = new HttpRequest(); // Khởi tạo HttpRequest
-
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString("userId", null);
 
         // Xử lý sự kiện chọn ngày
         tvdate.setOnClickListener(v -> {
@@ -73,9 +75,8 @@ public class PaymentFragment extends Fragment {
 
                 if (numberOfNights > 0) {
                     // Nếu có số đêm hợp lệ, cập nhật tổng giá
-                    updateTotalPrice();
+                    updatePriceDetails();
                 } else {
-                    // Nếu số đêm không hợp lệ, ẩn tổng giá hoặc thông báo lỗi
                     Toast.makeText(getContext(), "Invalid date range selected", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -84,6 +85,27 @@ public class PaymentFragment extends Fragment {
 
         // Xử lý sự kiện chọn khách
         tvPerson.setOnClickListener(view1 -> showSelectGuestBottomSheet());
+
+        //booking
+        btnpay.setOnClickListener(v -> {
+            // Lấy thông tin cần thiết
+            String startDate = tvdate.getText().toString().split("To:")[0].replace("From:", "").trim();
+            String endDate = tvdate.getText().toString().split("To:")[1].trim();
+            float total = Float.parseFloat(totalPrice.getText().toString().replace("$", "").trim());
+            String roomId = getArguments().getString("room_id");  // Lấy roomId
+            // Kiểm tra thông tin hợp lệ
+            if (startDate.isEmpty() || endDate.isEmpty() || total <= 0) {
+                Toast.makeText(getContext(), "Invalid booking details", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Tạo đối tượng booking
+            Booking booking = new Booking(userId, roomId, startDate, endDate, total);
+
+            // Gọi API để tạo booking
+            createBooking(booking);
+        });
+
 
         // Xử lý sự kiện nút Back
         btnback.setOnClickListener(view1 -> {
@@ -114,7 +136,6 @@ public class PaymentFragment extends Fragment {
         return view;
     }
 
-    // Hiển thị BottomSheet để chọn khách
     private void showSelectGuestBottomSheet() {
         SelectGuestBottomSheet bottomSheet = new SelectGuestBottomSheet();
         bottomSheet.setOnGuestSelectedListener((adults, children, infants) -> {
@@ -124,31 +145,88 @@ public class PaymentFragment extends Fragment {
         bottomSheet.show(getChildFragmentManager(), "SelectGuestBottomSheet");
     }
     private int calculateNights(String dateRange) {
+        if (dateRange == null || !dateRange.contains("To:")) {
+            Log.e("PaymentFragment", "Date range format is invalid: " + dateRange);
+            return 0;
+        }
         try {
-            // Giả sử dateRange có định dạng: "dd/MM/yyyy - dd/MM/yyyy"
-            String[] dates = dateRange.split(" - ");
+            String cleanedDateRange = dateRange.replace("From:", "").replace("To:", "").trim();
+            String[] dates = cleanedDateRange.split("\\s+");
+
+            if (dates.length < 2) {
+                Log.e("PaymentFragment", "Not enough dates in range: " + cleanedDateRange);
+                return 0;
+            }
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
-            Date startDate = format.parse(dates[0]);
-            Date endDate = format.parse(dates[1]);
+            Date startDate = format.parse(dates[0].trim());
+            Date endDate = format.parse(dates[1].trim());
 
-            // Tính số ngày giữa hai ngày
-            long diffInMillis = endDate.getTime() - startDate.getTime();
-            return (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+            if (startDate != null && endDate != null && endDate.after(startDate)) {
+                long diffInMillis = endDate.getTime() - startDate.getTime();
+                return (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+            } else {
+                Log.e("PaymentFragment", "Start date must be before end date");
+                return 0;
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return 0; // Mặc định trả về 0 nếu có lỗi
+            Log.e("PaymentFragment", "Error parsing date range: " + e.getMessage());
+            return 0;
         }
     }
-    private void updateTotalPrice() {
-        if (numberOfNights > 0 && roomPricePerNight > 0) {
-            float totalPrice = roomPricePerNight * numberOfNights; // Tính tổng giá
-            TextView totalPriceView = getView().findViewById(R.id.totalPrice);
-            totalPriceView.setText(String.format("$%.2f", totalPrice)); // Hiển thị tổng giá
-        } else {
-            TextView totalPriceView = getView().findViewById(R.id.totalPrice);
-            totalPriceView.setText("$0.00"); // Hiển thị giá 0 nếu chưa có thông tin đầy đủ
+
+    private void updatePriceDetails() {
+        try {
+            // Lấy giá trị từ TextView tvpriceKS và chuyển đổi sang float
+            String priceText = tvpriceKS.getText().toString().replace("$", "").trim();
+            float roomPrice = Float.parseFloat(priceText); // Chuyển đổi chuỗi thành số thực
+
+            // Tính toán tổng giá
+            if (numberOfNights > 0 && roomPrice > 0) {
+                float totalPriceValue = roomPrice * numberOfNights;
+
+                // Hiển thị tổng giá và chi tiết
+                totalPrice.setText(String.format("$%.2f", totalPriceValue));
+                tvPriceDetails.setText(String.format("Room Price: $%.2f\nNumber of nights: %d\nTotal Price: $%.2f",roomPrice, numberOfNights, totalPriceValue));
+            } else {
+                totalPrice.setText("$0.00");
+                tvPriceDetails.setText("Number of nights: 0\nTotal Price: $0.00");
+            }
+        } catch (NumberFormatException e) {
+            Log.e("PaymentFragment", "Error parsing room price: " + e.getMessage());
+            totalPrice.setText("$0.00");
+            tvPriceDetails.setText("Error calculating total price");
         }
     }
+
+    private void createBooking(Booking booking) {
+        // Khởi tạo Retrofit
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Booking>> call = httpRequest.callAPI().createBooking(booking);
+
+        // Gửi yêu cầu đến server
+        call.enqueue(new Callback<Response<Booking>>() {
+            @Override
+            public void onResponse(Call<Response<Booking>> call, retrofit2.Response<Response<Booking>> response) {
+                if (response.isSuccessful()) {
+                    // Nếu booking thành công, hiển thị thông báo
+                    Toast.makeText(getContext(), "Booking successful!", Toast.LENGTH_SHORT).show();
+                    // Có thể chuyển hướng đến màn hình khác
+                } else {
+                    // Nếu có lỗi, hiển thị thông báo
+                    Toast.makeText(getContext(), "Booking failed: Không được đặt cùng số ngày ", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Booking>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
 
 }

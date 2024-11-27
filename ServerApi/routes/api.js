@@ -7,15 +7,17 @@ const path = require("path");
 
 const hotels = require("../models/hotels");
 const TypeHotels = require("../models/typeHotels");
-const users = require("../models/users");
+const User = require("../models/users");
 const Room = require("../models/Room");
 const RoomService = require("../models/roomservice");
 const Service = require("../models/service");
 const Voucher = require("../models/vouchers");
+const Booking = require("../models/booking");
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = process.env.SECRET_KEY; 
+const SECRET_KEY = process.env.SECRET_KEY;
 // CRUD Hotel
 //APi hiển thi danh sách khách sạn
 router.get("/hotel", async (req, res) => {
@@ -31,7 +33,7 @@ router.get("/hotel", async (req, res) => {
 //   API hiển thị danh sách người dùng
 router.get("/user", async (req, res) => {
   try {
-    let user = await users.find();
+    let user = await User.find();
     res.send(user);
   } catch (error) {
     console.log("error");
@@ -53,7 +55,7 @@ router.post("/add_user", async (req, res) => {
       avatar,
     } = req.body;
 
-    const newUser = new users({
+    const newUser = new User({
       username,
       password,
       email,
@@ -80,7 +82,7 @@ router.post("/add_user", async (req, res) => {
 router.get("/detail_user/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await users.findById(id);
+    const user = await User.findById(id);
     if (user) {
       res.status(200).json({
         status: 200,
@@ -101,7 +103,7 @@ router.get("/detail_user/:id", async (req, res) => {
 router.get("/getuserbyid/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await users.findById(id);
+    const user = await User.findById(id);
     if (user) {
       res.status(200).json({
         status: 200,
@@ -133,7 +135,7 @@ router.put("/update_user/:id", async (req, res) => {
       avatar,
     } = req.body;
 
-    const updateUser = await users.findByIdAndUpdate(
+    const updateUser = await User.findByIdAndUpdate(
       id,
       {
         email,
@@ -530,7 +532,7 @@ router.get("/hotels", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-    const user = await users.findOne({ username });
+    const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(400).json({ message: "Tên đăng nhập không tồn tại" });
@@ -571,7 +573,7 @@ router.post("/register", async (req, res) => {
     // Mã hóa mật khẩu
     const hashedPassword = await bcrypt.hash(data.password, saltRounds);
 
-    const newUser = new users({
+    const newUser = new User({
       username: data.username,
       password: hashedPassword, // Lưu mật khẩu đã mã hóa
       email: data.email,
@@ -699,4 +701,139 @@ router.delete("/delete_voucher/:id", async (req, res) => {
     res.status(500).json({ message: "An error occurred while deleting voucher" });
   }
 });
+
+
+//booking
+
+router.post("/book_room", async (req, res) => {
+  try {
+    const { userId, roomId, startDate, endDate, totalPrice } = req.body;
+
+    // Kiểm tra user và phòng có tồn tại không
+    const user = await User.findById(userId);
+    const room = await Room.findById(roomId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    // Kiểm tra phòng có bị đặt trùng thời gian không
+    const overlappingBooking = await Booking.findOne({
+      roomId,
+      $or: [
+        { startDate: { $lte: endDate }, endDate: { $gte: startDate } },
+      ],
+    });
+
+    if (overlappingBooking) {
+      return res.status(400).json({ message: "Room is already booked during the selected dates" });
+    }
+
+    // Tạo booking mới
+    const newBooking = new Booking({
+      userId,
+      roomId,
+      startDate,
+      endDate,
+      totalPrice,
+    });
+
+    const savedBooking = await newBooking.save();
+    res.status(201).json({
+      message: "Room booked successfully",
+      data: savedBooking,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while booking room", error: error.message });
+  }
+});
+
+// Lấy tất cả bookings của user
+router.get("/user/:userId/bookings", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Truy vấn tất cả các booking của user
+    const bookings = await Booking.find({ userId });
+
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ message: "No bookings found for this user" });
+    }
+
+    // Lấy tất cả roomId của các booking
+    const roomIds = bookings.map(booking => booking.roomId);
+
+    // Truy vấn thông tin các phòng dựa trên roomIds
+    const rooms = await Room.find({ '_id': { $in: roomIds } });
+
+    if (!rooms || rooms.length === 0) {
+      return res.status(404).json({ message: "No rooms found for the bookings" });
+    }
+
+    // Kết hợp thông tin phòng vào mỗi booking
+    const bookingsWithRooms = bookings.map(booking => {
+      const room = rooms.find(room => room._id.toString() === booking.roomId.toString());
+      return { ...booking.toObject(), room }; // Thêm thông tin phòng vào mỗi booking
+    });
+
+    res.status(200).json({
+      message: "Bookings retrieved successfully",
+      data: bookingsWithRooms,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while retrieving bookings" });
+  }
+});
+
+
+// Cập nhật trạng thái booking
+router.put("/update_booking/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedBooking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json({
+      message: "Booking status updated successfully",
+      data: updatedBooking,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while updating booking" });
+  }
+});
+
+// Hủy booking
+router.delete("/cancel_booking/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedBooking = await Booking.findByIdAndDelete(id);
+
+    if (!deletedBooking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json({
+      message: "Booking cancelled successfully",
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while cancelling booking" });
+  }
+});
+
 module.exports = router;

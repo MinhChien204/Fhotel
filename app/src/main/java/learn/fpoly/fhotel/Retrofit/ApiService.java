@@ -3,6 +3,8 @@ package learn.fpoly.fhotel.Retrofit;
 import java.util.ArrayList;
 import java.util.List;
 
+import learn.fpoly.fhotel.Model.Booking;
+import learn.fpoly.fhotel.Model.BookingRequest;
 import learn.fpoly.fhotel.Model.LoginRequest;
 import learn.fpoly.fhotel.Model.PasswordUpdateRequest;
 import learn.fpoly.fhotel.response.LoginResponse;
@@ -72,4 +74,18 @@ public interface ApiService {
             @Path("id") String userId,
             @Body PasswordUpdateRequest passwordUpdateRequest
     );
+
+    //booking
+    @GET("api/user/{userId}/bookings")
+    Call<Response<List<Booking>>> getUserBookings(@Path("userId") String userId);
+
+    @POST("api/book_room")
+    Call<Response<Booking>> createBooking(@Body Booking booking);
+
+    @PUT("api/update_booking/{id}")
+    Call<Booking> updateBookingStatus(@Path("id") String bookingId, @Body Booking updatedBooking);
+
+    @DELETE("api/cancel_booking/{id}")
+    Call<Void> cancelBooking(@Path("id") String bookingId);
+
 }
