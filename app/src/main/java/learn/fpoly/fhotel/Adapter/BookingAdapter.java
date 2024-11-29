@@ -16,7 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import learn.fpoly.fhotel.Model.Booking;
 import learn.fpoly.fhotel.R;
@@ -26,13 +30,14 @@ import learn.fpoly.fhotel.response.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class UpcomingBookingAdapter extends RecyclerView.Adapter<UpcomingBookingAdapter.BookingViewHolder> {
-
+public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingViewHolder> {
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+    private SimpleDateFormat displayFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
     private List<Booking> bookings;
 
     private Context context;
 
-    public UpcomingBookingAdapter(Context context, List<Booking> bookings) {
+    public BookingAdapter(Context context, List<Booking> bookings) {
         this.context = context;
         this.bookings = bookings;
     }
@@ -59,9 +64,14 @@ public class UpcomingBookingAdapter extends RecyclerView.Adapter<UpcomingBooking
                     .into(holder.ivRoomImage);
         }
 
-        // Gán trạng thái đặt phòng
-        holder.tvBookingStatus.setText("Trạng thái: " + booking.getStatus());
+        try {
+            Date createdAt = dateFormat.parse(booking.getCreatedAt());
+            holder.tvCreatedAt.setText("Ngày đặt: " + displayFormat.format(createdAt));
+        } catch (Exception e) {
+            holder.tvCreatedAt.setText("Ngày đặt: Không xác định");
+        }
 
+        holder.tvBookingStatus.setText("Trạng thái: " + booking.getStatus());
         // Gán các thông tin khác
         holder.tvStartDate.setText("Ngày bắt đầu: " + booking.getStartDate());
         holder.tvEndDate.setText("Ngày kết thúc: " + booking.getEndDate());
@@ -122,7 +132,7 @@ public class UpcomingBookingAdapter extends RecyclerView.Adapter<UpcomingBooking
     }
 
     public class BookingViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoomName, tvStartDate, tvEndDate, tvTotalPrice, tvBookingStatus;
+        TextView tvRoomName, tvStartDate, tvEndDate, tvTotalPrice, tvBookingStatus,tvCreatedAt;
         ImageView ivRoomImage;
 
         public BookingViewHolder(View itemView) {
@@ -133,6 +143,7 @@ public class UpcomingBookingAdapter extends RecyclerView.Adapter<UpcomingBooking
             tvStartDate = itemView.findViewById(R.id.tvStartDate);
             tvEndDate = itemView.findViewById(R.id.tvEndDate);
             tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
+            tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
         }
     }
 
@@ -171,6 +182,17 @@ public class UpcomingBookingAdapter extends RecyclerView.Adapter<UpcomingBooking
         });
     }
 
-
+    public void sortByCreatedAtNewestFirst() {
+        Collections.sort(bookings, (b1, b2) -> {
+            try {
+                Date date1 = dateFormat.parse(b1.getCreatedAt());
+                Date date2 = dateFormat.parse(b2.getCreatedAt());
+                return date2.compareTo(date1);
+            } catch (Exception e) {
+                return 0;
+            }
+        });
+        notifyDataSetChanged();
+    }
 }
 

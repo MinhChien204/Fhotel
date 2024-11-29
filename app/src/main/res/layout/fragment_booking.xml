@@ -23,31 +23,9 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-   <com.google.android.material.tabs.TabLayout
-       android:id="@+id/tabLayout"
-       android:layout_width="match_parent"
-       android:layout_height="50dp"
-       app:tabMode="fixed"
-       app:tabGravity="fill"
-       android:layout_margin="10dp"
-       app:tabBackground="@drawable/tab_background_selector"
-       app:tabIndicatorHeight="0dp">
-
-       <com.google.android.material.tabs.TabItem
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Upcoming"/>
-
-       <com.google.android.material.tabs.TabItem
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Past"/>
-   </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewpagerbooking"
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="SpeakableTextPresentCheck" />
+        android:layout_height="match_parent"
+        android:id="@+id/rcv_listUpcomingBooking"/>
 
 </LinearLayout>

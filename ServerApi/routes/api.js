@@ -5,8 +5,7 @@ const upload = require("../config/common/upload");
 const multer = require("multer");
 const path = require("path");
 
-const hotels = require("../models/hotels");
-const TypeHotels = require("../models/typeHotels");
+
 const User = require("../models/users");
 const Room = require("../models/Room");
 const RoomService = require("../models/roomservice");
@@ -18,16 +17,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.SECRET_KEY;
-// CRUD Hotel
-//APi hiển thi danh sách khách sạn
-router.get("/hotel", async (req, res) => {
-  try {
-    let hotel = await hotels.find();
-    res.send(hotel);
-  } catch (error) {
-    console.log("lỗi");
-  }
-});
+
 
 //   CRUD User
 //   API hiển thị danh sách người dùng
