@@ -217,7 +217,6 @@ public class PaymentFragment extends Fragment {
             @Override
             public void onResponse(Call<Response<Booking>> call, retrofit2.Response<Response<Booking>> response) {
                 if (response.isSuccessful()) {
-                    updateRoomAvailability(roomId, "unavailable");
                     Toast.makeText(getContext(), "Booking successful!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getActivity(), Home_User.class);
                     intent.putExtra("fragment_to_load", R.id.navBooking_u);
@@ -234,27 +233,4 @@ public class PaymentFragment extends Fragment {
             }
         });
     }
-    private void updateRoomAvailability(String roomId, String status) {
-        HttpRequest httpRequest = new HttpRequest();
-        Call<Response<Room>> call = httpRequest.callAPI().updateRoomStatus(roomId, new Room(status));
-
-        call.enqueue(new Callback<Response<Room>>() {
-            @Override
-            public void onResponse(Call<Response<Room>> call, retrofit2.Response<Response<Room>> response) {
-                if (response.isSuccessful()) {
-                    Log.d("PaymentFragment", "Room status updated to: " + status);
-                } else {
-                    Log.e("PaymentFragment", "Failed to update room status");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Response<Room>> call, Throwable t) {
-                Log.e("PaymentFragment", "Error updating room status: " + t.getMessage());
-            }
-        });
-    }
-
-
-
 }

@@ -36,9 +36,6 @@ public interface ApiService {
     Call<Response<ArrayList<RoomService>>> getServiceByIdRoom(@Path("id") String roomId);
     @GET("api/user")
     Call<List<User>> getUsers();
-    /////
-    @GET("api/detail_user/{id}")
-    Call<User> getUserDetails(@Path("id") String userId);
     ///////
     @GET("api/getuserbyid/{id}")
     Call <Response<User>> getuserbyid(@Path("id") String userId);

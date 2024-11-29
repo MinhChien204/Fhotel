@@ -24,7 +24,8 @@ public class Booking {
 
     private String status;
     private Room room;
-
+    @SerializedName("createdAt")
+    private String createdAt;
 
     public Booking() {
     }
@@ -115,5 +116,13 @@ public class Booking {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

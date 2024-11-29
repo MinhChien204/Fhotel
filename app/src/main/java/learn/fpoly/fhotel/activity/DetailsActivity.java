@@ -123,7 +123,7 @@ private ServiceAdapter serviceAdapter;
 
                         // Kiểm tra trạng thái phòng
                         if (room.getStatus().equals("unavailable")) {
-                            btnBookingHotel.setText("Room Was Booked");
+                            btnBookingHotel.setText("Room Unavailable");
                             btnBookingHotel.setBackgroundColor(getResources().getColor(R.color.black));
                             btnBookingHotel.setBackgroundResource(R.drawable.book_button_bg);
                             btnBookingHotel.setEnabled(false);
