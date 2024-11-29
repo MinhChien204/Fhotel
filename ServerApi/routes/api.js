@@ -497,21 +497,7 @@ router.get("/roomservice", async (req, res) => {
 // CRUD Hotel
 
 // API hiển thị danh sách khách sạn
-router.get("/hotels", async (req, res) => {
-  try {
-    let hotels = await Hotel.find();
-    res.status(200).json({
-      status: 200,
-      message: "Hotels retrieved successfully",
-      data: hotels,
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while retrieving hotels" });
-  }
-})
+
 // });
 
 //API Login with JsonWebToken
