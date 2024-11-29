@@ -782,35 +782,26 @@ router.put("/update-status-booking/:id", async (req, res) => {
   const { status } = req.body;
 
   try {
-    // Kiểm tra trạng thái hợp lệ
+    
     if (!["pending", "confirmed", "cancelled"].includes(status)) {
       return res.status(400).json({ message: "Trạng thái không hợp lệ" });
     }
 
-    // Cập nhật trạng thái booking
     const booking = await Booking.findByIdAndUpdate(
       id,
       { status },
       { new: true }
-    ).populate("roomId"); // Lấy thông tin phòng liên kết với booking
+    );
 
     if (!booking) {
       return res.status(404).json({ message: "Không tìm thấy booking" });
     }
 
-    // Cập nhật trạng thái phòng dựa trên trạng thái booking
-    if (status === "confirmed") {
-      await Room.findByIdAndUpdate(booking.roomId._id, { status: "unavailable" });
-    } else if (status === "cancelled") {
-      await Room.findByIdAndUpdate(booking.roomId._id, { status: "available" });
-    }
-
     res.status(200).json({
-      message: "Cập nhật trạng thái booking thành công!",
+      message: "Bookings update successfully",
       data: booking,
     });
   } catch (error) {
-    console.error("Lỗi khi cập nhật trạng thái booking:", error);
     res.status(500).json({ message: "Lỗi server", error });
   }
 });
