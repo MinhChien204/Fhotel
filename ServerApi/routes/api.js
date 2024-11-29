@@ -171,7 +171,7 @@ router.put("/update_password/:id", async (req, res) => {
     const { oldPassword, newPassword } = req.body;
 
     // Tìm người dùng theo ID
-    const user = await users.findById(id);
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
@@ -208,7 +208,7 @@ router.put("/upload_user_image/:id", upload.single("avatar"), async (req, res) =
       imagePath = imagePath.replace('public/', '');  // Xóa phần 'public/' nếu có
 
       // Cập nhật đường dẫn ảnh vào cơ sở dữ liệu
-      const updateUser = await users.findByIdAndUpdate(
+      const updateUser = await User.findByIdAndUpdate(
         id,
         { avatar: imagePath },
         { new: true }
@@ -237,7 +237,7 @@ router.put("/upload_user_image/:id", upload.single("avatar"), async (req, res) =
 router.delete("/delete_user/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const deleteUser = await users.findByIdAndDelete(id);
+    const deleteUser = await User.findByIdAndDelete(id);
 
     if (deleteUser) {
       res.json({ message: "User deleted successfully" });
@@ -511,21 +511,7 @@ router.get("/hotels", async (req, res) => {
       .status(500)
       .json({ message: "An error occurred while retrieving hotels" });
   }
-});
-
-// API hiển thị danh sách người dùng
-// router.get("/users", async (req, res) => {
-//   try {
-//       let users = await User.find();
-//       res.status(200).json({
-//           status: 200,
-//           message: "Users retrieved successfully",
-//           data: users,
-//       });
-//   } catch (error) {
-//       console.error("Error:", error);
-//       res.status(500).json({ message: "An error occurred while retrieving users" });
-//   }
+})
 // });
 
 //API Login with JsonWebToken
@@ -796,26 +782,35 @@ router.put("/update-status-booking/:id", async (req, res) => {
   const { status } = req.body;
 
   try {
-    
+    // Kiểm tra trạng thái hợp lệ
     if (!["pending", "confirmed", "cancelled"].includes(status)) {
       return res.status(400).json({ message: "Trạng thái không hợp lệ" });
     }
 
+    // Cập nhật trạng thái booking
     const booking = await Booking.findByIdAndUpdate(
       id,
       { status },
       { new: true }
-    );
+    ).populate("roomId"); // Lấy thông tin phòng liên kết với booking
 
     if (!booking) {
       return res.status(404).json({ message: "Không tìm thấy booking" });
     }
 
+    // Cập nhật trạng thái phòng dựa trên trạng thái booking
+    if (status === "confirmed") {
+      await Room.findByIdAndUpdate(booking.roomId._id, { status: "unavailable" });
+    } else if (status === "cancelled") {
+      await Room.findByIdAndUpdate(booking.roomId._id, { status: "available" });
+    }
+
     res.status(200).json({
-      message: "Bookings update successfully",
+      message: "Cập nhật trạng thái booking thành công!",
       data: booking,
     });
   } catch (error) {
+    console.error("Lỗi khi cập nhật trạng thái booking:", error);
     res.status(500).json({ message: "Lỗi server", error });
   }
 });
@@ -867,7 +862,10 @@ router.delete("/cancel_booking/:id", async (req, res) => {
 // API lấy tất cả các booking
 router.get('/bookings', async (req, res) => {
   try {
-    const bookings = await Booking.find();
+    const bookings = await Booking.find()
+    .populate("userId", "name email phonenumber") // Lấy tên và email của người dùng từ User
+    .populate("roomId", "name price") // Lấy tên và giá của phòng từ Room
+    .exec();
     res.status(200).json(bookings); // Trả về danh sách các booking dưới dạng JSON
   } catch (err) {
     console.error(err);

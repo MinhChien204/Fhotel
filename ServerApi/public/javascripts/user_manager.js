@@ -1,146 +1,112 @@
-let users = [];
-
-// Fetch users from the server
+// Fetch all users and populate the table
 async function fetchUsers() {
-    try {
-        const response = await fetch('/api/user');
-        users = await response.json();
-        renderUserTable(users);
-    } catch (error) {
-        console.error('Error fetching users:', error);
-    }
-}
-
-// Render users in the table
-function renderUserTable(users) {
-    const userTableBody = document.getElementById('userTableBody');
-    userTableBody.innerHTML = '';
-    users.forEach(user => {
-        const userRow = document.createElement('tr');
-        userRow.innerHTML = `
-            <td>${user.name || 'N/A'}</td>
-            <td>${user.email || 'N/A'}</td>
-            <td>${user.phonenumber || 'N/A'}</td>
-            <td>${user.role === 0 ? 'Admin' : 'User'}</td>
-            <td>
-                <img src="${user.avatar || 'default-avatar.png'}" alt="Avatar" class="avatar" width="50" />
-            </td>
-            <td>
-                <button class="btn btn-warning btn-sm" onclick="editUser('${user._id}')">Edit</button>
-                <button class="btn btn-danger btn-sm" onclick="deleteUser('${user._id}')">Delete</button>
-            </td>
-        `;
-        userTableBody.appendChild(userRow);
+    const response = await fetch("/api/user");
+    const users = await response.json();
+    populateTable(users);
+  }
+  
+  // Populate the user table
+  function populateTable(users) {
+    const tableBody = document.getElementById("userTableBody");
+    tableBody.innerHTML = ""; // Clear existing rows
+  
+    users.forEach((user, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td><img src="${user.avatar}" alt="user Image" class="product-image" width="50"></td>
+        <td>${user.name}</td>
+        <td>${user.birthday}</td>
+        <td>${user.gender}</td>
+        <td>${user.email}</td>
+        <td>${user.phonenumber}</td>
+        <td>${user.address}</td>
+        <td>${user.role === 0? "Admin" : "User"}</td>
+        <td>
+              <img onclick="editUser('${user._id}')" src="./img/edit.png"style="width:20px;height:20px" alt="">
+          <img onclick="deleteUser('${user._id}')" src="./img/delete.png"style="width:20px;height:20px" alt="">
+        </td>
+      `;
+      tableBody.appendChild(row);
     });
-}
-
-// Edit user
-function editUser(userId) {
-    const user = users.find(user => user._id === userId);
-    document.getElementById('userId').value = user._id;
-    document.getElementById('username').value = user.username;
-    document.getElementById('email').value = user.email;
-    document.getElementById('name').value = user.name;
-    document.getElementById('phonenumber').value = user.phonenumber;
-    document.getElementById('address').value = user.address;
-    $('#userModal').modal('show');
-}
-
-// Delete user
-async function deleteUser(userId) {
-    if (confirm('Are you sure you want to delete this user?')) {
-        try {
-            await fetch(`/api/user/${userId}`, { method: 'DELETE' });
-            fetchUsers();
-        } catch (error) {
-            console.error('Error deleting user:', error);
-        }
-    }
-}
-
-// Initialize
-document.addEventListener('DOMContentLoaded', fetchUsers);
-
-// Mở modal và điền dữ liệu người dùng vào form
-function editUser(userId) {
-    const user = users.find(u => u._id === userId);
-    if (!user) {
-        alert('User not found');
-        return;
-    }
-
-    // Điền thông tin vào form
-    document.getElementById('editUserId').value = user._id;
-    document.getElementById('editUsername').value = user.username;
-    document.getElementById('editEmail').value = user.email;
-    document.getElementById('editName').value = user.name || '';
-    document.getElementById('editPhone').value = user.phonenumber || '';
-    document.getElementById('editAddress').value = user.address || '';
-    document.getElementById('editAvatar').value = user.avatar || '';
-    document.getElementById('editRole').value = user.role.toString();
-
-    // Hiển thị modal
-    const modal = document.getElementById('editUserModal');
-    modal.style.display = 'block';
-}
-
-async function saveUserChanges() {
-    const userId = document.getElementById('editUserId').value;
-    const userData = {
-        username: document.getElementById('editUsername').value.trim(),
-        email: document.getElementById('editEmail').value.trim(),
-        name: document.getElementById('editName').value.trim(),
-        phonenumber: document.getElementById('editPhone').value.trim(),
-        address: document.getElementById('editAddress').value.trim(),
-        avatar: document.getElementById('editAvatar').value.trim(),
-        role: parseInt(document.getElementById('editRole').value, 10),
+  }
+  
+  // Add or Edit User
+  document.getElementById("userForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+  
+    const id = e.target.dataset.id; // Check if we are editing or adding
+    const user = {
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      phonenumber: document.getElementById("phonenumber").value,
+      gender: document.getElementById("gender").value,
+      birthday: document.getElementById("birthday").value,
+      address: document.getElementById("address").value,
     };
-
-    try {
-        const response = await fetch(`/api/user/${userId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-        });
-
-        if (response.ok) {
-            alert('User updated successfully');
-            closeEditModal(); // Đóng modal
-            fetchUsers(); // Tải lại danh sách người dùng
-        } else {
-            const result = await response.json();
-            alert(`Failed to update user: ${result.message}`);
-        }
-    } catch (error) {
-        console.error('Error updating user:', error);
-        alert('Failed to update user');
-    }
-}
-function closeEditModal() {
-    const modal = document.getElementById('editUserModal');
-    modal.style.display = 'none';
-}
-function renderUserTable(users) {
-    const userTableBody = document.getElementById('userTableBody');
-    userTableBody.innerHTML = '';
-    users.forEach(user => {
-        const userRow = document.createElement('tr');
-        userRow.innerHTML = `
-            <td>${user.name || 'N/A'}</td>
-            <td>${user.email || 'N/A'}</td>
-            <td>${user.phonenumber || 'N/A'}</td>
-            <td>${user.role === 0 ? 'Admin' : 'User'}</td>
-            <td>
-                <img src="${user.avatar || 'default-avatar.png'}" alt="Avatar" class="avatar" width="50" />
-            </td>
-            <td>
-                <button class="btn btn-warning btn-sm" onclick="editUser('${user._id}')">Edit</button>
-                <button class="btn btn-danger btn-sm" onclick="deleteUser('${user._id}')">Delete</button>
-            </td>
-        `;
-        userTableBody.appendChild(userRow);
+  
+    const url = id ? `/api/update_user/${id}` : "/api/add_user";
+    const method = id ? "PUT" : "POST";
+  
+    const response = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user),
     });
-}
-
+  
+    if (response.ok) {
+      fetchUsers();
+      closeModal();
+    }
+  });
+  
+  // Open Add User Modal
+  document.getElementById("addUserBtn").addEventListener("click", () => {
+    openModal();
+  });
+  
+  // Edit User
+  async function editUser(id) {
+    const response = await fetch(`/api/getuserbyid/${id}`);
+    const { data: user } = await response.json();
+  
+    // Populate the form with user data
+    document.getElementById("name").value = user.name;
+    document.getElementById("email").value = user.email;
+    document.getElementById("phonenumber").value = user.phonenumber;
+    document.getElementById("gender").value = user.gender;
+    document.getElementById("birthday").value = user.birthday.slice(0, 10);
+    document.getElementById("address").value = user.address;
+  
+    // Attach user ID to form
+    document.getElementById("userForm").dataset.id = id;
+  
+    openModal();
+  }
+  
+  // Delete User
+  async function deleteUser(id) {
+    if (confirm("Are you sure you want to delete this user?")) {
+      const response = await fetch(`/api/delete_user/${id}`, { method: "DELETE" });
+  
+      if (response.ok) {
+        alert("User deleted successfully!");
+        fetchUsers(); // Refresh table
+      }
+    }
+  }
+  
+  // Modal Handling
+  function openModal() {
+    document.getElementById("userFormModal").style.display = "block";
+  }
+  
+  function closeModal() {
+    document.getElementById("userFormModal").style.display = "none";
+    document.getElementById("userForm").reset();
+    delete document.getElementById("userForm").dataset.id;
+  }
+  
+  // Load users on page load
+  document.addEventListener("DOMContentLoaded", fetchUsers);
+  

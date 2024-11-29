@@ -22,7 +22,7 @@
             <span class="text">Dashboard</span>
           </a>
         </li>
-        <li class="active">
+        <li >
           <a href="/usermanagerment">
             <i class="bx bxs-group"></i>
             <span class="text">Quản lí User</span>
@@ -34,8 +34,8 @@
             <span class="text">Quản Lí Room</span>
           </a>
         </li>
-        <li>
-          <a href="#" class="menu-link">
+        <li class="active">
+          <a href="#" >
             <i class="bx bxs-door-open"></i>
             <span class="text">Quản Lí Booking</span>
           </a>
@@ -105,7 +105,7 @@
       <main>
         <div class="head-title">
           <div class="left">
-            <h1>Quản Lí User</h1>
+            <h1>Quản Lí Booking</h1>
           </div>
            <a href="#" class="btn-danger">
             <i class="bx bxs-cloud-download"></i>
@@ -147,77 +147,40 @@
             </span>
           </li>
         </ul>
-        <div class="table-data">
-          <div class="order">
-            <div class="head">
-              <h3>Quản lý User</h3>
-              <i id="addUserBtn" class="bx bx-plus btn-add"></i>
-              <i class="bx bx-search"></i>
-              <i class="bx bx-filter"></i>
-              
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>STT</th>
-                  <th>Avatar</th>
-                  <th>Name</th>
-                  <th>Birthday</th>
-                  <th>Gender</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Role</th>
-                  <th>Actions</th>
-                </tr>
-              </thead> 
-              <tbody id="userTableBody"></tbody>
-            </table>
+    <div class="table-data">
+        <div class="order">
+          <div class="head">
+            <h3>Danh sách Booking</h3>
+            <i id="addRoomBtn" class="bx bx-plus btn-add"></i>
           </div>
-        </div>
+          <table>
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>NameUser</th>
+                <th>NameRoom</th>
+                <th>Price</th>
+                <th>StartDate</th>
+                <th>EndDate</th>
+                <th>Email</th>
+                <th>PhoneNumber</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+           <tbody id="BookingTableBody">
 
-        <!-- Modal Form -->
-        <div id="userFormModal" class="modal">
-          <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <form id="userForm">
-              <h2>Quản Lý User</h2>
-              <div>
-                <label for="name">Name</label>
-                <input type="text" id="name" required />
-              </div>
-              <div>
-                <label for="email">Email</label>
-                <input type="email" id="email" required />
-              </div>
-              <div>
-                <label for="phonenumber">Phone</label>
-                <input type="text" id="phonenumber" required />
-              </div>
-              <div>
-                <label for="gender">Gender</label>
-                <select id="gender" required>
-                  <option value="Male">Nam</option>
-                  <option value="Female">Nữ</option>
-                </select>
-              </div>
-              <div>
-                <label for="birthday">Birthday</label>
-                <input type="date" id="birthday" required />
-              </div>
-              <div>
-                <label for="address">Address</label>
-                <input type="text" id="address" required />
-              </div>
-              <button type="submit">Submit</button>
-            </form>
-          </div>
+           </tbody>
+          </table>
         </div>
-
+      </div>
+        <!-- Modal Thêm/Sửa Phòng -->
       </main>
     </section>
 
-    <script src="./javascripts/user_manager.js"></script>
+
+
+    <script src="./javascripts/booking_manager.js"></script>
     <script src="./javascripts/script.js"></script>
   </body>
 </html>

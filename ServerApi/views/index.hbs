@@ -29,37 +29,51 @@
           </a>
         </li>
         <li>
-          <a href="#">
-            <i class="bx bxs-shopping-bag-alt"></i>
-            <span class="text">My Store</span>
+          <a href="/usermanagerment" class="menu-link">
+            <i class="bx bxs-group"></i>
+            <span class="text">Quản Lí User</span>
           </a>
         </li>
         <li>
-          <a href="#">
-            <i class="bx bxs-doughnut-chart"></i>
-            <span class="text">Analytics</span>
+          <a href="/roommanagerment" class="menu-link">
+            <i class="bx bxs-door-open"></i>
+            <span class="text">Quản Lí Room</span>
           </a>
         </li>
-        <li>
-          <a href="#">
-            <i class="bx bxs-message-dots"></i>
-            <span class="text">Message</span>
+          <li>
+          <a href="#" class="menu-link">
+            <i class="bx bxs-door-open"></i>
+            <span class="text">Quản Lí Booking</span>
           </a>
         </li>
-       <li>
-  <a href="/usermanagerment" class="menu-link" onclick="loadContent('usermanagerment')">
-    <i class="bx bxs-group"></i>
-    <span class="text">Quản Lí User</span>
-  </a>
-</li>
-      <li>
-  <a href="/room" class="menu-link" onclick="loadContent('room')">
-    <i class="bx bxs-door-open"></i>
-    <span class="text">Quản Lí Room</span>
-  </a>
-</li>
+           <li>
+          <a href="#" class="menu-link">
+            <i class="bx bxs-door-open"></i>
+            <span class="text">Quản Lí Service</span>
+          </a>
+        </li>
+           <li>
+          <a href="#" class="menu-link">
+            <i class="bx bxs-door-open"></i>
+            <span class="text">Quản Lí Notification</span>
+          </a>
+        </li>
+         <li>
+          <a href="#" class="menu-link">
+            <i class="bx bxs-door-open"></i>
+            <span class="text">Quản Lí Đánh Giá</span>
+          </a>
+        </li>
+           <li>
+          <a href="#" class="menu-link">
+            <i class="bx bxs-door-open"></i>
+            <span class="text">Thống Kê</span>
+          </a>
+        </li>
       </ul>
       <ul class="side-menu">
+      <hr>
+
         <li>
           <a href="/setting">
             <i class="bx bxs-cog"></i>
@@ -131,7 +145,7 @@
               <p>New Order</p>
             </span>
           </li>
-		  <li>
+          <li>
             <i class="bx bxs-calendar-check"></i>
             <span class="text">
               <h3>1020</h3>
@@ -153,7 +167,483 @@
             </span>
           </li>
         </ul>
-		
+
+        <div class="row">
+          <div class="table-data">
+            <div class="col-md-12 col-lg-6 chartrow">
+              <div class="card card-chart">
+                <div class="card-header">
+                  <h4 class="card-title">VISITORS</h4>
+                </div>
+                <div class="card-body">
+                  <div
+                    id="line-chart"
+                    style="position: relative; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                  ><svg
+                      height="342"
+                      version="1.1"
+                      width="540.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      style="overflow: hidden; position: relative;"
+                    ><desc
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      >Created with Raphaël 2.3.0</desc><defs
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></defs><text
+                        x="32.52499961853027"
+                        y="303.3999996185303"
+                        text-anchor="end"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                      ><tspan
+                          dy="4.39998722076416"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >0</tspan></text><path
+                        fill="none"
+                        stroke="#aaaaaa"
+                        d="M45.02499961853027,303.3999996185303H515.5"
+                        stroke-width="0.5"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><text
+                        x="32.52499961853027"
+                        y="233.7999997138977"
+                        text-anchor="end"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                      ><tspan
+                          dy="4.399993419647217"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >25</tspan></text><path
+                        fill="none"
+                        stroke="#aaaaaa"
+                        d="M45.02499961853027,233.7999997138977H515.5"
+                        stroke-width="0.5"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><text
+                        x="32.52499961853027"
+                        y="164.19999980926514"
+                        text-anchor="end"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                      ><tspan
+                          dy="4.399999618530273"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >50</tspan></text><path
+                        fill="none"
+                        stroke="#aaaaaa"
+                        d="M45.02499961853027,164.19999980926514H515.5"
+                        stroke-width="0.5"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><text
+                        x="32.52499961853027"
+                        y="94.59999990463257"
+                        text-anchor="end"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                      ><tspan
+                          dy="4.399998188018799"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >75</tspan></text><path
+                        fill="none"
+                        stroke="#aaaaaa"
+                        d="M45.02499961853027,94.59999990463257H515.5"
+                        stroke-width="0.5"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><text
+                        x="32.52499961853027"
+                        y="25"
+                        text-anchor="end"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                      ><tspan
+                          dy="4.399999618530273"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >100</tspan></text><path
+                        fill="none"
+                        stroke="#aaaaaa"
+                        d="M45.02499961853027,25H515.5"
+                        stroke-width="0.5"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><text
+                        x="515.5"
+                        y="315.8999996185303"
+                        text-anchor="middle"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                        transform="matrix(1,0,0,1,0,6.8)"
+                      ><tspan
+                          dy="4.39998722076416"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >2012</tspan></text><text
+                        x="437.123288389212"
+                        y="315.8999996185303"
+                        text-anchor="middle"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                        transform="matrix(1,0,0,1,0,6.8)"
+                      ><tspan
+                          dy="4.39998722076416"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >2011</tspan></text><text
+                        x="358.74657677842407"
+                        y="315.8999996185303"
+                        text-anchor="middle"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                        transform="matrix(1,0,0,1,0,6.8)"
+                      ><tspan
+                          dy="4.39998722076416"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >2010</tspan></text><text
+                        x="280.3698651676361"
+                        y="315.8999996185303"
+                        text-anchor="middle"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                        transform="matrix(1,0,0,1,0,6.8)"
+                      ><tspan
+                          dy="4.39998722076416"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >2009</tspan></text><text
+                        x="201.77842284010623"
+                        y="315.8999996185303"
+                        text-anchor="middle"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                        transform="matrix(1,0,0,1,0,6.8)"
+                      ><tspan
+                          dy="4.39998722076416"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >2008</tspan></text><text
+                        x="123.40171122931825"
+                        y="315.8999996185303"
+                        text-anchor="middle"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                        transform="matrix(1,0,0,1,0,6.8)"
+                      ><tspan
+                          dy="4.39998722076416"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >2007</tspan></text><text
+                        x="45.02499961853027"
+                        y="315.8999996185303"
+                        text-anchor="middle"
+                        font-family="sans-serif"
+                        font-size="12px"
+                        stroke="none"
+                        fill="#888888"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;"
+                        font-weight="normal"
+                        transform="matrix(1,0,0,1,0,6.8)"
+                      ><tspan
+                          dy="4.39998722076416"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >2006</tspan></text><path
+                        fill="none"
+                        stroke="#cdc6c6"
+                        d="M45.02499961853027,52.83999996185301C64.61917752122727,70.23999993801115,103.80753332662125,105.03999989032744,123.40171122931825,122.43999986648558C142.99588913201524,139.83999984264372,182.18424493740923,192.03999977111818,201.77842284010623,192.03999977111818C221.4262834219887,192.03999977111818,260.7220045857536,122.43999986648558,280.3698651676361,122.43999986648558C299.9640430703331,122.43999986648558,339.15239887572704,192.03999977111818,358.74657677842407,192.03999977111818C378.34075468112104,192.03999977111818,417.52911048651504,139.83999984264372,437.123288389212,122.43999986648558C456.717466291909,105.03999989032742,495.90582209730303,70.23999993801115,515.5,52.83999996185301"
+                        stroke-width="3px"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><path
+                        fill="none"
+                        stroke="#009688"
+                        d="M45.02499961853027,25C64.61917752122727,42.39999997615814,103.80753332662125,77.19999992847443,123.40171122931825,94.59999990463257C142.99588913201524,111.99999988079071,182.18424493740923,164.19999980926514,201.77842284010623,164.19999980926514C221.4262834219887,164.19999980926514,260.7220045857536,94.59999990463257,280.3698651676361,94.59999990463257C299.9640430703331,94.59999990463257,339.15239887572704,164.19999980926514,358.74657677842407,164.19999980926514C378.34075468112104,164.19999980926514,417.52911048651504,111.99999988079071,437.123288389212,94.59999990463257C456.717466291909,77.19999992847443,495.90582209730303,42.39999997615814,515.5,25"
+                        stroke-width="3px"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><circle
+                        cx="45.02499961853027"
+                        cy="52.83999996185301"
+                        r="4"
+                        fill="#cdc6c6"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="123.40171122931825"
+                        cy="122.43999986648558"
+                        r="4"
+                        fill="#cdc6c6"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="201.77842284010623"
+                        cy="192.03999977111818"
+                        r="4"
+                        fill="#cdc6c6"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="280.3698651676361"
+                        cy="122.43999986648558"
+                        r="4"
+                        fill="#cdc6c6"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="358.74657677842407"
+                        cy="192.03999977111818"
+                        r="4"
+                        fill="#cdc6c6"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="437.123288389212"
+                        cy="122.43999986648558"
+                        r="7"
+                        fill="#cdc6c6"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="515.5"
+                        cy="52.83999996185301"
+                        r="4"
+                        fill="#cdc6c6"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="45.02499961853027"
+                        cy="25"
+                        r="4"
+                        fill="#009688"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="123.40171122931825"
+                        cy="94.59999990463257"
+                        r="4"
+                        fill="#009688"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="201.77842284010623"
+                        cy="164.19999980926514"
+                        r="4"
+                        fill="#009688"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="280.3698651676361"
+                        cy="94.59999990463257"
+                        r="4"
+                        fill="#009688"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="358.74657677842407"
+                        cy="164.19999980926514"
+                        r="4"
+                        fill="#009688"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="437.123288389212"
+                        cy="94.59999990463257"
+                        r="7"
+                        fill="#009688"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle><circle
+                        cx="515.5"
+                        cy="25"
+                        r="4"
+                        fill="#009688"
+                        stroke="#ffffff"
+                        stroke-width="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></circle></svg><div
+                      class="morris-hover morris-default-style"
+                      style="left: 396.836px; top: 6px;"
+                    ><div class="morris-hover-row-label">2011</div><div
+                        class="morris-hover-point"
+                        style="color: #009688"
+                      >
+                        Series A: 75
+                      </div>
+                      <div class="morris-hover-point" style="color: #cdc6c6">
+                        Series B: 65
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-data">
+            <div class="col-md-12 col-lg-6 charts">
+              <div class="card card-chart">
+                <div class="card-header">
+                  <h4 class="card-title">ROOMS BOOKED</h4>
+                </div>
+                <div class="card-body">
+                  <div id="donut-chart"><svg
+                      height="342"
+                      version="1.1"
+                      width="540.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      style="overflow: hidden; position: relative; left: -0.5px;"
+                    ><desc
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      >Created with Raphaël 2.3.0</desc><defs
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></defs><path
+                        fill="none"
+                        stroke="#0ba462"
+                        d="M270.25,278.3333333333333A107.33333333333333,107.33333333333333,0,0,0,277.76071685423676,63.92977268736222"
+                        stroke-width="2"
+                        opacity="1"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1;"
+                      ></path><path
+                        fill="#0ba462"
+                        stroke="#f2f5fa"
+                        d="M270.25,281.3333333333333A110.33333333333333,110.33333333333333,0,0,0,277.9706437228334,60.9371265823506L281.5160752813551,10.394659031043318A161,161,0,0,1,270.25,332Z"
+                        stroke-width="3"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><path
+                        fill="none"
+                        stroke="#39b580"
+                        d="M277.76071685423676,63.92977268736222A107.33333333333333,107.33333333333333,0,0,0,163.27518915320357,162.234482973802"
+                        stroke-width="2"
+                        opacity="0"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 0;"
+                      ></path><path
+                        fill="#39b580"
+                        stroke="#f2f5fa"
+                        d="M277.9706437228334,60.9371265823506A110.33333333333333,110.33333333333333,0,0,0,160.28520996804465,161.9894840507095L114.77108237173684,158.26005599919046A156,156,0,0,1,281.1661971670273,15.382402539395997Z"
+                        stroke-width="3"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><path
+                        fill="none"
+                        stroke="#67c69d"
+                        d="M163.27518915320357,162.234482973802A107.33333333333333,107.33333333333333,0,0,0,166.7290183941703,199.35226290457106"
+                        stroke-width="2"
+                        opacity="0"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 0;"
+                      ></path><path
+                        fill="#67c69d"
+                        stroke="#f2f5fa"
+                        d="M160.28520996804465,161.9894840507095A110.33333333333333,110.33333333333333,0,0,0,163.8355748089142,200.1447174578044L119.79093356668233,212.20763676813434A156,156,0,0,1,114.77108237173684,158.26005599919046Z"
+                        stroke-width="3"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><path
+                        fill="none"
+                        stroke="#95d7bb"
+                        d="M166.7290183941703,199.35226290457106A107.33333333333333,107.33333333333333,0,0,0,205.13167534309918,256.3231987112702"
+                        stroke-width="2"
+                        opacity="0"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 0;"
+                      ></path><path
+                        fill="#95d7bb"
+                        stroke="#f2f5fa"
+                        d="M163.8355748089142,200.1447174578044A110.33333333333333,110.33333333333333,0,0,0,203.3115979458566,258.708008613138L175.60597534338638,295.0101148971257A156,156,0,0,1,119.79093356668233,212.20763676813434Z"
+                        stroke-width="3"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><path
+                        fill="none"
+                        stroke="#0ba462"
+                        d="M205.13167534309918,256.3231987112702A107.33333333333333,107.33333333333333,0,0,0,270.2162802394063,278.3333280366457"
+                        stroke-width="2"
+                        opacity="0"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 0;"
+                      ></path><path
+                        fill="#0ba462"
+                        stroke="#f2f5fa"
+                        d="M203.3115979458566,258.708008613138A110.33333333333333,110.33333333333333,0,0,0,270.2153377616257,281.3333278886016L270.20099115541035,326.99999230170863A156,156,0,0,1,175.60597534338638,295.0101148971257Z"
+                        stroke-width="3"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                      ></path><text
+                        x="270.25"
+                        y="161"
+                        text-anchor="middle"
+                        font-family="&quot;Arial&quot;"
+                        font-size="15px"
+                        stroke="none"
+                        fill="#009688"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: Arial; font-size: 15px; font-weight: 800;"
+                        font-weight="800"
+                        transform="matrix(1.7343,0,0,1.7343,-198.5298,-126.1611)"
+                        stroke-width="0.5765853708081611"
+                      ><tspan
+                          dy="6.000002861022949"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >Normal Room</tspan></text><text
+                        x="270.25"
+                        y="181"
+                        text-anchor="middle"
+                        font-family="&quot;Arial&quot;"
+                        font-size="14px"
+                        stroke="none"
+                        fill="#009688"
+                        style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: Arial; font-size: 14px;"
+                        transform="matrix(2.2361,0,0,2.2361,-334.1895,-213.8472)"
+                        stroke-width="0.4472049689440994"
+                      ><tspan
+                          dy="4.8000030517578125"
+                          style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"
+                        >50</tspan></text></svg></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="table-data">
           <div class="order">
             <div class="head">

@@ -12,11 +12,14 @@ router.get('/dashbroad', function(req, res, next) {
 router.get('/usermanagerment', function(req, res, next) {
   res.render('usermanagerment', { title: 'Users Managerment' });
 });
-router.get('/room', function(req, res, next) {
+router.get('/roommanagerment', function(req, res, next) {
   res.render('roommanagerment', { title: 'Rooms Managerment' });
 });
-router.get('/service', function(req, res, next) {
+router.get('/servicemanagerment', function(req, res, next) {
   res.render('servicemanagerment', { title: 'Services Managerment' });
+});
+router.get('/bookingmanagerment', function(req, res, next) {
+  res.render('bookingmanagerment', { title: 'Booking Managerment' });
 });
 router.get('/setting', function(req, res, next) {
   res.render('setting', { title: 'Setting' });

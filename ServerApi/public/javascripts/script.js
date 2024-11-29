@@ -112,15 +112,3 @@ function logout() {
 	  });
 	});
   }
-
-  // Hàm để tải nội dung khi click vào các mục trong sidebar
-const loadContent = async (page) => {
-	try {
-	  const response = await fetch(`/${page}`);  // Gọi tới API hoặc trang cho nội dung tương ứng
-	  const content = await response.text();    // Lấy nội dung trả về
-	  document.getElementById('content').innerHTML = content; // Cập nhật nội dung vào phần content
-	} catch (error) {
-	  console.error('Error loading content:', error);
-	}
-  };
-  
