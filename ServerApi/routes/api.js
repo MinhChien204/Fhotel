@@ -484,11 +484,6 @@ router.get("/roomservice", async (req, res) => {
   }
 });
 
-// CRUD Hotel
-
-// API hiển thị danh sách khách sạn
-
-// });
 
 //API Login with JsonWebToken
 router.post("/login", async (req, res) => {
@@ -681,9 +676,10 @@ router.post("/book_room", async (req, res) => {
       return res.status(404).json({ message: "Room not found" });
     }
 
-    // Kiểm tra phòng có bị đặt trùng thời gian không
+    // Kiểm tra phòng có bị đặt trùng thời gian không (ngoại trừ booking bị "cancelled")
     const overlappingBooking = await Booking.findOne({
       roomId,
+      status: { $ne: "cancelled" }, // Bỏ qua booking có trạng thái "cancelled"
       $or: [
         { startDate: { $lte: endDate }, endDate: { $gte: startDate } },
       ],
@@ -700,6 +696,7 @@ router.post("/book_room", async (req, res) => {
       startDate,
       endDate,
       totalPrice,
+      status: "pending", // Trạng thái mặc định ban đầu
     });
 
     const savedBooking = await newBooking.save();
