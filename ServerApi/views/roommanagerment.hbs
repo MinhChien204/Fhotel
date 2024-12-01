@@ -8,6 +8,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./stylesheets/style.css" />
+        <link rel="icon" href="./img/favicon/favicon.ico" type="img/favicon" />
+
   </head>
   <body>
     <section id="sidebar">
@@ -41,25 +43,25 @@
           </a>
         </li>
         <li>
-          <a href="#" class="menu-link">
+          <a href="/servicemanagerment" class="menu-link">
             <i class="bx bxs-door-open"></i>
             <span class="text">Quản Lí Service</span>
           </a>
         </li>
         <li>
-          <a href="#" class="menu-link">
+          <a href="/notificationmanagerment" class="menu-link">
             <i class="bx bxs-door-open"></i>
             <span class="text">Quản Lí Notification</span>
           </a>
         </li>
         <li>
-          <a href="#" class="menu-link">
+          <a href="/ratingmanagerment" class="menu-link">
             <i class="bx bxs-door-open"></i>
             <span class="text">Quản Lí Đánh Giá</span>
           </a>
         </li>
         <li>
-          <a href="#" class="menu-link">
+          <a href="/thongke" class="menu-link">
             <i class="bx bxs-door-open"></i>
             <span class="text">Thống Kê</span>
           </a>
@@ -73,7 +75,7 @@
           </a>
         </li>
         <li>
-          <a href="#" class="logout" onclick="logout()">
+          <a href="/logout" class="logout" onclick="logout()">
             <i class="bx bxs-log-out-circle"></i>
             <span class="text">Logout</span>
           </a>
@@ -177,32 +179,48 @@
       </main>
     </section>
 
-     <div class="modal" id="roomModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Thêm/Sửa Phòng</h5>
-          <button type="button" class="close-modal-btn">&times;</button>
-        </div>
-        <div class="modal-body">
-          <form id="roomForm">
-            <label for="roomName">Tên Phòng</label>
-            <input type="text" id="roomName" class="form-control" placeholder="Nhập tên phòng" />
-            <label for="roomPrice">Giá</label>
-            <input type="number" id="roomPrice" class="form-control" placeholder="Nhập giá phòng" />
-            <label for="roomRating">Đánh giá</label>
-            <input type="number" id="roomRating" class="form-control" placeholder="Đánh giá" />
-            <label for="roomDescription">Mô tả</label>
-            <textarea id="roomDescription" class="form-control"></textarea>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="close-modal-btn">Đóng</button>
-          <button type="button" id="saveRoomBtn">Lưu</button>
-        </div>
+<div id="roomFormModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <form id="roomForm">
+      <h2>Quản Lý Phòng</h2>
+      <div>
+        <label for="roomImage">Image URL</label>
+        <input type="text" id="roomImage" required />
       </div>
-    </div>
+      <div>
+        <label for="roomName">Name</label>
+        <input type="text" id="roomName" required />
+      </div>
+      <div>
+        <label for="roomPrice">Price</label>
+        <input type="number" id="roomPrice" required />
+      </div>
+      <div>
+        <label for="roomRating">Rating</label>
+        <input type="number" step="0.1" id="roomRating" required />
+      </div>
+      <div>
+        <label for="roomDescription">Description</label>
+        <textarea id="roomDescription" required></textarea>
+      </div>
+      <div>
+        <label for="roomCapacity">Capacity</label>
+        <input type="number" id="roomCapacity" required />
+      </div>
+      <div>
+        <label for="roomStatus">Status</label>
+        <select id="roomStatus" required>
+          <option value="available">Available</option>
+          <option value="unavailable">Unavailable</option>
+        </select>
+      </div>
+      <input type="hidden" id="roomId" />
+      <button type="submit">Submit</button>
+    </form>
   </div>
+</div>
+
 
     <script src="./javascripts/room_manager.js"></script>
     <script src="./javascripts/script.js"></script>

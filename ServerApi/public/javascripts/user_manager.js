@@ -8,41 +8,47 @@ async function fetchUsers() {
   // Populate the user table
   function populateTable(users) {
     const tableBody = document.getElementById("userTableBody");
-    tableBody.innerHTML = ""; // Clear existing rows
+    tableBody.innerHTML = ""; // Xóa các hàng hiện tại
   
     users.forEach((user, index) => {
+      const gender = user.gender.toLowerCase() === "nam" ? "Nam" : "Nữ"; // Chuẩn hóa chữ thường/hoa
+  
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${index + 1}</td>
-        <td><img src="${user.avatar}" alt="user Image" class="product-image" width="50"></td>
+        <td><img src="${user.avatar}" alt="User Image" class="product-image" width="50"></td>
         <td>${user.name}</td>
         <td>${user.birthday}</td>
-        <td>${user.gender}</td>
+        <td>${gender}</td> <!-- Sử dụng giá trị đã chuẩn hóa -->
         <td>${user.email}</td>
         <td>${user.phonenumber}</td>
         <td>${user.address}</td>
-        <td>${user.role === 0? "Admin" : "User"}</td>
+        <td>${user.role === 0 ? "Admin" : "User"}</td>
         <td>
-              <img onclick="editUser('${user._id}')" src="./img/edit.png"style="width:20px;height:20px" alt="">
-          <img onclick="deleteUser('${user._id}')" src="./img/delete.png"style="width:20px;height:20px" alt="">
+          <img onclick="editUser('${user._id}')" src="./img/edit.png" style="width:20px;height:20px" alt="Edit">
+          <img onclick="deleteUser('${user._id}')" src="./img/delete.png" style="width:20px;height:20px" alt="Delete">
         </td>
       `;
       tableBody.appendChild(row);
     });
   }
   
+  
   // Add or Edit User
   document.getElementById("userForm").addEventListener("submit", async (e) => {
     e.preventDefault();
   
-    const id = e.target.dataset.id; // Check if we are editing or adding
+    const id = e.target.dataset.id; // Kiểm tra xem đang thêm mới hay chỉnh sửa
     const user = {
+      username: document.getElementById("username").value,
+      password: document.getElementById("password").value,
       name: document.getElementById("name").value,
       email: document.getElementById("email").value,
       phonenumber: document.getElementById("phonenumber").value,
-      gender: document.getElementById("gender").value,
+      gender: document.getElementById("gender").value.toLowerCase(), // Chuyển thành chữ thường
       birthday: document.getElementById("birthday").value,
       address: document.getElementById("address").value,
+      avatar: document.getElementById("avatar").value,
     };
   
     const url = id ? `/api/update_user/${id}` : "/api/add_user";
@@ -60,28 +66,32 @@ async function fetchUsers() {
     }
   });
   
+  
   // Open Add User Modal
   document.getElementById("addUserBtn").addEventListener("click", () => {
     openModal();
   });
   
-  // Edit User
+  // Open Edit User Modal
   async function editUser(id) {
     const response = await fetch(`/api/getuserbyid/${id}`);
     const { data: user } = await response.json();
   
-    // Populate the form with user data
+    // Điền dữ liệu người dùng vào form
+    document.getElementById("username").value = user.username;
+    document.getElementById("password").value = user.password;
     document.getElementById("name").value = user.name;
     document.getElementById("email").value = user.email;
     document.getElementById("phonenumber").value = user.phonenumber;
-    document.getElementById("gender").value = user.gender;
+    document.getElementById("gender").value = user.gender.toLowerCase() === "nam" ? "Nam" : "Nữ";
     document.getElementById("birthday").value = user.birthday.slice(0, 10);
     document.getElementById("address").value = user.address;
+    document.getElementById("avatar").value = user.avatar;
   
-    // Attach user ID to form
+    // Gắn ID vào form để biết đây là chỉnh sửa
     document.getElementById("userForm").dataset.id = id;
   
-    openModal();
+    openModal(); // Mở modal
   }
   
   // Delete User
@@ -98,14 +108,22 @@ async function fetchUsers() {
   
   // Modal Handling
   function openModal() {
-    document.getElementById("userFormModal").style.display = "block";
+    const modal = document.getElementById("userFormModal");
+    modal.style.display = "flex"; // Hiển thị modal
   }
   
   function closeModal() {
-    document.getElementById("userFormModal").style.display = "none";
-    document.getElementById("userForm").reset();
-    delete document.getElementById("userForm").dataset.id;
+    const modal = document.getElementById("userFormModal");
+    modal.style.display = "none"; // Đảm bảo modal ẩn đi
+    document.getElementById("userForm").reset(); // Reset form nếu cần
+    delete document.getElementById("userForm").dataset.id; // Xóa ID (nếu có)
   }
+  
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    // Đảm bảo modal không được hiển thị khi trang tải lại
+    closeModal();
+  });
   
   // Load users on page load
   document.addEventListener("DOMContentLoaded", fetchUsers);

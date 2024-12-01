@@ -112,3 +112,34 @@ function logout() {
 	  });
 	});
   }
+
+  //booking tables
+  // Fetch booking data from the API
+async function fetchBookings() {
+    try {
+      const response = await fetch("/api/bookings"); // Adjust the URL if necessary
+      const bookings = await response.json();
+  
+      const tableBody = document.getElementById("IndexTableBody");
+      tableBody.innerHTML = ""; // Clear the table before rendering
+  
+      bookings.forEach((booking, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+		  <td><img src="${booking.userId?.avatar}" alt=""></td>
+
+          <td>${booking.userId?.name}</td>
+          <td>${booking.startDate}</td>
+          <td class="status">${booking.status}</td>
+        
+        `;
+        tableBody.appendChild(row);
+      });
+    } catch (error) {
+      console.error("Failed to fetch bookings:", error);
+    }
+  }
+  
+  
+  // Call the function to populate the table when the page loads
+  fetchBookings();

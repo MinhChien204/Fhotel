@@ -827,7 +827,7 @@ router.delete("/cancel_booking/:id", async (req, res) => {
 router.get('/bookings', async (req, res) => {
   try {
     const bookings = await Booking.find()
-    .populate("userId", "name email phonenumber") // Lấy tên và email của người dùng từ User
+    .populate("userId", "name email phonenumber avatar") // Lấy tên và email của người dùng từ User
     .populate("roomId", "name price") // Lấy tên và giá của phòng từ Room
     .exec();
     res.status(200).json(bookings); // Trả về danh sách các booking dưới dạng JSON
@@ -836,5 +836,7 @@ router.get('/bookings', async (req, res) => {
     res.status(500).json({ message: 'Server error' }); // Nếu có lỗi server
   }
 });
+
+
 
 module.exports = router;

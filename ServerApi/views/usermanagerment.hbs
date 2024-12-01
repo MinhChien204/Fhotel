@@ -8,6 +8,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./stylesheets/style.css" />
+        <link rel="icon" href="./img/favicon/favicon.ico" type="img/favicon" />
+
   </head>
   <body>
     <section id="sidebar">
@@ -35,31 +37,31 @@
           </a>
         </li>
         <li>
-          <a href="#" class="menu-link">
+          <a href="/bookingmanagerment" class="menu-link">
             <i class="bx bxs-door-open"></i>
             <span class="text">Quản Lí Booking</span>
           </a>
         </li>
         <li>
-          <a href="#" class="menu-link">
+          <a href="/servicemanagerment" class="menu-link">
             <i class="bx bxs-door-open"></i>
             <span class="text">Quản Lí Service</span>
           </a>
         </li>
         <li>
-          <a href="#" class="menu-link">
+          <a href="/notificationmanagerment" class="menu-link">
             <i class="bx bxs-door-open"></i>
             <span class="text">Quản Lí Notification</span>
           </a>
         </li>
         <li>
-          <a href="#" class="menu-link">
+          <a href="/ratingmanagerment" class="menu-link">
             <i class="bx bxs-door-open"></i>
             <span class="text">Quản Lí Đánh Giá</span>
           </a>
         </li>
         <li>
-          <a href="#" class="menu-link">
+          <a href="/thongke" class="menu-link">
             <i class="bx bxs-door-open"></i>
             <span class="text">Thống Kê</span>
           </a>
@@ -73,7 +75,7 @@
           </a>
         </li>
         <li>
-          <a href="#" class="logout" onclick="logout()">
+          <a href="/logout" class="logout" onclick="logout()">
             <i class="bx bxs-log-out-circle"></i>
             <span class="text">Logout</span>
           </a>
@@ -177,42 +179,57 @@
         </div>
 
         <!-- Modal Form -->
-        <div id="userFormModal" class="modal">
-          <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <form id="userForm">
-              <h2>Quản Lý User</h2>
-              <div>
-                <label for="name">Name</label>
-                <input type="text" id="name" required />
-              </div>
-              <div>
-                <label for="email">Email</label>
-                <input type="email" id="email" required />
-              </div>
-              <div>
-                <label for="phonenumber">Phone</label>
-                <input type="text" id="phonenumber" required />
-              </div>
-              <div>
-                <label for="gender">Gender</label>
-                <select id="gender" required>
-                  <option value="Male">Nam</option>
-                  <option value="Female">Nữ</option>
-                </select>
-              </div>
-              <div>
-                <label for="birthday">Birthday</label>
-                <input type="date" id="birthday" required />
-              </div>
-              <div>
-                <label for="address">Address</label>
-                <input type="text" id="address" required />
-              </div>
-              <button type="submit">Submit</button>
-            </form>
-          </div>
-        </div>
+<!-- Modal Form -->
+<div id="userFormModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <form id="userForm">
+      <h2>Quản Lý User</h2>
+      <div>
+        <label for="username">username</label>
+        <input type="text" id="username" required />
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="text" id="password" required />
+      </div>
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" required />
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" required />
+      </div>
+      <div>
+        <label for="phonenumber">Phone</label>
+        <input type="text" id="phonenumber" required />
+      </div>
+      <div>
+        <label for="gender">Gender</label>
+        <select id="gender" required>
+          <option value="Nam">Nam</option>
+          <option value="Nữ">Nữ</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="birthday">Birthday</label>
+        <input type="date" id="birthday" required />
+      </div>
+      <div>
+        <label for="address">Address</label>
+        <input type="text" id="address" required />
+      </div>
+      <div>
+        <label for="avatar">Avatar</label>
+        <input type="text" id="avatar" required />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</div>
+
 
       </main>
     </section>

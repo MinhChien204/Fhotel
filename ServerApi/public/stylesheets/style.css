@@ -165,57 +165,81 @@ body {
 }
 /* SIDEBAR */
 
-/* CSS cho modal */
+/* CSS cho modal *
+
+/* Modal background */
+/* Định dạng chung cho modal */
 .modal {
-	display: none; /* Ẩn modal mặc định */
-	position: fixed; /* Định vị cố định */
-	z-index: 1000; /* Đưa modal lên trên các thành phần khác */
-	left: 0;
-	top: 0;
-	width: 100%; /* Bao phủ toàn bộ màn hình */
-	height: 100%; /* Bao phủ toàn bộ màn hình */
-	background-color: rgba(0, 0, 0, 0.5); /* Làm mờ nền */
-	justify-content: center; /* Canh giữa ngang */
-	align-items: center; /* Canh giữa dọc */
-  }
-  
-  /* CSS cho nội dung modal */
-  .modal-content {
-	background-color: #fff; /* Màu nền trắng */
-	padding: 20px; /* Khoảng cách bên trong modal */
-	border-radius: 8px; /* Bo góc */
-	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Đổ bóng */
-	width: 400px; /* Chiều rộng modal */
-	max-width: 90%; /* Đảm bảo modal không vượt quá chiều rộng màn hình */
-	animation: fadeIn 0.3s ease; /* Hiệu ứng mở modal */
-  }
-  
-  /* Hiệu ứng mờ dần khi modal xuất hiện */
-  @keyframes fadeIn {
-	from {
-	  opacity: 0;
-	  transform: scale(0.9);
-	}
-	to {
-	  opacity: 1;
-	  transform: scale(1);
-	}
-  }
-  
-  /* Nút đóng modal */
-  .modal-content .close {
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	font-size: 20px;
-	color: #333;
-	cursor: pointer;
-	transition: color 0.2s;
-  }
-  
-  .modal-content .close:hover {
-	color: #ff4d4d;
-  }
+    display: none; /* Ẩn modal mặc định */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Màu nền tối */
+    z-index: 1000;
+    justify-content: center; /* Căn giữa ngang */
+    align-items: center; /* Căn giữa dọc */
+}
+
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90%;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal-content label {
+    font-weight: bold;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.modal-content button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3;
+}
+
   
 
 /* CONTENT */
