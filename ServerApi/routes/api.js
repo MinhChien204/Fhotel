@@ -13,6 +13,7 @@ const Service = require("../models/service");
 const Voucher = require("../models/vouchers");
 const Booking = require("../models/booking");
 const TypeRooms = require("../models/typeRooms");
+const Favourite = require("../models/favourite")
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -978,7 +979,7 @@ router.delete('/delete_typeroom/:id', async (req, res) => {
   }
 });
 
-    // Tạo booking mới
+    // Tạo yeu thich mới
     const newFavourite = new Favourite({
       userId,
       roomId,
@@ -994,6 +995,23 @@ router.delete('/delete_typeroom/:id', async (req, res) => {
     res.status(500).json({ message: "An error occurred while booking room", error: error.message });
   }
 });
+//API delete yeu thich
+router.delete("/delete_Favourite/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteFavourite = await Favourite.findByIdAndDelete(id);
 
+    if (deleteFavourite) {
+      res.json({ 
+        message: "deleteFavourite deleted successfully" 
+      });
+    } else {
+      res.status(404).json({ message: "deleteFavourite not found" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while deleting deleteFavourite" });
+  }
+});
 
 module.exports = router;

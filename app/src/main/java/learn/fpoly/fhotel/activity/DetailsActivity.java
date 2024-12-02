@@ -44,17 +44,15 @@ public class DetailsActivity extends AppCompatActivity {
     private HttpRequest httpRequest;
     private  int favouritestatus;
     private String roomId ;
-private RecyclerView rvServices;
-private ServiceAdapter serviceAdapter;
-private Favourite favourite;
+    private RecyclerView rvServices;
+    private ServiceAdapter serviceAdapter;
+    private Favourite favourite;
     private Room room;
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-
-
         // Khởi tạo HttpRequest
         httpRequest = new HttpRequest();
         rvServices = findViewById(R.id.rvServices);
@@ -72,7 +70,6 @@ private Favourite favourite;
         imgRom_details = findViewById(R.id.imgRom_details);
         serviceAdapter = new ServiceAdapter(this, new ArrayList<>());
         rvServices.setAdapter(serviceAdapter);
-
         // Nhận dữ liệu room_id từ Intent
         SharedPreferences sharedPreferences = DetailsActivity.this.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", null);
@@ -87,11 +84,17 @@ private Favourite favourite;
         ivFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(favouritestatus == 0){
                     favourite = new Favourite(userId,roomId);
                     createfavourite(favourite);
                     ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
-
-
+                }
+                if(favouritestatus == 1){
+//                    deleteFavourite(favourite.getId());
+                    updatefavouritestatus(roomId, 0);
+//                    Log.d("check favourite", "onClick: " + favourite.getId());
+                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_border_24);
+                }
 
             }
         });
@@ -122,7 +125,7 @@ private Favourite favourite;
             }
         });
     }
-//createfavourite
+    //createfavourite
     public  void createfavourite (Favourite favourite) {
         // Khởi tạo Retrofit
         HttpRequest httpRequest = new HttpRequest();
@@ -148,8 +151,8 @@ private Favourite favourite;
         });
 
     }
-///updatefavouritestatus
-private void updatefavouritestatus(String roomId, int newfavouritestatus) {
+    ///updatefavouritestatus
+    private void updatefavouritestatus(String roomId, int newfavouritestatus) {
     HttpRequest httpRequest = new HttpRequest();
     Call<Response<Room>> call = httpRequest.callAPI().updatefavouritestatus(roomId, new Room(newfavouritestatus));
 
@@ -190,6 +193,10 @@ private void updatefavouritestatus(String roomId, int newfavouritestatus) {
                         txtprice_details.setText(String.valueOf(room.getPrice()));
                         txt_capacity.setText(String.valueOf(room.getCapacity()) + " person");
                         favouritestatus =  room.getFavouritestatus();
+                        if(favouritestatus == 1){
+                            ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
+                        }
+
 
                         Glide.with(DetailsActivity.this)
                                 .load(room.getImage())
@@ -222,7 +229,6 @@ private void updatefavouritestatus(String roomId, int newfavouritestatus) {
             }
         });
     }
-
     public void fetchServiceByRoomId(String roomId) {
         Call<Response<ArrayList<RoomService>>> call = httpRequest.callAPI().getServiceByIdRoom(roomId);
         call.enqueue(new Callback<Response<ArrayList<RoomService>>>() {
@@ -251,6 +257,29 @@ private void updatefavouritestatus(String roomId, int newfavouritestatus) {
             }
         });
     }
+    public void deleteFavourite(String favouriteId) {
+        // Khởi tạo Retrofit
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Void> call = httpRequest.callAPI().deletefavourites(favouriteId);
+        // Gửi yêu cầu đến server
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    updatefavouritestatus(roomId, 0); // Ví dụ: Cập nhật trạng thái về 0 sau khi xóa
+                    Toast.makeText(DetailsActivity.this, "Delete successful!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DetailsActivity.this, "Failed to delete favourite!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(DetailsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     //de lam moi du lieu moi khi focus vao man nay
     @Override

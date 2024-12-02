@@ -16,6 +16,10 @@ public class Favourite {
     public Favourite() {
     }
 
+    public Favourite(String id) {
+        this.id = id;
+    }
+
     public Favourite(String userId, String roomId) {
         this.userId = userId;
         this.roomId = roomId;
