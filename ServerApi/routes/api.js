@@ -7,7 +7,7 @@ const path = require("path");
 
 
 const User = require("../models/users");
-const Room = require("../models/Room");
+const Room = require("../models/room");
 const RoomService = require("../models/roomservice");
 const Service = require("../models/service");
 const Voucher = require("../models/vouchers");
@@ -912,7 +912,22 @@ router.post("/addFavourite", async (req, res) => {
     if (!room) {
       return res.status(404).json({ message: "Room not found" });
     }
+    // Tạo yeu thich mới
+    const newFavourite = new Favourite({
+      userId,
+      roomId,
+    });
 
+    const savedFavourite = await newFavourite.save();
+    res.status(201).json({
+      message: "Favourite booked successfully",
+      data: savedFavourite,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while booking room", error: error.message });
+  }
+});
 //Type Room
 router.post('/add_typeroom', async (req, res) => {
   const { name, imageRoom } = req.body;
@@ -979,22 +994,7 @@ router.delete('/delete_typeroom/:id', async (req, res) => {
   }
 });
 
-    // Tạo yeu thich mới
-    const newFavourite = new Favourite({
-      userId,
-      roomId,
-    });
 
-    const savedFavourite = await newFavourite.save();
-    res.status(201).json({
-      message: "Favourite booked successfully",
-      data: savedFavourite,
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ message: "An error occurred while booking room", error: error.message });
-  }
-});
 //API delete yeu thich
 router.delete("/delete_Favourite/:id", async (req, res) => {
   try {
