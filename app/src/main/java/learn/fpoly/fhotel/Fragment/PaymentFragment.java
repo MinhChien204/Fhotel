@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,8 +31,10 @@ import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import learn.fpoly.fhotel.activity.Home_User;
+import learn.fpoly.fhotel.activity.VnPayment;
 import learn.fpoly.fhotel.dialog.SelectDateBottomSheet;
 import learn.fpoly.fhotel.dialog.SelectGuestBottomSheet;
+import learn.fpoly.fhotel.utils.VNPayUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import learn.fpoly.fhotel.response.Response;
@@ -40,6 +44,9 @@ public class PaymentFragment extends Fragment {
     ImageView btnback, roomImage;
     Button btnpay;
     RatingBar ratingBar;
+    private RadioGroup paymentMethodsGroup;
+    private RadioButton rbPayVNPay, rbPayCash;
+
     private String userId, roomId;
     private int numberOfNights = 0; // Số đêm mặc định
     private float roomPricePerNight = 120; // Giá phòng mỗi đêm mặc định
@@ -62,6 +69,9 @@ public class PaymentFragment extends Fragment {
         roomImage = view.findViewById(R.id.roomImage);
         ratingBar = view.findViewById(R.id.ratingBarPayment);
         btnpay = view.findViewById(R.id.pay_now_button);
+        paymentMethodsGroup = view.findViewById(R.id.payment_methods_group);
+        rbPayVNPay = view.findViewById(R.id.rb_pay_vnpay);
+        rbPayCash = view.findViewById(R.id.rb_pay_cash);
 
         totalPrice.setText("$0.00");
         tvPriceDetails.setText("Room Price: $0.00\nNumber of nights: 0\nTotal Price: $0.00");
@@ -109,18 +119,28 @@ public class PaymentFragment extends Fragment {
                     Toast.makeText(getContext(), "Vui lòng chọn ngày đặt phòng!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 String startDate = dateRange.split("To:")[0].replace("From:", "").trim();
                 String endDate = dateRange.split("To:")[1].trim();
                 float total = Float.parseFloat(totalPrice.getText().toString().replace("$", "").trim());
+
                 if (total <= 0) {
                     Toast.makeText(getContext(), "Invalid booking details", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Booking booking = new Booking(userId, roomId, startDate, endDate, total);
-
-                createBooking(booking);
+                // Kiểm tra phương thức thanh toán
+                int selectedPaymentMethod = paymentMethodsGroup.getCheckedRadioButtonId();
+                if (selectedPaymentMethod == R.id.rb_pay_vnpay) {
+                    processVNPayPayment(startDate, endDate, total);
+                } else if (selectedPaymentMethod == R.id.rb_pay_cash) {
+                    Booking booking = new Booking(userId, roomId, startDate, endDate, total);
+                    createBooking(booking);
+                } else {
+                    Toast.makeText(getContext(), "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
+                }
             });
+
 
 
             btnback.setOnClickListener(view1 -> {
@@ -233,4 +253,19 @@ public class PaymentFragment extends Fragment {
             }
         });
     }
+    private void processVNPayPayment(String startDate, String endDate, float totalAmount) {
+        try {
+            String paymentUrl = VNPayUtils.generateVNPayUrl(roomId, (long) totalAmount);
+
+            // Chuyển hướng đến PaymentActivity để mở WebView
+            Intent intent = new Intent(getActivity(), VnPayment.class);
+            intent.putExtra("paymentUrl", paymentUrl);
+            startActivity(intent);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Error generating VNPay URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

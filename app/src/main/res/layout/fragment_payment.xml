@@ -221,63 +221,65 @@
                 android:textStyle="bold" />
 
             <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/pay_in_full"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/arimo_semibold"
-                    android:text="Pay in full" />
-
-                <RadioButton
-                    android:id="@+id/pay_part_now"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/arimo_semibold"
-                    android:text="Pay part now, part later" />
-            </RadioGroup>
-
-            <!-- Payment Method Section -->
-            <TextView
+                android:id="@+id/payment_methods_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:fontFamily="serif"
-                android:text="Pay with"
-                android:textSize="18dp"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:layout_marginTop="16dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rcv_visapayment"
-                    android:layout_width="280dp"
-                    android:layout_height="wrap_content"/>
-
-                <!-- Thêm một khoảng trống đẩy nút "Add" về cuối -->
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/add_payment"
+                <RadioButton
+                    android:id="@+id/rb_pay_vnpay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/search_bg"
-                    android:backgroundTint="@color/primaryColor"
-                    android:text="Add"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:text="Thanh toán qua VNPay" />
+
+                <RadioButton
+                    android:id="@+id/rb_pay_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thanh toán bằng tiền mặt" />
+            </RadioGroup>
+
+
+            <!-- Payment Method Section -->
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:fontFamily="serif"-->
+<!--                android:text="Pay with"-->
+<!--                android:textSize="18dp"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/rcv_visapayment"-->
+<!--                    android:layout_width="280dp"-->
+<!--                    android:layout_height="wrap_content"/>-->
+
+<!--                &lt;!&ndash; Thêm một khoảng trống đẩy nút "Add" về cuối &ndash;&gt;-->
+<!--                <Space-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1" />-->
+
+<!--                <androidx.appcompat.widget.AppCompatButton-->
+<!--                    android:id="@+id/add_payment"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:background="@drawable/search_bg"-->
+<!--                    android:backgroundTint="@color/primaryColor"-->
+<!--                    android:text="Add"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="14sp"-->
+<!--                    android:textStyle="bold" />-->
+<!--            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
