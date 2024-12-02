@@ -87,12 +87,13 @@ public class Login extends AppCompatActivity {
                     if (userResponse.getStatus() == 200) {
                         int roles = userResponse.getRole();
                         String id  = userResponse.getId();
+                        String avatar = userResponse.getAvatar();
                         Log.d("roles", "onResponse: " + roles);
                         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("userId",id);
+                        editor.putString("avatar",avatar);
                         editor.apply(); // Lưu thay đổi
-                        Log.d("dcm huynlsv", "onResponse: "+ id);
                         // Sử dụng switch-case để chuyển màn hình
                         switch (roles) {
                             case 0:

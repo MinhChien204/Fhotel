@@ -1,16 +1,21 @@
 package learn.fpoly.fhotel.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -38,6 +43,8 @@ public class Fragment_TrangChu extends Fragment {
     private HttpRequest httpRequest;
     private FloatingActionButton floatingActionButton;
     private TextView txtSeeall;
+    private String avetar;
+    private ImageView imageView;
 
     public Fragment_TrangChu() {
         // Required empty public constructor
@@ -47,6 +54,8 @@ public class Fragment_TrangChu extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment__trang_chu, container, false);
         txtSeeall = view.findViewById(R.id.txtSeeall);
+        imageView = view.findViewById(R.id.imageView);
+
 
         // Khởi tạo ApiService
         httpRequest = new HttpRequest();
@@ -59,6 +68,12 @@ public class Fragment_TrangChu extends Fragment {
         // Gọi API để lấy dữ liệu
         fetchRecentsData(view);
         fetchTopPlacesData(view);
+// Lấy userId từ SharedPreferences
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        avetar = sharedPreferences.getString("avatar", null);
+        Glide.with(getContext())
+                .load(avetar) // URL của hình ảnh
+                .into(imageView); // ImageView để hiển thị ảnh
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override

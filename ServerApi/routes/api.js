@@ -12,6 +12,7 @@ const RoomService = require("../models/roomservice");
 const Service = require("../models/service");
 const Voucher = require("../models/vouchers");
 const Booking = require("../models/booking");
+const Favourite = require("../models/favourite");
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -334,7 +335,49 @@ router.get("/room/:id", async (req, res) => {
       .json({ message: "An error occurred while retrieving room" });
   }
 });
+////// API cập nhật trangj thai yeu thich
+router.put("/update_room_favouritestatus/:id", async (req, res) => {
+  const { id } = req.params;
+  const { favouritestatus } = req.body;
 
+  try {
+
+    const room = await Room.findByIdAndUpdate(
+      id,
+      { favouritestatus },
+      { new: true }
+    );
+
+    if (!room) {
+      return res.status(404).json({ message: "Không tìm thấy room" });
+    }
+
+    res.status(200).json({
+      message: "room update successfully",
+      data: room,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi server", error });
+  }
+});
+// API xóa phòng
+router.delete("/delete_room/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteRoom = await Room.findByIdAndDelete(id);
+
+    if (deleteRoom) {
+      res.status(200).json({ message: "Room deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Room not found" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while deleting room" });
+  }
+});
+
+/////
 // API cập nhật phòng
 router.put("/update_room/:id", async (req, res) => {
   try {
@@ -513,6 +556,7 @@ router.post("/login", async (req, res) => {
       message: "Login thành công",
       role: user.role,
       id: user._id,
+      avatar: user.avatar,
       token: token,
       refreshToken: refreshToken,
     });
@@ -836,7 +880,55 @@ router.get('/bookings', async (req, res) => {
     res.status(500).json({ message: 'Server error' }); // Nếu có lỗi server
   }
 });
+// API lấy tất cả các yêu thích
+router.get('/favourite', async (req, res) => {
+  try {
+    const favourite = await Favourite.find()
+    .populate("userId") // Lấy tên và email của người dùng từ User
+    .populate("roomId") // Lấy tên và giá của phòng từ Room
+    .exec();
+    res.status(200).json(
+      {
+        message : "lấy dữ liệu thành công",
+        data : favourite
+      }
+    ); // Trả về danh sách các booking dưới dạng JSON
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' }); // Nếu có lỗi server
+  }
+});
+//// add yêu thích {date test: userid = 6746aea316aac83085b8afef romid =6724d8252c88291f6771f7f2
+router.post("/addFavourite", async (req, res) => {
+  try {
+    const { userId, roomId } = req.body;
 
+    // Kiểm tra user và phòng có tồn tại không
+    const user = await User.findById(userId);
+    const room = await Room.findById(roomId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    // Tạo booking mới
+    const newFavourite = new Favourite({
+      userId,
+      roomId,
+    });
+
+    const savedFavourite = await newFavourite.save();
+    res.status(201).json({
+      message: "Favourite booked successfully",
+      data: savedFavourite,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while booking room", error: error.message });
+  }
+});
 
 
 module.exports = router;

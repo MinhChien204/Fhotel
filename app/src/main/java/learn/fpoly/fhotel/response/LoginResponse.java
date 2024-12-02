@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class LoginResponse {
     private String id;
     private String messenger;
+    private String avatar;
     private int role;
     private int status;
     private String accessToken;  // Thêm accessToken
@@ -13,10 +14,10 @@ public class LoginResponse {
     public LoginResponse() {
     }
 
-
-    public LoginResponse(String id, String messenger, int role, int status, String accessToken, String refreshToken) {
+    public LoginResponse(String id, String messenger, String avatar, int role, int status, String accessToken, String refreshToken) {
         this.id = id;
         this.messenger = messenger;
+        this.avatar = avatar;
         this.role = role;
         this.status = status;
         this.accessToken = accessToken;
@@ -37,6 +38,14 @@ public class LoginResponse {
 
     public void setMessenger(String messenger) {
         this.messenger = messenger;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getRole() {

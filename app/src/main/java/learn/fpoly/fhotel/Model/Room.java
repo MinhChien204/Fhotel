@@ -11,6 +11,7 @@ public class Room {
     private String description;
     private String image;
     private int capacity;
+    private int favouritestatus;
     private String room_code;
     private String status;
 
@@ -21,7 +22,11 @@ public class Room {
         this.status = status;
     }
 
-    public Room(String id, String name, Double price, Double rating, String description, String image, int capacity, String room_code, String status) {
+    public Room(int favouritestatus) {
+        this.favouritestatus = favouritestatus;
+    }
+
+    public Room(String id, String name, Double price, Double rating, String description, String image, int capacity, int favouritestatus, String room_code, String status) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -29,11 +34,20 @@ public class Room {
         this.description = description;
         this.image = image;
         this.capacity = capacity;
+        this.favouritestatus = favouritestatus;
         this.room_code = room_code;
         this.status = status;
     }
 
     // Getters và Setters
+
+    public int getFavouritestatus() {
+        return favouritestatus;
+    }
+
+    public void setFavouritestatus(int favouritestatus) {
+        this.favouritestatus = favouritestatus;
+    }
 
     public String getId() {
         return id;

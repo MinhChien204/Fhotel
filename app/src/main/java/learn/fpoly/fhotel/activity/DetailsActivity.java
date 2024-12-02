@@ -1,6 +1,11 @@
 package learn.fpoly.fhotel.activity;
 
+import static java.security.AccessController.getContext;
+
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,8 +25,11 @@ import java.util.ArrayList;
 
 import learn.fpoly.fhotel.Adapter.ServiceAdapter;
 import learn.fpoly.fhotel.Fragment.PaymentFragment;
+import learn.fpoly.fhotel.Model.Booking;
+import learn.fpoly.fhotel.Model.Favourite;
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.Model.RoomService;
+import learn.fpoly.fhotel.Model.User;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import retrofit2.Call;
@@ -34,8 +42,11 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView txtdescription_details, txtprice_details, txtNamerom_details,txt_capacity,txtstatusRoom;
     private RatingBar txtRating_details;
     private HttpRequest httpRequest;
+    private  int favouritestatus;
+    private String roomId ;
 private RecyclerView rvServices;
 private ServiceAdapter serviceAdapter;
+private Favourite favourite;
     private Room room;
     @SuppressLint("WrongViewCast")
     @Override
@@ -63,7 +74,9 @@ private ServiceAdapter serviceAdapter;
         rvServices.setAdapter(serviceAdapter);
 
         // Nhận dữ liệu room_id từ Intent
-        String roomId = getIntent().getStringExtra("room_id");
+        SharedPreferences sharedPreferences = DetailsActivity.this.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", null);
+        roomId = getIntent().getStringExtra("room_id");
         // Xử lý sự kiện quay lại
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +84,17 @@ private ServiceAdapter serviceAdapter;
                 onBackPressed();  // Quay lại màn hình trước
             }
         });
+        ivFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    favourite = new Favourite(userId,roomId);
+                    createfavourite(favourite);
+                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
 
+
+
+            }
+        });
         // Xử lý sự kiện khi nhấn nút đặt phòng
         btnBookingHotel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +122,56 @@ private ServiceAdapter serviceAdapter;
             }
         });
     }
+//createfavourite
+    public  void createfavourite (Favourite favourite) {
+        // Khởi tạo Retrofit
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Favourite>> call = httpRequest.callAPI().createfavourite(favourite);
 
+        // Gửi yêu cầu đến server
+        call.enqueue(new Callback<Response<Favourite>>() {
+            @Override
+            public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
+                if (response.isSuccessful()) {
+                    updatefavouritestatus(roomId,1);
+                    Toast.makeText(DetailsActivity.this, "create successful!", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(DetailsActivity.this, "false", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Favourite>> call, Throwable t) {
+                Toast.makeText(DetailsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+///updatefavouritestatus
+private void updatefavouritestatus(String roomId, int newfavouritestatus) {
+    HttpRequest httpRequest = new HttpRequest();
+    Call<Response<Room>> call = httpRequest.callAPI().updatefavouritestatus(roomId, new Room(newfavouritestatus));
+
+    call.enqueue(new Callback<Response<Room>>() {
+        @Override
+        public void onResponse(Call<Response<Room>> call, retrofit2.Response<Response<Room>> response) {
+            if (response.isSuccessful()) {
+                // Kiểm tra và cập nhật thông tin của booking chỉ cần thiết
+
+                Toast.makeText(DetailsActivity.this, "Trạng thái đã được cập nhật!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(DetailsActivity.this, "Không thể cập nhật trạng thái", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Response<Room>> call, Throwable t) {
+            Log.d("stbk", "onFailure: "+t);
+            Toast.makeText(DetailsActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    });
+}
     public void fetchRoomById(String roomId) {
         Call<Response<Room>> call = httpRequest.callAPI().getRoomById(roomId);
         call.enqueue(new Callback<Response<Room>>() {
@@ -117,6 +189,8 @@ private ServiceAdapter serviceAdapter;
                         txtstatusRoom.setText(room.getStatus());
                         txtprice_details.setText(String.valueOf(room.getPrice()));
                         txt_capacity.setText(String.valueOf(room.getCapacity()) + " person");
+                        favouritestatus =  room.getFavouritestatus();
+
                         Glide.with(DetailsActivity.this)
                                 .load(room.getImage())
                                 .into(imgRom_details);

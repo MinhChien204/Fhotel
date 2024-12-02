@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learn.fpoly.fhotel.Model.Booking;
+import learn.fpoly.fhotel.Model.Favourite;
 import learn.fpoly.fhotel.Model.LoginRequest;
 import learn.fpoly.fhotel.Model.PasswordUpdateRequest;
 import learn.fpoly.fhotel.response.LoginResponse;
@@ -84,5 +85,11 @@ public interface ApiService {
     Call<Response<Room>> updateRoomStatus(@Path("id") String id, @Body Room status);
     @DELETE("api/cancel_booking/{id}")
     Call<Void> cancelBooking(@Path("id") String bookingId);
+    /////////////
+    @POST("api/addFavourite")
+    Call<Response<Favourite>> createfavourite(@Body Favourite favourite);
+    /////////////////
+    @PUT("api/update_room_favouritestatus/{id}")
+    Call<Response<Room>> updatefavouritestatus(@Path("id") String id, @Body Room status);
 
 }
