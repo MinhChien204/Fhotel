@@ -12,7 +12,7 @@ const RoomService = require("../models/roomservice");
 const Service = require("../models/service");
 const Voucher = require("../models/vouchers");
 const Booking = require("../models/booking");
-const Favourite = require("../models/favourite");
+const TypeRooms = require("../models/typeRooms");
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -556,7 +556,6 @@ router.post("/login", async (req, res) => {
       message: "Login thành công",
       role: user.role,
       id: user._id,
-      avatar: user.avatar,
       token: token,
       refreshToken: refreshToken,
     });
@@ -912,6 +911,72 @@ router.post("/addFavourite", async (req, res) => {
     if (!room) {
       return res.status(404).json({ message: "Room not found" });
     }
+
+//Type Room
+router.post('/add_typeroom', async (req, res) => {
+  const { name, imageRoom } = req.body;
+  const newTypeRoom = new TypeRooms({ name, imageRoom });
+
+  try {
+    const savedTypeRoom = await newTypeRoom.save();
+    res.status(201).json(savedTypeRoom);
+  } catch (error) {
+    res.status(400).json({ message: 'Error creating typeRoom', error });
+  }
+});
+
+/* 2. Read all (GET) */
+router.get('/typerooms', async (req, res) => {
+  try {
+    const typeRooms = await TypeRooms.find();
+    res.status(200).json(typeRooms);
+  } catch (error) {
+    res.status(400).json({ message: 'Error fetching typeRooms', error });
+  }
+});
+
+/* 3. Read single (GET by ID) */
+router.get('/typeroom/:id', async (req, res) => {
+  try {
+    const typeRoom = await TypeRooms.findById(req.params.id);
+    if (!typeRoom) {
+      return res.status(404).json({ message: 'TypeRoom not found' });
+    }
+    res.status(200).json(typeRoom);
+  } catch (error) {
+    res.status(400).json({ message: 'Error fetching typeRoom', error });
+  }
+});
+
+/* 4. Update (PUT) */
+router.put('/update_typeroom/:id', async (req, res) => {
+  try {
+    const updatedTypeRoom = await TypeRooms.findByIdAndUpdate(
+      req.params.id,
+      { name: req.body.name, imageRoom: req.body.imageRoom },
+      { new: true }  // Return the updated document
+    );
+    if (!updatedTypeRoom) {
+      return res.status(404).json({ message: 'TypeRoom not found' });
+    }
+    res.status(200).json(updatedTypeRoom);
+  } catch (error) {
+    res.status(400).json({ message: 'Error updating typeRoom', error });
+  }
+});
+
+/* 5. Delete (DELETE) */
+router.delete('/delete_typeroom/:id', async (req, res) => {
+  try {
+    const deletedTypeRoom = await TypeRooms.findByIdAndDelete(req.params.id);
+    if (!deletedTypeRoom) {
+      return res.status(404).json({ message: 'TypeRoom not found' });
+    }
+    res.status(200).json({ message: 'TypeRoom deleted' });
+  } catch (error) {
+    res.status(400).json({ message: 'Error deleting typeRoom', error });
+  }
+});
 
     // Tạo booking mới
     const newFavourite = new Favourite({

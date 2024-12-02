@@ -86,15 +86,18 @@ public class Login extends AppCompatActivity {
                     LoginResponse userResponse = response.body(); // Lấy đối tượng Response
                     if (userResponse.getStatus() == 200) {
                         int roles = userResponse.getRole();
-                        String id  = userResponse.getId();
-                        String avatar = userResponse.getAvatar();
-                        Log.d("roles", "onResponse: " + roles);
+                        String id = userResponse.getId();
+                        String name = userResponse.getName(); // Lấy tên từ API response
+                        String email = userResponse.getEmail(); // Lấy email từ API response
+                        String profileImage = userResponse.getProfileImage(); // Lấy URL ảnh từ API response
+
                         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("userId",id);
-                        editor.putString("avatar",avatar);
-                        editor.apply(); // Lưu thay đổi
-                        // Sử dụng switch-case để chuyển màn hình
+                        editor.putString("userId", id);
+                        editor.putString("userName", name);
+                        editor.putString("userEmail", email);
+                        editor.putString("userImage", profileImage);
+                        editor.apply();
                         switch (roles) {
                             case 0:
                                 // Chuyển sang TrangChuAdmin nếu idUser = 0

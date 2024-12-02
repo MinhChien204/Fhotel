@@ -3,15 +3,20 @@ package learn.fpoly.fhotel.Fragment;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.bumptech.glide.Glide;
 
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.activity.Change_password;
@@ -24,6 +29,8 @@ import learn.fpoly.fhotel.chatbot.ChatBotActivity;
 public class TkhoanFragment extends Fragment {
 
     LinearLayout editProfile, editPassword, payment, booking, privacy, terms,btnLogOut,voucher;
+    TextView txtUserName, txtUserEmail;
+    ImageView imgUserProfile;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -36,6 +43,24 @@ public class TkhoanFragment extends Fragment {
         editProfile = view.findViewById(R.id.editProfile);
         voucher = view.findViewById(R.id.linearlayoutVoucher);
         editPassword = view.findViewById(R.id.editPassword);
+
+        txtUserName = view.findViewById(R.id.profile_name);
+        txtUserEmail = view.findViewById(R.id.profile_email);
+        imgUserProfile = view.findViewById(R.id.profile_image);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
+        String userName = sharedPreferences.getString("userName", "Người dùng");
+        String userEmail = sharedPreferences.getString("userEmail", "Email không xác định");
+        String userImage = sharedPreferences.getString("userImage", null);
+
+        txtUserName.setText(userName);
+        txtUserEmail.setText(userEmail);
+        if (userImage != null) {
+            Glide.with(this).load(userImage).into(imgUserProfile); // Tải ảnh từ URL
+        } else {
+            imgUserProfile.setImageResource(R.drawable.ic_launcher_foreground); // Hiển thị ảnh mặc định nếu không có URL
+        }
+
         editPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

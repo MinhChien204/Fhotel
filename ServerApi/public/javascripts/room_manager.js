@@ -95,7 +95,7 @@ function createStars(rating) {
 
 // Open the modal for adding/editing rooms
 function openModal(room = null) {
-  roomFormModal.style.display = "block";
+  roomFormModal.style.display = "flex";
 
   if (room) {
     document.getElementById("roomId").value = room._id;

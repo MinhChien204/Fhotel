@@ -7,6 +7,7 @@ import learn.fpoly.fhotel.Model.Booking;
 import learn.fpoly.fhotel.Model.Favourite;
 import learn.fpoly.fhotel.Model.LoginRequest;
 import learn.fpoly.fhotel.Model.PasswordUpdateRequest;
+import learn.fpoly.fhotel.Model.TypeRoom;
 import learn.fpoly.fhotel.response.LoginResponse;
 import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.Model.Room;
@@ -91,5 +92,9 @@ public interface ApiService {
     /////////////////
     @PUT("api/update_room_favouritestatus/{id}")
     Call<Response<Room>> updatefavouritestatus(@Path("id") String id, @Body Room status);
+
+    //Type Room
+    @GET("api/typerooms")
+    Call<Response<ArrayList<TypeRoom>>> getTypeRooms();
 
 }

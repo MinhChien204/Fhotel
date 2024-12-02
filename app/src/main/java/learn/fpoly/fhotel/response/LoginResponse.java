@@ -5,25 +5,57 @@ import com.google.gson.annotations.SerializedName;
 public class LoginResponse {
     private String id;
     private String messenger;
-    private String avatar;
     private int role;
     private int status;
-    private String accessToken;  // Thêm accessToken
-    private String refreshToken; // Thêm refreshToken
+    private String accessToken;
+    private String refreshToken;
+
+    // Thêm các trường mới
+    private String name;
+    private String email;
+    private String profileImage;
 
     public LoginResponse() {
     }
 
-    public LoginResponse(String id, String messenger, String avatar, int role, int status, String accessToken, String refreshToken) {
+    public LoginResponse(String id, String messenger, int role, int status, String accessToken, String refreshToken, String name, String email, String profileImage) {
         this.id = id;
         this.messenger = messenger;
-        this.avatar = avatar;
         this.role = role;
         this.status = status;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.name = name;
+        this.email = email;
+        this.profileImage = profileImage;
     }
 
+    // Getter và Setter cho các trường mới
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    // Các getter và setter khác
     public String getId() {
         return id;
     }
@@ -38,14 +70,6 @@ public class LoginResponse {
 
     public void setMessenger(String messenger) {
         this.messenger = messenger;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 
     public int getRole() {

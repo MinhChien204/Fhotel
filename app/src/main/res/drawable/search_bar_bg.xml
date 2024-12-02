@@ -1,0 +1,5 @@
+<!-- res/drawable/search_bar_bg.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#fff"/> <!-- Color for the search bar background -->
+    <corners android:radius="16dp"/> <!-- Rounded corners -->
+</shape>
