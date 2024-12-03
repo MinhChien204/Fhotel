@@ -12,12 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import learn.fpoly.fhotel.Adapter.BookingAdapter;
+import learn.fpoly.fhotel.Adapter.FavouriteAdapter;
 import learn.fpoly.fhotel.Model.Booking;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
@@ -29,12 +32,14 @@ import retrofit2.Callback;
 public class BookingFragment extends Fragment {
     private RecyclerView rcvListUpcomingBooking;
     private String userId;
+    private BookingAdapter adapter;
+    private TextView tvNoBookings;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_booking, container, false);
-
+        tvNoBookings=view.findViewById(R.id.tvNoBookings);
         // Ánh xạ RecyclerView
         rcvListUpcomingBooking = view.findViewById(R.id.rcv_listUpcomingBooking);
         rcvListUpcomingBooking.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -58,14 +63,17 @@ public class BookingFragment extends Fragment {
         call.enqueue(new Callback<Response<List<Booking>>>() {
             @Override
             public void onResponse(Call<Response<List<Booking>>> call, retrofit2.Response<Response<List<Booking>>> response) {
-                if (response.isSuccessful() && response.body().getStatus() != 404) {
+                if (response.isSuccessful()) {
                     List<Booking> bookings = response.body().getData();
                     if (bookings != null && !bookings.isEmpty()) {
-                        BookingAdapter adapter = new BookingAdapter(getContext(),bookings);
+                        tvNoBookings.setVisibility(View.GONE);
+                        adapter = new BookingAdapter(getContext(),bookings);
                         adapter.sortByCreatedAtNewestFirst(); // Sắp xếp trước khi hiển thị
                         rcvListUpcomingBooking.setAdapter(adapter);
                     } else {
-                        Toast.makeText(getContext(), "No upcoming bookings.", Toast.LENGTH_SHORT).show();
+                        tvNoBookings.setVisibility(View.VISIBLE);
+                        adapter = new BookingAdapter(getContext(), new ArrayList<>());
+                        rcvListUpcomingBooking.setAdapter(adapter);
                     }
                 } else {
                     Toast.makeText(getContext(), "No room was found.", Toast.LENGTH_SHORT).show();

@@ -10,7 +10,7 @@ const Room = new Schema({
     capacity: { type: Number, required: true },
     status: { type: String, required: true },  // Chuyển sang String để lưu trạng thái như "available"
     favouritestatus: {type: Number, required: true, default: 0}, // chuyển trạng thái yêu thích (0:1)
-    room_code: { type: String, required: true } // Chuyển thành String cho mã phòng dạng "D123"
+    room_code: { type: String, required: true } 
 }, {
     timestamps: true
 });

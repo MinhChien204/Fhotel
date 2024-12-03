@@ -13,8 +13,8 @@
         android:icon="@drawable/notes"
         android:title="Booking" />
     <item
-        android:id="@+id/navUudai_u"
-        android:icon="@drawable/promotion"
+        android:id="@+id/navFavourite_u"
+        android:icon="@drawable/baseline_favorite_24"
         android:title="Ưu đãi" />
     <item
         android:id="@+id/navTaiKhoan_u"

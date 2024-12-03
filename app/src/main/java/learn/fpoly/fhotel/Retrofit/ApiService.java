@@ -25,6 +25,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
     String DOMAIN ="http://10.0.2.2:3000/";
@@ -95,6 +96,12 @@ public interface ApiService {
     //////////////////
     @DELETE("api/delete_Favourite/{id}")
     Call<Void> deletefavourites(@Path("id") String favouritesId);
+    /////////////
+    @GET("api/favourites/check")
+    Call<Response<Favourite>> checkFavourite(@Query("userId") String userId, @Query("roomId") String roomId);
+
+    @GET("api/user/{userId}/favourites")
+    Call<Response<List<Favourite>>> getUserFavourites(@Path("userId") String userId);
 
     //Type Room
     @GET("api/typerooms")

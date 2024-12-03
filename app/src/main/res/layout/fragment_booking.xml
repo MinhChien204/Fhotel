@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Fragment.BookingFragment">
 
@@ -22,10 +21,22 @@
             android:textStyle="bold" />
 
     </androidx.appcompat.widget.Toolbar>
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
         android:id="@+id/rcv_listUpcomingBooking"/>
-
+        <TextView
+            android:id="@+id/tvNoBookings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vẫn chưa có gì ở đây cả"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:textSize="16sp"/>
+    </FrameLayout>
 </LinearLayout>

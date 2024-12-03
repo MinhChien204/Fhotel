@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Favourite = new Schema({
-    roomId: { type: mongoose.Schema.Types.ObjectId, ref: "room", required: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
+    roomId: { type: mongoose.Schema.Types.ObjectId, ref: "room", required: true },
+    
    
 }, {
     timestamps: true

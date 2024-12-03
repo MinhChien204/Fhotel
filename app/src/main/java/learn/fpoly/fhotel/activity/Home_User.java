@@ -17,7 +17,7 @@ import learn.fpoly.fhotel.Fragment.BookingFragment;
 import learn.fpoly.fhotel.Fragment.Fragment_TrangChu;
 import learn.fpoly.fhotel.Fragment.NotificationFragment;
 import learn.fpoly.fhotel.Fragment.TkhoanFragment;
-import learn.fpoly.fhotel.Fragment.UudaiFragment;
+import learn.fpoly.fhotel.Fragment.FavouriteFragment;
 import learn.fpoly.fhotel.R;
 
 public class Home_User extends AppCompatActivity {
@@ -47,8 +47,8 @@ public class Home_User extends AppCompatActivity {
                 } else if (itemID == R.id.navBooking_u) {
                     selectedFragment = new BookingFragment();
                 }
-                else if (itemID == R.id.navUudai_u) {
-                    selectedFragment = new UudaiFragment();
+                else if (itemID == R.id.navFavourite_u) {
+                    selectedFragment = new FavouriteFragment();
                 }else {
                     selectedFragment = new TkhoanFragment();
                 }

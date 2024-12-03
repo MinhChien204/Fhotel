@@ -13,6 +13,9 @@ public class Favourite {
     @SerializedName("roomId")
     private String roomId;
 
+    private Room room;
+    @SerializedName("createdAt")
+    private String createdAt;
     public Favourite() {
     }
 
@@ -29,6 +32,13 @@ public class Favourite {
         this.id = id;
         this.userId = userId;
         this.roomId = roomId;
+    }
+
+    public Favourite(String id, String userId, String roomId, Room room) {
+        this.id = id;
+        this.userId = userId;
+        this.roomId = roomId;
+        this.room = room;
     }
 
     public String getId() {
@@ -53,5 +63,21 @@ public class Favourite {
 
     public void setRoomId(String roomId) {
         this.roomId = roomId;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

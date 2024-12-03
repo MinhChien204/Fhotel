@@ -84,17 +84,7 @@ public class DetailsActivity extends AppCompatActivity {
         ivFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(favouritestatus == 0){
-                    favourite = new Favourite(userId,roomId);
-                    createfavourite(favourite);
-                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
-                }
-                if(favouritestatus == 1){
-//                    deleteFavourite(favourite.getId());
-                    updatefavouritestatus(roomId, 0);
-//                    Log.d("check favourite", "onClick: " + favourite.getId());
-                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_border_24);
-                }
+                checkFavourite(userId, roomId);
 
             }
         });
@@ -125,6 +115,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
     }
+
     //createfavourite
     public  void createfavourite (Favourite favourite) {
         // Khởi tạo Retrofit
@@ -275,6 +266,29 @@ public class DetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(DetailsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void checkFavourite(String userId, String roomId) {
+        Call<Response<Favourite>> call = httpRequest.callAPI().checkFavourite(userId, roomId);
+        call.enqueue(new Callback<Response<Favourite>>() {
+            @Override
+            public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Favourite favourite = response.body().getData();
+                    // Nếu Favourite tồn tại, xóa nó
+                    deleteFavourite(favourite.getId());
+                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_border_24);
+                } else {
+                    // Nếu không tồn tại, tạo mới
+                    createfavourite(new Favourite(userId, roomId));
+                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Favourite>> call, Throwable t) {
                 Toast.makeText(DetailsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

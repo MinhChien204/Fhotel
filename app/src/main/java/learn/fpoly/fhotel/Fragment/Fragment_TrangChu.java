@@ -102,7 +102,6 @@ public class Fragment_TrangChu extends Fragment {
             @Override
             public void onFailure(Call<Response<ArrayList<TypeRoom>>> call, Throwable throwable) {
                 Log.e("API_FAILURE", "Error: " + throwable.getMessage());
-                Toast.makeText(getContext(), "Failed to load type rooms", Toast.LENGTH_SHORT).show();
             }
         });
 
