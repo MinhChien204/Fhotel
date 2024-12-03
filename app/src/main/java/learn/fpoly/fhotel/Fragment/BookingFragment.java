@@ -12,8 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,12 +37,14 @@ public class BookingFragment extends Fragment {
     private String userId;
     private BookingAdapter adapter;
     private TextView tvNoBookings;
+    private ImageView ivLoadingbookingGif;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_booking, container, false);
         tvNoBookings=view.findViewById(R.id.tvNoBookings);
+        ivLoadingbookingGif=view.findViewById(R.id.ivLoadingbookingGif);
         // Ánh xạ RecyclerView
         rcvListUpcomingBooking = view.findViewById(R.id.rcv_listUpcomingBooking);
         rcvListUpcomingBooking.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -66,12 +71,18 @@ public class BookingFragment extends Fragment {
                 if (response.isSuccessful()) {
                     List<Booking> bookings = response.body().getData();
                     if (bookings != null && !bookings.isEmpty()) {
+                        ivLoadingbookingGif.setVisibility(View.GONE);
                         tvNoBookings.setVisibility(View.GONE);
                         adapter = new BookingAdapter(getContext(),bookings);
                         adapter.sortByCreatedAtNewestFirst(); // Sắp xếp trước khi hiển thị
                         rcvListUpcomingBooking.setAdapter(adapter);
                     } else {
+                        ivLoadingbookingGif.setVisibility(View.VISIBLE);
                         tvNoBookings.setVisibility(View.VISIBLE);
+                        Glide.with(getContext())
+                                .asGif()  // Đảm bảo tải ảnh động
+                                .load(R.drawable.hotel_animation)  // Tải ảnh động từ tài nguyên drawable
+                                .into(ivLoadingbookingGif);
                         adapter = new BookingAdapter(getContext(), new ArrayList<>());
                         rcvListUpcomingBooking.setAdapter(adapter);
                     }
