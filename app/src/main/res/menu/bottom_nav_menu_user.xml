@@ -15,7 +15,7 @@
     <item
         android:id="@+id/navFavourite_u"
         android:icon="@drawable/baseline_favorite_24"
-        android:title="Ưu đãi" />
+        android:title="Yêu thích" />
     <item
         android:id="@+id/navTaiKhoan_u"
         android:icon="@drawable/person"
