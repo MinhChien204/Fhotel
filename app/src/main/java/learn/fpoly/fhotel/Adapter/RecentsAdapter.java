@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,8 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
         Room room = recentsDataList.get(position);
         holder.room_name.setText(room.getName());
         holder.room_code.setText(room.getRoomCode());
-        holder.price_room.setText(String.valueOf(room.getPrice()));
+        holder.price_room.setText(String.valueOf(room.getPrice() +"vnd/night"));
+        holder.ratingBar.setRating(room.getRating());
         Glide.with(context)
                 .load(recentsDataList.get(position).getImage()) // URL của hình ảnh
                 .into(holder.room_image); // ImageView để hiển thị ảnh
@@ -72,7 +74,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
 
         ImageView room_image;
         TextView room_name, room_code, price_room;
-
+        RatingBar ratingBar;
         public RecentsViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -80,7 +82,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
             room_name = itemView.findViewById(R.id.room_name);
             room_code = itemView.findViewById(R.id.room_code);
             price_room = itemView.findViewById(R.id.price_room);
-
+            ratingBar =itemView.findViewById(R.id.ratingBarHome);
         }
     }
 }

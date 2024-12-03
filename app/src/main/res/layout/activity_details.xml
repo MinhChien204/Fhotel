@@ -21,7 +21,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primaryColor"
+        android:background="@color/primary_blue"
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- Nút Back -->
@@ -246,7 +246,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/book_button_bg"
-            android:backgroundTint="@color/primaryColor"
+            android:backgroundTint="@color/primary_blue"
             android:text="Start Booking Your Trip"
             android:textColor="#fff" />
     </LinearLayout>

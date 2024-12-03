@@ -7,7 +7,7 @@ public class Room {
     private String id;
     private String name;
     private Double price;
-    private Double rating;
+    private Float rating;
     private String description;
     private String image;
     private int capacity;
@@ -26,7 +26,7 @@ public class Room {
         this.favouritestatus = favouritestatus;
     }
 
-    public Room(String id, String name, Double price, Double rating, String description, String image, int capacity, int favouritestatus, String room_code, String status) {
+    public Room(String id, String name, Double price, Float rating, String description, String image, int capacity, int favouritestatus, String room_code, String status) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -73,11 +73,11 @@ public class Room {
         this.price = price;
     }
 
-    public Double getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 

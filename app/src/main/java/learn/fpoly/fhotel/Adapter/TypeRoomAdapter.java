@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,9 @@ public class TypeRoomAdapter extends RecyclerView.Adapter<TypeRoomAdapter.HotelV
     @Override
     public void onBindViewHolder(@NonNull TypeRoomAdapter.HotelViewHolder holder, int position) {
         TypeRoom typeRoom = list.get(position);
-        holder.imgRoom.setImageResource(Integer.parseInt(String.valueOf(typeRoom.getImageRoom())));
+        Glide.with(context)
+                .load(typeRoom.getImageRoom()) // Truyền URL vào đây
+                .into(holder.imgRoom); // ImageView
         holder.name.setText(typeRoom.getName());
     }
 

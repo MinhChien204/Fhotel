@@ -14,7 +14,7 @@
         android:title="Booking" />
     <item
         android:id="@+id/navFavourite_u"
-        android:icon="@drawable/baseline_favorite_24"
+        android:icon="@drawable/favourite"
         android:title="Yêu thích" />
     <item
         android:id="@+id/navTaiKhoan_u"
