@@ -8,6 +8,7 @@ import learn.fpoly.fhotel.Model.Favourite;
 import learn.fpoly.fhotel.Model.LoginRequest;
 import learn.fpoly.fhotel.Model.PasswordUpdateRequest;
 import learn.fpoly.fhotel.Model.TypeRoom;
+import learn.fpoly.fhotel.Model.UserVoucher;
 import learn.fpoly.fhotel.response.LoginResponse;
 import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.Model.Room;
@@ -105,4 +106,7 @@ public interface ApiService {
     @GET("api/typerooms")
     Call<Response<ArrayList<TypeRoom>>> getTypeRooms();
 
+    //Voucher
+    @GET("api/user/{userId}/vouchers")
+    Call<Response<List<UserVoucher>>> getUserVouchers(@Path("userId") String userId);
 }

@@ -21,8 +21,8 @@ const Service = require("../models/service");
 const Voucher = require("../models/vouchers");
 const Booking = require("../models/booking");
 const TypeRooms = require("../models/typeRooms");
-const Favourite = require("../models/favourite")
-
+const Favourite = require("../models/favourite");
+const UserVoucher=require("../models/uservoucher");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
@@ -773,7 +773,81 @@ router.delete("/delete_voucher/:id", async (req, res) => {
     res.status(500).json({ message: "An error occurred while deleting voucher" });
   }
 });
+//API them voucher cua 1 thg user cu the
+router.post("/user/:userId/add_voucher", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { voucherId } = req.body;
 
+    const newUserVoucher = new UserVoucher({
+      userId,
+      voucherId,
+    });
+
+    const result = await newUserVoucher.save();
+    res.status(201).json({
+      status: 201,
+      message: "Voucher added to user successfully",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({
+        message: "An error occurred while adding Voucher to User",
+        error: error.message,
+      });
+  }
+});
+//API hien thi list voucher cua 1 thg user cu the
+router.get("/user/:userId/vouchers", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const uservouchers = await UserVoucher.find({ userId });
+
+    if (!uservouchers || uservouchers.length === 0) {
+      return res.status(200).json({ message: "No uservouchers found for this user", data: [] });
+    }
+
+    const voucherIds = uservouchers.map(uservoucher => uservoucher.voucherId);
+
+    const vouchers = await Voucher.find({ '_id': { $in: voucherIds } });
+
+    if (!vouchers || vouchers.length === 0) {
+      return res.status(200).json({ message: "No vouchers found for this user", data: [] });
+    }
+    const vouchersWithUsers = uservouchers.map(uservoucher => {
+      const voucher = vouchers.find(voucher => voucher._id.toString() === uservoucher.voucherId.toString());
+      return { ...uservoucher.toObject(), voucher };
+    });
+
+    res.status(200).json({
+      message: "Vouchers retrieved successfully",
+      data: vouchersWithUsers,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while retrieving Vouchers" });
+  }
+});
+//API xoa voucher cua 1 thg user cu the
+router.delete("/delete_uservoucher/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteVoucher = await UserVoucher.findByIdAndDelete(id);
+
+    if (deleteVoucher) {
+      res.status(200).json({ message: "UserVoucher deleted successfully" });
+    } else {
+      res.status(404).json({ message: "UserVoucher not found" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while deleting voucher" });
+  }
+});
 
 //booking
 

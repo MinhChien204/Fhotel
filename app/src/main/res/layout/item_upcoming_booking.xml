@@ -24,13 +24,21 @@
             android:layout_marginBottom="5dp"
             android:textSize="14sp" />
 
-        <ImageView
-            android:id="@+id/ivRoomImage"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginBottom="8dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background" />
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/ivRoomImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background" />
+        </androidx.cardview.widget.CardView>
+
 
         <TextView
             android:id="@+id/tvRoomName"

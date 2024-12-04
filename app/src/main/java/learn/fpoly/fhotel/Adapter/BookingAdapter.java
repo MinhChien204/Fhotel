@@ -71,11 +71,29 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             holder.tvCreatedAt.setText("Ngày đặt: Không xác định");
         }
 
-        holder.tvBookingStatus.setText("Trạng thái: " + booking.getStatus());
+        String status = booking.getStatus().trim();
+        holder.tvBookingStatus.setText("Trạng thái: " + status);
+
+        // Đổi màu dựa trên trạng thái
+        switch (status.toLowerCase(Locale.ROOT)) {
+            case "pending":
+                holder.tvBookingStatus.setTextColor(context.getResources().getColor(android.R.color.holo_orange_dark)); // Màu vàng
+                break;
+            case "confirmed":
+                holder.tvBookingStatus.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark)); // Màu xanh lá
+                break;
+            case "cancelled":
+                holder.tvBookingStatus.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark)); // Màu đỏ
+                break;
+            default:
+                holder.tvBookingStatus.setTextColor(context.getResources().getColor(android.R.color.darker_gray)); // Màu xám
+                break;
+        }
+
         // Gán các thông tin khác
         holder.tvStartDate.setText("Ngày bắt đầu: " + booking.getStartDate());
         holder.tvEndDate.setText("Ngày kết thúc: " + booking.getEndDate());
-        holder.tvTotalPrice.setText("$" + booking.getTotalPrice());
+        holder.tvTotalPrice.setText(booking.getTotalPrice()+"VND");
 
         // Sự kiện khi nhấn vào item (chuyển đến màn chi tiết phòng)
         holder.itemView.setOnClickListener(v -> {
@@ -94,7 +112,6 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
         // Sự kiện khi nhấn dài (có thể là để hủy booking)
         holder.itemView.setOnLongClickListener(v -> {
-            String status = booking.getStatus().trim();
             String bookingId = booking.getId();
 
             if (bookingId == null || bookingId.isEmpty()) {
