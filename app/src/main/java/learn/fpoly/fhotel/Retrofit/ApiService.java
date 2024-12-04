@@ -6,6 +6,7 @@ import java.util.List;
 import learn.fpoly.fhotel.Model.Booking;
 import learn.fpoly.fhotel.Model.Favourite;
 import learn.fpoly.fhotel.Model.LoginRequest;
+import learn.fpoly.fhotel.Model.Notification;
 import learn.fpoly.fhotel.Model.PasswordUpdateRequest;
 import learn.fpoly.fhotel.Model.TypeRoom;
 import learn.fpoly.fhotel.Model.UserVoucher;
@@ -76,6 +77,10 @@ public interface ApiService {
     @GET("api/user/{userId}/bookings")
     Call<Response<List<Booking>>> getUserBookings(@Path("userId") String userId);
 
+    //get 1 booking
+    @GET("api/bookings/{id}")
+    Call<Response<Booking>> getBookingById(@Path("id") String bookingId);
+
     @POST("api/book_room")
     Call<Response<Booking>> createBooking(@Body Booking booking);
 
@@ -109,4 +114,11 @@ public interface ApiService {
     //Voucher
     @GET("api/user/{userId}/vouchers")
     Call<Response<List<UserVoucher>>> getUserVouchers(@Path("userId") String userId);
+
+    //Notification
+    @GET("/api/notifications")
+    Call<Response<List<Notification>>> getNotifications(@Query("userId") String userId);
+
+    @POST("api/add_notification")
+    Call<Response<Notification>> createNotification(@Body Notification notification);
 }

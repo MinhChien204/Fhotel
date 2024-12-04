@@ -23,6 +23,7 @@ const Booking = require("../models/booking");
 const TypeRooms = require("../models/typeRooms");
 const Favourite = require("../models/favourite");
 const UserVoucher=require("../models/uservoucher");
+const Notification=require("../models/notification");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
@@ -1030,6 +1031,52 @@ router.get('/bookings', async (req, res) => {
     res.status(500).json({ message: 'Server error' }); // Nếu có lỗi server
   }
 });
+// API lấy thong tin 1 booking
+router.get("/bookings/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Tìm Booking bằng ID
+    const booking = await Booking.findById(id);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    // Tìm thông tin Room dựa trên roomId từ Booking
+    const room = await Room.findById(booking.roomId);
+
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    // Kết hợp thông tin Booking và Room vào một đối tượng
+    const bookingWithRoom = {
+      ...booking.toObject(),  // Thông tin booking
+      room: {                 // Thông tin phòng
+        _id: room._id,
+        name: room.name,
+        price: room.price,
+        image: room.image,
+        description: room.description,   
+        status: room.status,           
+      },
+    };
+
+    // Trả về thông tin Booking và Room
+    res.status(200).json({
+      message: "Booking details with room fetched successfully",
+      data: bookingWithRoom,
+    });
+  } catch (error) {
+    console.error("Error fetching booking details:", error);
+    res.status(500).json({
+      message: "An error occurred while fetching booking details",
+      error: error.message,
+    });
+  }
+});
+
 // API lấy tất cả các yêu thích
 router.get("/user/:userId/favourites", async (req, res) => {
   try {
@@ -1236,4 +1283,62 @@ router.delete("/delete_Favourite/:id", async (req, res) => {
   }
 });
 
+// Lấy danh sách thông báo của một user
+router.get("/get-notification/:id", async (req, res) => {
+  const { id } = req.params; // Thay đổi 'userId' thành 'id' vì bạn đang dùng ':id'
+  try {
+    const notifications = await Notification.find({ userId: id }).sort({ createdAt: -1 });
+    if (!notifications || notifications.length === 0) {
+      return res.status(200).json({ message: "No notifications found for this user", data: [] });
+    }
+    res.status(200).json({
+      message: "Notifications retrieved successfully",
+      data: notifications,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Lấy tất cả thông báo
+router.get("/notifications", async (req, res) => {
+  try {
+    const notifications = await Notification.find();
+    res.status(200).json({
+      status: 200,
+      message: "Notification retrieved successfully",
+      data: notifications,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while retrieving notifications" });
+  }
+});
+//API add notification
+router.post("/add_notification", async (req, res) => {
+  try {
+    const { userId, message,type } = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // Tạo yeu thich mới
+    const newNotification = new Notification({
+      userId,
+      message,
+      type
+    });
+
+    const savedNotification = await newNotification.save();
+    res.status(201).json({
+      message: "Notification booked successfully",
+      data: savedNotification,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while booking room", error: error.message });
+  }
+});
 module.exports = router;

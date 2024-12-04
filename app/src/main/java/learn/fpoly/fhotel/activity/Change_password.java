@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import learn.fpoly.fhotel.Model.Notification;
 import learn.fpoly.fhotel.Model.PasswordUpdateRequest;
 import learn.fpoly.fhotel.Model.User;
 import learn.fpoly.fhotel.R;
@@ -105,6 +106,7 @@ public class Change_password extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
                 if (response.isSuccessful()) {
+                    createPasswordChangeNotification();
                     Toast.makeText(Change_password.this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
                     navigateToLogin();
                 } else {
@@ -130,5 +132,29 @@ public class Change_password extends AppCompatActivity {
 
         // Kết thúc màn hình hiện tại
         finish();
+    }
+
+    private void createPasswordChangeNotification() {
+        Notification notification = new Notification();
+        notification.setUserId(userId);
+        notification.setMessage("Bạn đã thay đổi mật khẩu.");
+        notification.setType("password_change");
+
+        Call<Response<Notification>> notificationCall = httpRequest.callAPI().createNotification(notification);
+        notificationCall.enqueue(new Callback<Response<Notification>>() {
+            @Override
+            public void onResponse(Call<Response<Notification>> call, retrofit2.Response<Response<Notification>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("Notification", "Notification created successfully");
+                } else {
+                    Log.e("Notification", "Failed to create notification");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Notification>> call, Throwable t) {
+                Log.e("Notification", "Error: " + t.getMessage());
+            }
+        });
     }
 }

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 
 import learn.fpoly.fhotel.Model.Booking;
+import learn.fpoly.fhotel.Model.Notification;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import learn.fpoly.fhotel.activity.DetailsActivity;
@@ -183,7 +184,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
                             break;
                         }
                     }
-
+                    createCancelNotification(bookingId);
                     Toast.makeText(context, "Trạng thái đã được cập nhật!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, "Không thể cập nhật trạng thái", Toast.LENGTH_SHORT).show();
@@ -211,5 +212,65 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         });
         notifyDataSetChanged();
     }
+
+    private void createCancelNotification(String bookingId) {
+        // Gọi API lấy chi tiết booking
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Booking>> bookingCall = httpRequest.callAPI().getBookingById(bookingId); // API giả định
+
+        bookingCall.enqueue(new Callback<Response<Booking>>() {
+            @Override
+            public void onResponse(Call<Response<Booking>> call, retrofit2.Response<Response<Booking>> response) {
+                if (response.isSuccessful()) {
+                    Booking booking = response.body().getData();
+                    if (booking != null && booking.getRoom() != null) {
+                        String roomName = booking.getRoom().getName(); // Lấy tên phòng từ booking
+                        Log.d("rname", "onResponse: "+roomName);
+                        // Sau khi có thông tin phòng, tạo thông báo
+                        String message = "Your booking for room " + roomName;
+                        sendNotification(booking.getUserId(), message, "booking_cancelled");
+                    } else {
+                        Log.e("Notification", "Room information not found for booking ID: " + bookingId);
+                    }
+                } else {
+                    Log.e("Notification", "Failed to fetch booking details for ID: " + bookingId);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Booking>> call, Throwable t) {
+                Log.e("Notification", "Error: " + t.getMessage());
+            }
+        });
+    }
+
+    private void sendNotification(String userId, String message, String type) {
+        // Chuẩn bị thông tin thông báo
+        Notification notification = new Notification();
+        notification.setUserId(userId);
+        notification.setMessage(message);
+        notification.setType(type);
+
+        // Gọi API thêm thông báo
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Notification>> notificationCall = httpRequest.callAPI().createNotification(notification);
+
+        notificationCall.enqueue(new Callback<Response<Notification>>() {
+            @Override
+            public void onResponse(Call<Response<Notification>> call, retrofit2.Response<Response<Notification>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("Notification", "Notification created successfully");
+                } else {
+                    Log.e("Notification", "Failed to create notification");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Notification>> call, Throwable t) {
+                Log.e("Notification", "Error: " + t.getMessage());
+            }
+        });
+    }
+
 }
 
