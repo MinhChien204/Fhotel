@@ -85,23 +85,21 @@ public class Fragment_TrangChu extends Fragment {
         return view;
     }
     private void fetchdata(View view){
-        Log.d("API_CALL", "Fetching type rooms...");
         httpRequest.callAPI().getTypeRooms().enqueue(new Callback<Response<ArrayList<TypeRoom>>>() {
             @Override
             public void onResponse(Call<Response<ArrayList<TypeRoom>>> call, retrofit2.Response<Response<ArrayList<TypeRoom>>> response) {
-                Log.d("API_RESPONSE", "Response received: " + response.toString());
                 if (response.isSuccessful() && response.body() != null) {
                     ArrayList<TypeRoom> typeRooms = response.body().getData();
                     Log.d("API_RESPONSE", "Data: " + typeRooms.toString());
-                    settyperoom(view, typeRooms);
+                    setTypeRoom(view, typeRooms);
                 } else {
                     Log.e("API_ERROR", "Response failed: " + response.message());
                 }
             }
 
             @Override
-            public void onFailure(Call<Response<ArrayList<TypeRoom>>> call, Throwable throwable) {
-                Log.e("API_FAILURE", "Error: " + throwable.getMessage());
+            public void onFailure(Call<Response<ArrayList<TypeRoom>>> call, Throwable t) {
+                Log.e("API_FAILURE", "Error: " + t.getMessage());
             }
         });
 
@@ -149,11 +147,14 @@ public class Fragment_TrangChu extends Fragment {
             }
         });
     }
-    private void settyperoom(View view, List<TypeRoom> typeRoomList) {
+    private void setTypeRoom(View view, List<TypeRoom> typeRoomList) {
         typeroomRecyclerview.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         typeRoomAdapter = new TypeRoomAdapter(getContext(), typeRoomList);
+        Log.d(TAG, "setTypeRoom: "+typeRoomList);
         typeroomRecyclerview.setAdapter(typeRoomAdapter);
+        typeRoomAdapter.notifyDataSetChanged(); // Bổ sung dòng này
     }
+
 
     private void setRecentRecycler(View view, List<Room> recentsDataList) {
         recentRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));

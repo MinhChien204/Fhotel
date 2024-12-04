@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,17 +38,18 @@ import retrofit2.Callback;
 import learn.fpoly.fhotel.response.Response;
 
 public class DetailsActivity extends AppCompatActivity {
-    private ImageView ivBack, ivFavorite, imgRom_details,imageView8;
+    private ImageView ivBack, ivFavorite, imgRom_details, imageView8;
     private Button btnBookingHotel;
-    private TextView txtdescription_details, txtprice_details, txtNamerom_details,txt_capacity,txtstatusRoom;
+    private TextView txtdescription_details, txtprice_details, txtNamerom_details, txt_capacity, txtstatusRoom;
     private RatingBar txtRating_details;
     private HttpRequest httpRequest;
-    private  int favouritestatus;
-    private String roomId ;
+    private int favouritestatus;
+    private String roomId;
     private RecyclerView rvServices;
     private ServiceAdapter serviceAdapter;
     private Favourite favourite;
     private Room room;
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +58,14 @@ public class DetailsActivity extends AppCompatActivity {
         // Khởi tạo HttpRequest
         httpRequest = new HttpRequest();
         rvServices = findViewById(R.id.rvServices);
-        rvServices.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rvServices.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         // Ánh xạ các view từ layout
         txtNamerom_details = findViewById(R.id.txtNamerom_details);
         txtRating_details = findViewById(R.id.ratingBarDetail);
         txtdescription_details = findViewById(R.id.txtdescription_details);
         txtprice_details = findViewById(R.id.txtprice_details);
-        txt_capacity =findViewById(R.id.tvcapacity);
-        txtstatusRoom =findViewById(R.id.textView10);
+        txt_capacity = findViewById(R.id.tvcapacity);
+        txtstatusRoom = findViewById(R.id.textView10);
         ivBack = findViewById(R.id.ivBack);
         ivFavorite = findViewById(R.id.ivFavorite);
         btnBookingHotel = findViewById(R.id.buttonBooking);
@@ -100,7 +102,7 @@ public class DetailsActivity extends AppCompatActivity {
                 bundle.putFloat("room_rating", txtRating_details.getRating());
                 bundle.putString("room_description", txtdescription_details.getText().toString());
                 bundle.putString("room_price", txtprice_details.getText().toString());
-                bundle.putString("room_image", room.getImage()); // Lấy URL ảnh từ đối tượng room
+                bundle.putString("room_image", "http://10.0.2.2:3000/" + room.getImage());
                 bundle.putString("room_capacity", txt_capacity.getText().toString());
                 // Gán Bundle cho Fragment
                 paymentFragment.setArguments(bundle);
@@ -117,7 +119,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     //createfavourite
-    public  void createfavourite (Favourite favourite) {
+    public void createfavourite(Favourite favourite) {
         // Khởi tạo Retrofit
         HttpRequest httpRequest = new HttpRequest();
         Call<Response<Favourite>> call = httpRequest.callAPI().createfavourite(favourite);
@@ -127,7 +129,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
                 if (response.isSuccessful()) {
-                    updatefavouritestatus(roomId,1);
+                    updatefavouritestatus(roomId, 1);
                     Toast.makeText(DetailsActivity.this, "create successful!", Toast.LENGTH_SHORT).show();
 
                 } else {
@@ -142,30 +144,32 @@ public class DetailsActivity extends AppCompatActivity {
         });
 
     }
+
     ///updatefavouritestatus
     private void updatefavouritestatus(String roomId, int newfavouritestatus) {
-    HttpRequest httpRequest = new HttpRequest();
-    Call<Response<Room>> call = httpRequest.callAPI().updatefavouritestatus(roomId, new Room(newfavouritestatus));
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Room>> call = httpRequest.callAPI().updatefavouritestatus(roomId, new Room(newfavouritestatus));
 
-    call.enqueue(new Callback<Response<Room>>() {
-        @Override
-        public void onResponse(Call<Response<Room>> call, retrofit2.Response<Response<Room>> response) {
-            if (response.isSuccessful()) {
-                // Kiểm tra và cập nhật thông tin của booking chỉ cần thiết
+        call.enqueue(new Callback<Response<Room>>() {
+            @Override
+            public void onResponse(Call<Response<Room>> call, retrofit2.Response<Response<Room>> response) {
+                if (response.isSuccessful()) {
+                    // Kiểm tra và cập nhật thông tin của booking chỉ cần thiết
 
-                Toast.makeText(DetailsActivity.this, "Trạng thái đã được cập nhật!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(DetailsActivity.this, "Không thể cập nhật trạng thái", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DetailsActivity.this, "Trạng thái đã được cập nhật!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DetailsActivity.this, "Không thể cập nhật trạng thái", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
 
-        @Override
-        public void onFailure(Call<Response<Room>> call, Throwable t) {
-            Log.d("stbk", "onFailure: "+t);
-            Toast.makeText(DetailsActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    });
-}
+            @Override
+            public void onFailure(Call<Response<Room>> call, Throwable t) {
+                Log.d("stbk", "onFailure: " + t);
+                Toast.makeText(DetailsActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void fetchRoomById(String roomId) {
         Call<Response<Room>> call = httpRequest.callAPI().getRoomById(roomId);
         call.enqueue(new Callback<Response<Room>>() {
@@ -183,16 +187,20 @@ public class DetailsActivity extends AppCompatActivity {
                         txtstatusRoom.setText(room.getStatus());
                         txtprice_details.setText(String.valueOf(room.getPrice()));
                         txt_capacity.setText(String.valueOf(room.getCapacity()) + " person");
-                        favouritestatus =  room.getFavouritestatus();
-                        if(favouritestatus == 1){
+                        favouritestatus = room.getFavouritestatus();
+                        if (favouritestatus == 1) {
                             ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
                         }
 
 
                         Glide.with(DetailsActivity.this)
-                                .load(room.getImage())
+                                .load("http://10.0.2.2:3000/" + room.getImage())
                                 .into(imgRom_details);
+                        if (room.getServices() != null && !room.getServices().isEmpty()) {
+                            // Truyền danh sách dịch vụ vào adapter
+                            serviceAdapter.updateData(room.getServices());
 
+                        }
                         // Kiểm tra trạng thái phòng
                         if (room.getStatus().equals("unavailable")) {
                             btnBookingHotel.setText("Room Unavailable");
@@ -220,34 +228,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
     }
-    public void fetchServiceByRoomId(String roomId) {
-        Call<Response<ArrayList<RoomService>>> call = httpRequest.callAPI().getServiceByIdRoom(roomId);
-        call.enqueue(new Callback<Response<ArrayList<RoomService>>>() {
-            @Override
-            public void onResponse(Call<Response<ArrayList<RoomService>>> call, retrofit2.Response<Response<ArrayList<RoomService>>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Response<ArrayList<RoomService>> roomResponse = response.body();
-                    if (roomResponse.getStatus() == 200) {
-                        ArrayList<RoomService> services = roomResponse.getData();
 
-                        // Update RecyclerView with fetched services
-                        serviceAdapter.updateData(services); // Assuming you have an updateData method in ServiceAdapter
-
-                        Toast.makeText(DetailsActivity.this, "Services loaded successfully", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(DetailsActivity.this, "Services not found: " + roomResponse.getMessenger(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(DetailsActivity.this, "Failed to load services", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Response<ArrayList<RoomService>>> call, Throwable t) {
-                Toast.makeText(DetailsActivity.this, "Failed to load services: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
     public void deleteFavourite(String favouriteId) {
         // Khởi tạo Retrofit
         HttpRequest httpRequest = new HttpRequest();
@@ -270,6 +251,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
     }
+
     private void checkFavourite(String userId, String roomId) {
         Call<Response<Favourite>> call = httpRequest.callAPI().checkFavourite(userId, roomId);
         call.enqueue(new Callback<Response<Favourite>>() {
@@ -302,7 +284,6 @@ public class DetailsActivity extends AppCompatActivity {
         String roomId = getIntent().getStringExtra("room_id");
         if (roomId != null && !roomId.isEmpty()) {
             fetchRoomById(roomId);
-            fetchServiceByRoomId(roomId);
         } else {
             Toast.makeText(this, "Invalid Room ID", Toast.LENGTH_SHORT).show();
         }

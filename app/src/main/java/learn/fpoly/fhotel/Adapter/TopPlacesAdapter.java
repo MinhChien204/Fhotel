@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,10 +42,11 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
     public void onBindViewHolder(@NonNull TopPlacesViewHolder holder, int position) {
 
         holder.room_name.setText(topPlacesDataList.get(position).getName());
-        holder.room_code.setText(topPlacesDataList.get(position).getRoomCode());
-        holder.price_room.setText(String.valueOf(topPlacesDataList.get(position).getPrice()));
+        holder.room_code.setText(topPlacesDataList.get(position).getRoom_code());
+        holder.price_room.setText(String.valueOf(topPlacesDataList.get(position).getPrice() + " vnd/night"));
+        holder.ratingBar.setRating(topPlacesDataList.get(position).getRating());
         Glide.with(context)
-                .load(topPlacesDataList.get(position).getImage()) // URL của hình ảnh
+                .load("http://10.0.2.2:3000/" + topPlacesDataList.get(position).getImage()) // URL của hình ảnh
                 .into(holder.room_image); // ImageView để hiển thị ảnh
 
     }
@@ -54,10 +56,11 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
         return topPlacesDataList.size();
     }
 
-    public static final class TopPlacesViewHolder extends RecyclerView.ViewHolder{
+    public static final class TopPlacesViewHolder extends RecyclerView.ViewHolder {
 
         ImageView room_image;
         TextView room_name, room_code, price_room;
+        RatingBar ratingBar;
 
         public TopPlacesViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -66,7 +69,7 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
             room_name = itemView.findViewById(R.id.room_name);
             room_code = itemView.findViewById(R.id.room_code);
             price_room = itemView.findViewById(R.id.price_room);
-
+            ratingBar = itemView.findViewById(R.id.ratingBarHome);
         }
     }
 }

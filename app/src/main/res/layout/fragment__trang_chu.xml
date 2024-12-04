@@ -1,117 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
-    <!-- Header section with background image -->
-    <LinearLayout
+    <!-- Nội dung cuộn sẽ được bọc trong NestedScrollView -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:orientation="vertical"
-        android:background="@drawable/home_search"
-        android:padding="10dp">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
-
-        <!-- Profile Image -->
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/profile" />
-
-        <!-- Search Bar -->
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:background="@drawable/search_bar_bg"
-        android:elevation="4dp">
+            android:background="@android:color/white">
 
-        <!-- Search Input -->
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-        android:background="@android:color/transparent"
-        android:drawableLeft="@drawable/ic_search_black_24dp"
-        android:drawablePadding="10dp"
-        android:hint="Search Destinations"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:textColor="#3E4A59"
-        android:textSize="16sp" />
+            <!-- Header section with background image -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/header_section"
+                android:background="@drawable/home_search"
+                android:padding="10dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Filter Icon -->
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackground"
-        android:padding="12dp"
-        android:src="@drawable/filter"
-        app:tint="#3E4A59" />
-    </LinearLayout>
+                <!-- Profile Image -->
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/profile" />
 
+                <!-- Search Bar -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:background="@drawable/search_bar_bg"
+                    android:elevation="4dp">
 
-</LinearLayout>
+                    <!-- Search Input -->
+                    <EditText
+                        android:id="@+id/editText"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:drawableLeft="@drawable/ic_search_black_24dp"
+                        android:drawablePadding="10dp"
+                        android:hint="Search Destinations"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:textColor="#3E4A59"
+                        android:textSize="16sp" />
 
+                    <!-- Filter Icon -->
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="12dp"
+                        android:src="@drawable/filter"
+                        app:tint="#3E4A59" />
+                </LinearLayout>
+            </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv_typeroom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp" />
+            <!-- RecyclerView for Type Room -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcv_typeroom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:layout_constraintTop_toBottomOf="@id/header_section"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Nearby your location section -->
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nearby your location"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+            <!-- Nearby your location section -->
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nearby your location"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/rcv_typeroom"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recent_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recent_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/textView4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Recent section -->
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Recent"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+            <!-- Recent section -->
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recent"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/recent_recycler"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/top_places_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/top_places_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/textView5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Floating Action Button -->
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- FloatingActionButton trong CoordinatorLayout sẽ đứng yên khi cuộn -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_chatbot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Floating Action Button"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Chatbot"
         android:src="@drawable/assistant"
-        app:backgroundTint="#fff"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="end|bottom" />
+        app:layout_anchor="@id/nestedScrollView"
+    app:layout_anchorGravity="bottom|end"
+    app:tint="@color/primary_blue" />
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
