@@ -1,14 +1,22 @@
 var express = require("express");
 var router = express.Router();
 
-const upload = require("../config/common/upload");
 const multer = require("multer");
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/common/cloudinaryConfig');
 const path = require("path");
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'Fhotel', // Tên thư mục trong Cloudinary
+    allowed_formats: ['jpg', 'png', 'jpeg'], // Định dạng file cho phép
+  },
+});
 
+const upload = multer({ storage });
 
 const User = require("../models/users");
 const Room = require("../models/room");
-const RoomService = require("../models/roomservice");
 const Service = require("../models/service");
 const Voucher = require("../models/vouchers");
 const Booking = require("../models/booking");
@@ -192,31 +200,30 @@ router.put("/update_password/:id", async (req, res) => {
 router.put("/upload_user_image/:id", upload.single("avatar"), async (req, res) => {
   try {
     const { id } = req.params;
-    let imagePath = req.file ? req.file.path : null; // Kiểm tra xem tệp có được gửi không
+    const { file } = req; // Multer lưu file tải lên ở đây
 
-    if (imagePath) {
-      // Sửa dấu gạch chéo ngược thành gạch chéo xuôi
-      imagePath = imagePath.replace(/\\/g, "/"); // Chuyển đổi tất cả gạch chéo ngược thành gạch chéo xuôi
-      imagePath = imagePath.replace('public/', '');  // Xóa phần 'public/' nếu có
+    if (!file) {
+      return res.status(400).json({ message: "No image uploaded" });
+    }
 
-      // Cập nhật đường dẫn ảnh vào cơ sở dữ liệu
-      const updateUser = await User.findByIdAndUpdate(
-        id,
-        { avatar: imagePath },
-        { new: true }
-      );
+    // Lấy đường dẫn ảnh từ Cloudinary (URL)
+    const imageUrl = file.path; // Đây là đường dẫn ảnh Cloudinary
 
-      if (updateUser) {
-        res.status(200).json({
-          status: 200,
-          message: "Image uploaded successfully",
-          data: updateUser,
-        });
-      } else {
-        res.status(404).json({ message: "User not found" });
-      }
+    // Cập nhật avatar của người dùng trong cơ sở dữ liệu
+    const updateUser = await User.findByIdAndUpdate(
+      id,
+      { avatar: imageUrl },
+      { new: true }
+    );
+
+    if (updateUser) {
+      res.status(200).json({
+        status: 200,
+        message: "Image uploaded successfully",
+        data: updateUser,
+      });
     } else {
-      res.status(400).json({ message: "No image uploaded" });
+      res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
     console.error("Error:", error);
@@ -280,8 +287,10 @@ router.post('/add_room', upload.single('image'), async (req, res) => {
     if (!file) {
       return res.status(400).json({ message: "No image uploaded" });
     }
-    // Lấy đường dẫn ảnh từ file
-    const urlsImage = `uploads/${file.filename}`;
+
+    // Lấy URL ảnh từ Cloudinary
+    const imageUrl = file.path;  // Đường dẫn ảnh trên Cloudinary
+
     const servicesArray = services.split(',').map((id) => id.trim());
 
     // Tạo đối tượng mới cho phòng
@@ -293,7 +302,7 @@ router.post('/add_room', upload.single('image'), async (req, res) => {
       capacity,
       status,
       room_code,
-      image: urlsImage,
+      image: imageUrl,  // Sử dụng URL ảnh từ Cloudinary
       services: servicesArray,
     });
 
@@ -315,7 +324,6 @@ router.post('/add_room', upload.single('image'), async (req, res) => {
     });
   }
 });
-
 // API xem chi tiết phòng
 router.get('/room/:id', async (req, res) => {
   try {
@@ -348,8 +356,6 @@ router.get('/room/:id', async (req, res) => {
   }
 });
 
-
-
 // API cập nhật phòng
 router.put('/update_room/:id', upload.single('image'), async (req, res) => {
   try {
@@ -373,10 +379,10 @@ router.put('/update_room/:id', upload.single('image'), async (req, res) => {
       return res.status(404).json({ message: "Room not found" });
     }
 
-    // Nếu có file ảnh mới, lấy đường dẫn ảnh từ file
+    // Nếu có file ảnh mới, upload lên Cloudinary và lấy URL ảnh
     let imageUrl = room.image; // Giữ nguyên hình ảnh cũ nếu không có ảnh mới
     if (file) {
-      imageUrl = `uploads/${file.filename}`;
+      imageUrl = file.path; // Lấy đường dẫn ảnh từ Cloudinary
     }
 
     // Chuyển đổi dữ liệu services từ chuỗi thành mảng
@@ -411,7 +417,6 @@ router.put('/update_room/:id', upload.single('image'), async (req, res) => {
     });
   }
 });
-
 
 // API xóa phòng
 router.delete('/delete_room/:id', async (req, res) => {
@@ -462,22 +467,22 @@ router.get("/services", async (req, res) => {
 // add
 router.post("/add-service", upload.single('image'), async (req, res) => {
   try {
+    const { file } = req; // File upload lưu trên Cloudinary
     const data = req.body;
-    const { file } = req; // Multer lưu file tải lên ở đây
 
     if (!file) {
       return res.status(400).json({ message: "No image uploaded" });
     }
 
-    // Lấy đường dẫn ảnh từ file
-    const imageUrl = `uploads/${file.filename}`;
+    // URL ảnh được lưu trên Cloudinary
+    const imageUrl = file.path;
 
     // Tạo mới Service
     const newService = new Service({
       name: data.name,
       price: data.price,
       description: data.description,
-      image: imageUrl, // Lưu đường dẫn ảnh dưới dạng mảng
+      image: imageUrl, // Lưu URL ảnh trên Cloudinary
     });
 
     // Lưu vào cơ sở dữ liệu
@@ -513,9 +518,9 @@ router.put("/update_service/:id", upload.single('image'), async (req, res) => {
     service.price = price || service.price;
     service.description = description || service.description;
 
-    // Nếu có ảnh mới, xử lý ảnh và cập nhật đường dẫn
+    // Nếu có ảnh mới, upload lên Cloudinary và cập nhật đường dẫn ảnh
     if (req.file) {
-      const imageUrl = `uploads/${req.file.filename}`;  // Lưu đường dẫn ảnh
+      const imageUrl = req.file.path;  // Đường dẫn ảnh từ Cloudinary trả về
       service.image = imageUrl;
     }
 
@@ -645,7 +650,7 @@ router.post("/register", async (req, res) => {
       password: hashedPassword, // Lưu mật khẩu đã mã hóa
       email: data.email,
       phonenumber: data.phonenumber,
-      name: "",
+      name: data.name,
       gender: "",
       address: "",
       birthday: "",

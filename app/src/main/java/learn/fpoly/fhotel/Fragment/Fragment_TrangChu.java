@@ -2,17 +2,23 @@ package learn.fpoly.fhotel.Fragment;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -24,6 +30,7 @@ import learn.fpoly.fhotel.Adapter.TopPlacesAdapter;
 import learn.fpoly.fhotel.Adapter.TypeRoomAdapter;
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.Model.TypeRoom;
+import learn.fpoly.fhotel.Model.User;
 import learn.fpoly.fhotel.activity.Home_User;
 import learn.fpoly.fhotel.chatbot.ChatBotActivity;
 import learn.fpoly.fhotel.response.Response;
@@ -31,41 +38,53 @@ import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest; // Import your Retrofit client
 import retrofit2.Call;
 import retrofit2.Callback;
+
 import android.widget.TextView;
 
 
 public class Fragment_TrangChu extends Fragment {
 
-    private RecyclerView recentRecycler, topPlacesRecycler,typeroomRecyclerview;
+    private RecyclerView recentRecycler, topPlacesRecycler, typeroomRecyclerview;
     private RecentsAdapter recentsAdapter;
     private TopPlacesAdapter topPlacesAdapter;
     private TypeRoomAdapter typeRoomAdapter;
     private HttpRequest httpRequest;
     private FloatingActionButton floatingActionButton;
     private TextView txtSeeall;
+    private ImageView imgUser;
 
     public Fragment_TrangChu() {
         // Required empty public constructor
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment__trang_chu, container, false);
 //        txtSeeall = view.findViewById(R.id.txtSeeall);
-
+        imgUser = view.findViewById(R.id.imageUser);
         // Khởi tạo ApiService
         httpRequest = new HttpRequest();
-
         // Khởi tạo RecyclerView
         recentRecycler = view.findViewById(R.id.recent_recycler);
         topPlacesRecycler = view.findViewById(R.id.top_places_recycler);
-        typeroomRecyclerview =view.findViewById(R.id.rcv_typeroom);
-        floatingActionButton =view.findViewById(R.id.fab_chatbot);
+        typeroomRecyclerview = view.findViewById(R.id.rcv_typeroom);
+        floatingActionButton = view.findViewById(R.id.fab_chatbot);
 
         // Gọi API để lấy dữ liệu
         fetchdata(view);
         fetchRecentsData(view);
         fetchTopPlacesData(view);
+
+        // Lấy userId từ SharedPreferences
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", null);
+
+        if (userId != null && !userId.isEmpty()) {
+            fetchimgUser(userId);
+        } else {
+            Toast.makeText(getContext(), "Invalid User ID", Toast.LENGTH_SHORT).show();
+        }
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +103,8 @@ public class Fragment_TrangChu extends Fragment {
 
         return view;
     }
-    private void fetchdata(View view){
+
+    private void fetchdata(View view) {
         httpRequest.callAPI().getTypeRooms().enqueue(new Callback<Response<ArrayList<TypeRoom>>>() {
             @Override
             public void onResponse(Call<Response<ArrayList<TypeRoom>>> call, retrofit2.Response<Response<ArrayList<TypeRoom>>> response) {
@@ -147,10 +167,35 @@ public class Fragment_TrangChu extends Fragment {
             }
         });
     }
+
+    private void fetchimgUser(String userId) {
+        Call<Response<User>> call = httpRequest.callAPI().getuserbyid(userId);
+        call.enqueue(new Callback<Response<User>>() {
+            @Override
+            public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    User user = response.body().getData();
+                    if (user != null) {
+                        String avatarUrl = user.getAvatar();  // Thêm URL gốc vào đường dẫn ảnh
+                        Glide.with(getContext())
+                                .load(avatarUrl)  // Sử dụng URL đầy đủ
+                                .circleCrop()
+                                .into(imgUser);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<User>> call, Throwable t) {
+                Toast.makeText(getContext(), "Failed to fetch user: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void setTypeRoom(View view, List<TypeRoom> typeRoomList) {
         typeroomRecyclerview.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         typeRoomAdapter = new TypeRoomAdapter(getContext(), typeRoomList);
-        Log.d(TAG, "setTypeRoom: "+typeRoomList);
+        Log.d(TAG, "setTypeRoom: " + typeRoomList);
         typeroomRecyclerview.setAdapter(typeRoomAdapter);
         typeRoomAdapter.notifyDataSetChanged(); // Bổ sung dòng này
     }

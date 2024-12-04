@@ -46,7 +46,7 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
         holder.price_room.setText(String.valueOf(topPlacesDataList.get(position).getPrice() + " vnd/night"));
         holder.ratingBar.setRating(topPlacesDataList.get(position).getRating());
         Glide.with(context)
-                .load("http://10.0.2.2:3000/" + topPlacesDataList.get(position).getImage()) // URL của hình ảnh
+                .load(topPlacesDataList.get(position).getImage()) // URL của hình ảnh
                 .into(holder.room_image); // ImageView để hiển thị ảnh
 
     }

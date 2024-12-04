@@ -2,38 +2,28 @@ package learn.fpoly.fhotel.activity;
 
 import static android.content.ContentValues.TAG;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import learn.fpoly.fhotel.Model.User;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.ApiService;
-import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import learn.fpoly.fhotel.response.Response;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Register extends AppCompatActivity {
-    EditText edt_username_register, edt_Email_register, edt_password_register, edt_phonenumber_register, edt_name_register;
+    EditText edt_username_register, edt_Email_register, edt_password_register, edt_phonenumber_register, edt_name;
     AppCompatButton btn_REGISTER;
     ApiService apiService;
     TextView txt_login;
@@ -43,6 +33,7 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        edt_name = findViewById(R.id.edt_name);
         edt_Email_register = findViewById(R.id.edt_Email_register);
         edt_username_register = findViewById(R.id.edt_username_register);
         edt_password_register = findViewById(R.id.edt_password_register);
@@ -61,6 +52,7 @@ public class Register extends AppCompatActivity {
             public void onClick(View v) {
                 String username = edt_username_register.getText().toString().trim();
                 String password = edt_password_register.getText().toString().trim();
+                String name = edt_name.getText().toString().trim();
                 String email = edt_Email_register.getText().toString().trim();
                 String phone = edt_phonenumber_register.getText().toString().trim();
 
@@ -73,6 +65,11 @@ public class Register extends AppCompatActivity {
                 if (email.isEmpty()) {
                     edt_Email_register.setError("Vui lòng nhập Email");
                     edt_Email_register.requestFocus();
+                    return;
+                }
+                if (name.isEmpty()) {
+                    edt_name.setError("Vui lòng nhập name");
+                    edt_name.requestFocus();
                     return;
                 }
                 if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -106,7 +103,7 @@ public class Register extends AppCompatActivity {
                     return;
                 }
                 // Make API call to register
-                Call<Response<User>> call = apiService.register(username, password, email, phone);
+                Call<Response<User>> call = apiService.register(username, password, name, email, phone);
                 call.enqueue(new Callback<Response<User>>() {
                     @Override
                     public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {

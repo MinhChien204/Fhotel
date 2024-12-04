@@ -1,5 +1,6 @@
 package learn.fpoly.fhotel.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import android.content.Intent;
 import android.text.Html;
 import android.view.View;
@@ -31,6 +33,7 @@ public class navigation extends AppCompatActivity {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         }
+
         @Override
         public void onPageSelected(int position) {
             setDotIndicator(position);
@@ -39,12 +42,13 @@ public class navigation extends AppCompatActivity {
             } else {
                 backButton.setVisibility(View.INVISIBLE);
             }
-            if (position == 2){
+            if (position == 2) {
                 nextButton.setText("Finish");
             } else {
                 nextButton.setText("Next");
             }
         }
+
         @Override
         public void onPageScrollStateChanged(int state) {
         }
@@ -60,6 +64,27 @@ public class navigation extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        // Kiểm tra trạng thái đăng nhập
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        int userRole = sharedPreferences.getInt("userRole", -1); // Lấy vai trò người dùng (-1 nếu không có)
+
+        if (isLoggedIn) {
+            if (userRole == 0) {
+                // Chuyển tới TrangChuAdmin nếu là admin
+                startActivity(new Intent(navigation.this, TrangChuAdmin.class));
+            } else if (userRole == 1) {
+                // Chuyển tới Home_User nếu là người dùng thường
+                startActivity(new Intent(navigation.this, Home_User.class));
+            }
+            finish(); // Đóng LoginActivity
+            return;
+        }
+
+        // Nếu chưa đăng nhập, hiển thị giao diện login
+        setContentView(R.layout.activity_navigation);
+
+
         backButton = findViewById(R.id.backButton);
         nextButton = findViewById(R.id.nextButton);
         skipButton = findViewById(R.id.skipButton);
@@ -98,6 +123,7 @@ public class navigation extends AppCompatActivity {
         setDotIndicator(0);
         slideViewPager.addOnPageChangeListener(viewPagerListener);
     }
+
     public void setDotIndicator(int position) {
         dots = new TextView[3];
         dotIndicator.removeAllViews();
@@ -110,6 +136,7 @@ public class navigation extends AppCompatActivity {
         }
         dots[position].setTextColor(getResources().getColor(R.color.black, getApplicationContext().getTheme()));
     }
+
     private int getItem(int i) {
         return slideViewPager.getCurrentItem() + i;
     }
