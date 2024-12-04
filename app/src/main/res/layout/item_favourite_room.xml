@@ -2,7 +2,9 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="8dp"
+    app:cardCornerRadius="15dp"
     android:elevation="4dp">
 
     <LinearLayout
@@ -11,12 +13,14 @@
         android:orientation="horizontal"
         android:padding="8dp">
 
-        <ImageView
+        <!-- ImageView cho ảnh phòng -->
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivRoomImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background" />
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_launcher_foreground"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Image.Rounded"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="0dp"

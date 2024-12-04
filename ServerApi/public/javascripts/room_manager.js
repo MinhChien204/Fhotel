@@ -68,7 +68,7 @@ function displayRooms(rooms) {
 
     row.innerHTML = `
       <td>${index + 1}</td>
-      <td><img src="${room.image}" alt="${room.name}" width="50" height="50" /></td>
+      <td><img src="${room.image}" alt="${room.name}" width="100" height="100" /></td>
       <td>${room.name}</td>
       <td>$${room.price}</td>
       <td>${stars}</td>
@@ -282,7 +282,7 @@ roomForm.addEventListener("submit", (event) => {
 });
 
 
-// Edit room functionality
+// Edit room functionality 
 function editRoom(roomId) {
   fetch(`/api/room/${roomId}`)
     .then((response) => response.json())

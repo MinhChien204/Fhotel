@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,12 +25,17 @@ public class VnPayment extends AppCompatActivity {
 
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient());
+
+//        webView.setWebViewClient(new WebViewClient());
 
         // Lấy URL từ Intent
         String paymentUrl = getIntent().getStringExtra("paymentUrl");
+
         if (paymentUrl != null) {
             webView.loadUrl(paymentUrl);
+        } else {
+            Toast.makeText(this, "Payment URL is invalid", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 }
