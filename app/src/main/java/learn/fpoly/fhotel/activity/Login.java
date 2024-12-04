@@ -7,6 +7,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,24 +26,26 @@ import retrofit2.Callback;
 
 public class Login extends AppCompatActivity {
     AppCompatButton btn_LOGIN;
-    TextView txt_register_now,txt_forgot_Password;
+    TextView txt_register_now, txt_forgot_Password;
     HttpRequest httpRequest;
-    EditText edt_Email_login,edt_password_login;
+    EditText edt_Username_login, edt_password_login;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        edt_Email_login=findViewById(R.id.edt_Email_login);
-        edt_password_login=findViewById(R.id.edt_password_login);
+        edt_Username_login = findViewById(R.id.edt_Email_login);
+        edt_password_login = findViewById(R.id.edt_password_login);
         btn_LOGIN = findViewById(R.id.btn_LOGIN);
         txt_register_now = findViewById(R.id.txt_register_now);
         txt_forgot_Password = findViewById(R.id.txt_forgot_Password);
         httpRequest = new HttpRequest();
 
+
         txt_forgot_Password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Login.this , Forgot_password.class);
+                Intent intent = new Intent(Login.this, Forgot_password.class);
                 startActivity(intent);
             }
         });
@@ -51,12 +54,12 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String username = edt_Email_login.getText().toString().trim();
+                String username = edt_Username_login.getText().toString().trim();
                 String password = edt_password_login.getText().toString().trim();
 
                 if (username.isEmpty()) {
-                    edt_Email_login.setError("Vui lòng nhập username");
-                    edt_Email_login.requestFocus();
+                    edt_Username_login.setError("Vui lòng nhập username");
+                    edt_Username_login.requestFocus();
                     return;
                 }
 
@@ -65,71 +68,64 @@ public class Login extends AppCompatActivity {
                     edt_password_login.requestFocus();
                     return;
                 }
-
                 handleLogin(username, password);
             }
         });
         txt_register_now.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Login.this , Register.class);
+                Intent intent = new Intent(Login.this, Register.class);
                 startActivity(intent);
             }
         });
     }
+
     public void handleLogin(String username, String password) {
         Call<LoginResponse> call = httpRequest.callAPI().login(new LoginRequest(username, password));
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, retrofit2.Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    LoginResponse userResponse = response.body(); // Lấy đối tượng Response
+                    LoginResponse userResponse = response.body();
                     if (userResponse.getStatus() == 200) {
-                        int roles = userResponse.getRole();
-                        String id = userResponse.getId();
-                        String name = userResponse.getName(); // Lấy tên từ API response
-                        String email = userResponse.getEmail(); // Lấy email từ API response
-                        String profileImage = userResponse.getProfileImage(); // Lấy URL ảnh từ API response
 
+                        // Tiến hành lưu thông tin người dùng và điều hướng
                         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("userId", id);
-                        editor.putString("userName", name);
-                        editor.putString("userEmail", email);
-                        editor.putString("userImage", profileImage);
+                        editor.putBoolean("isLoggedIn", true); // Lưu trạng thái đăng nhập
+                        editor.putInt("userRole", userResponse.getRole()); // Lưu vai trò người dùng
+                        editor.putString("userId", userResponse.getId()); // Lưu ID người dùng
                         editor.apply();
-                        switch (roles) {
-                            case 0:
-                                // Chuyển sang TrangChuAdmin nếu idUser = 0
-                                Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                Intent adminIntent = new Intent(Login.this, TrangChuAdmin.class);
-                                startActivity(adminIntent);
-                                break;
 
-                            case 1:
-                                // Chuyển sang Home_User nếu idUser = 1
-                                Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                Intent userIntent = new Intent(Login.this, Home_User.class);
-                                startActivity(userIntent);
-                                break;
-
-                            default:
-                                Log.d("Login", "User role not recognized");
-                                break;
+                        // Chuyển hướng dựa trên vai trò người dùng
+                        if (userResponse.getRole() == 0) {
+                            // Admin
+                            Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(Login.this, TrangChuAdmin.class));
+                        } else if (userResponse.getRole() == 1) {
+                            // User
+                            Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(Login.this, Home_User.class));
+                        } else {
+                            Log.d("Login", "Unrecognized role");
                         }
-                        finish();
+
+                        finish(); // Hoàn thành hoạt động login
                     } else {
+                        // Thông báo lỗi từ server
                         Log.d("Login", "Login failed: " + userResponse.getMessenger());
-                        edt_Email_login.setError("Tài khoản hoặc mật khẩu không đúng");
-                        edt_Email_login.requestFocus();
+                        edt_Username_login.setError("Tài khoản hoặc mật khẩu không đúng");
+                        edt_Username_login.requestFocus();
                     }
                 } else {
+                    // Khi response không thành công hoặc không có dữ liệu
                     Log.d("Login", "Response unsuccessful or empty");
                     edt_password_login.setError("Tài khoản hoặc mật khẩu không chính xác");
-                    edt_Email_login.setError("Tài khoản hoặc mật khẩu không chính xác");
+                    edt_Username_login.setError("Tài khoản hoặc mật khẩu không chính xác");
                     edt_password_login.requestFocus();
                 }
             }
+
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable throwable) {
@@ -137,5 +133,4 @@ public class Login extends AppCompatActivity {
             }
         });
     }
-
 }

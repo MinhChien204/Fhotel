@@ -48,7 +48,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
         holder.price_room.setText(String.valueOf(room.getPrice() + "vnd/night"));
         holder.ratingBar.setRating(room.getRating());
         Glide.with(context)
-                .load("http://10.0.2.2:3000/" + room.getImage()) // URL của hình ảnh
+                .load(room.getImage()) // URL của hình ảnh
                 .into(holder.room_image); // ImageView để hiển thị ảnh
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

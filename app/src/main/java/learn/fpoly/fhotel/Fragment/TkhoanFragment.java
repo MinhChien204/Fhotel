@@ -1,16 +1,21 @@
 package learn.fpoly.fhotel.Fragment;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -18,19 +23,21 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 
+import learn.fpoly.fhotel.Model.User;
 import learn.fpoly.fhotel.R;
+import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import learn.fpoly.fhotel.activity.Change_password;
-import learn.fpoly.fhotel.activity.Home_User;
 import learn.fpoly.fhotel.activity.Login;
-import learn.fpoly.fhotel.activity.MainActivity;
-import learn.fpoly.fhotel.chatbot.ChatBotActivity;
+import learn.fpoly.fhotel.response.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 public class TkhoanFragment extends Fragment {
-
-    LinearLayout editProfile, editPassword, payment, booking, privacy, terms,btnLogOut,voucher;
-    TextView txtUserName, txtUserEmail;
-    ImageView imgUserProfile;
+    private HttpRequest httpRequest;
+    LinearLayout editProfile, editPassword, payment, booking, privacy, terms, btnLogOut, voucher;
+    TextView txtName, txtEmail;
+    ImageView imgProfile;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -44,23 +51,20 @@ public class TkhoanFragment extends Fragment {
         voucher = view.findViewById(R.id.linearlayoutVoucher);
         editPassword = view.findViewById(R.id.editPassword);
 
-        txtUserName = view.findViewById(R.id.profile_name);
-        txtUserEmail = view.findViewById(R.id.profile_email);
-        imgUserProfile = view.findViewById(R.id.profile_image);
+        txtName = view.findViewById(R.id.profile_name);
+        txtEmail = view.findViewById(R.id.profile_email);
+        imgProfile = view.findViewById(R.id.profile_image);
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
-        String userName = sharedPreferences.getString("userName", "Người dùng");
-        String userEmail = sharedPreferences.getString("userEmail", "Email không xác định");
-        String userImage = sharedPreferences.getString("userImage", null);
+        httpRequest = new HttpRequest();
 
-        txtUserName.setText(userName);
-        txtUserEmail.setText(userEmail);
-        if (userImage != null) {
-            Glide.with(this).load(userImage).into(imgUserProfile); // Tải ảnh từ URL
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", null);
+
+        if (userId != null && !userId.isEmpty()) {
+            fetchUserById(userId);
         } else {
-            imgUserProfile.setImageResource(R.drawable.ic_launcher_foreground); // Hiển thị ảnh mặc định nếu không có URL
+            Toast.makeText(getContext(), "Invalid User ID", Toast.LENGTH_SHORT).show();
         }
-
         editPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,12 +97,41 @@ public class TkhoanFragment extends Fragment {
         return view;
     }
 
+    private void fetchUserById(String userId) {
+        Call<Response<User>> call = httpRequest.callAPI().getuserbyid(userId);
+        call.enqueue(new Callback<Response<User>>() {
+            @Override
+            public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    User user = response.body().getData();
+                    if (user != null) {
+                        txtEmail.setText(user.getEmail());
+                        txtName.setText(user.getName());
+
+                        String avatarUrl = user.getAvatar();
+                        Log.d("ava", "onResponse: " + avatarUrl);
+                        Glide.with(getContext())
+                                .load(avatarUrl)  // Sử dụng URL đầy đủ
+                                .circleCrop()
+                                .into(imgProfile);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<User>> call, Throwable t) {
+                Toast.makeText(getContext(), "Failed to fetch user: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.framelayout_u, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
     private void showLogoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Đăng xuất");
@@ -106,6 +139,10 @@ public class TkhoanFragment extends Fragment {
         builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear(); // Xóa toàn bộ dữ liệu đăng nhập
+                editor.apply();
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
                 getActivity().finish(); // Close the current activity

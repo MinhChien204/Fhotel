@@ -1,10 +1,7 @@
 package learn.fpoly.fhotel.activity;
 
-import static java.security.AccessController.getContext;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,11 +23,8 @@ import java.util.ArrayList;
 
 import learn.fpoly.fhotel.Adapter.ServiceAdapter;
 import learn.fpoly.fhotel.Fragment.PaymentFragment;
-import learn.fpoly.fhotel.Model.Booking;
 import learn.fpoly.fhotel.Model.Favourite;
 import learn.fpoly.fhotel.Model.Room;
-import learn.fpoly.fhotel.Model.RoomService;
-import learn.fpoly.fhotel.Model.User;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import retrofit2.Call;
@@ -102,7 +96,7 @@ public class DetailsActivity extends AppCompatActivity {
                 bundle.putFloat("room_rating", txtRating_details.getRating());
                 bundle.putString("room_description", txtdescription_details.getText().toString());
                 bundle.putString("room_price", txtprice_details.getText().toString());
-                bundle.putString("room_image", "http://10.0.2.2:3000/" + room.getImage());
+                bundle.putString("room_image", room.getImage());
                 bundle.putString("room_capacity", txt_capacity.getText().toString());
                 // Gán Bundle cho Fragment
                 paymentFragment.setArguments(bundle);
@@ -194,7 +188,7 @@ public class DetailsActivity extends AppCompatActivity {
 
 
                         Glide.with(DetailsActivity.this)
-                                .load("http://10.0.2.2:3000/" + room.getImage())
+                                .load(room.getImage())
                                 .into(imgRom_details);
                         if (room.getServices() != null && !room.getServices().isEmpty()) {
                             // Truyền danh sách dịch vụ vào adapter

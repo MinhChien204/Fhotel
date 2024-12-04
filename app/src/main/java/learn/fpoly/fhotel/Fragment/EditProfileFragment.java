@@ -148,13 +148,12 @@ public class EditProfileFragment extends Fragment {
                         Address_prf.setText(user.getAddress());
                         Phone_prf.setText(user.getPhonenumber());
                         date_pof.setText(user.getBirthday());
-                        if (user.getGender().equalsIgnoreCase("female")) {
+                        if (user.getGender().equalsIgnoreCase("nữ")) {
                             Famal_prf.setChecked(true);
                         } else {
-                        Male_prf.setChecked(true);
+                            Male_prf.setChecked(true);
                         }
-                        String avatarUrl = "http://10.0.2.2:3000/" + user.getAvatar();  // Thêm URL gốc vào đường dẫn ảnh
-                        Log.d("ava", "onResponse: "+avatarUrl);
+                        String avatarUrl = user.getAvatar();  // Thêm URL gốc vào đường dẫn ảnh
                         Glide.with(getContext())
                                 .load(avatarUrl)  // Sử dụng URL đầy đủ
                                 .circleCrop()
@@ -177,7 +176,7 @@ public class EditProfileFragment extends Fragment {
         String birthday = date_pof.getText().toString().trim();
         String address = Address_prf.getText().toString().trim();
         String phonenumber = Phone_prf.getText().toString().trim();
-        String gender = Male_prf.isChecked() ? "male" : "female";
+        String gender = Male_prf.isChecked() ? "nam" : "nữ";
 
         User user = new User();
         user.setEmail(email);
@@ -219,8 +218,8 @@ public class EditProfileFragment extends Fragment {
                 @Override
                 public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
                     if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT).show();
-                }
+                        Toast.makeText(getContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override

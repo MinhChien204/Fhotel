@@ -46,7 +46,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceV
         holder.tvName.setText(service.getName());
         // Load the image using Glide
         Glide.with(context)
-                .load("http://10.0.2.2:3000/" + service.getImage()) // Replace with the method to get image URL
+                .load(service.getImage()) // Replace with the method to get image URL
                 .into(holder.serviceImage);
     }
 
