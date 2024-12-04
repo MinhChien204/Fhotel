@@ -2,6 +2,8 @@ package learn.fpoly.fhotel.Model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Room {
     @SerializedName("_id")
     private String id;
@@ -14,7 +16,7 @@ public class Room {
     private int favouritestatus;
     private String room_code;
     private String status;
-
+    private List<Service> services;
 
     // Constructor
 
@@ -26,7 +28,7 @@ public class Room {
         this.favouritestatus = favouritestatus;
     }
 
-    public Room(String id, String name, Double price, Float rating, String description, String image, int capacity, int favouritestatus, String room_code, String status) {
+    public Room(String id, String name, Double price, Float rating, String description, String image, int capacity, int favouritestatus, String room_code, String status, List<Service> services) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -37,16 +39,7 @@ public class Room {
         this.favouritestatus = favouritestatus;
         this.room_code = room_code;
         this.status = status;
-    }
-
-    // Getters và Setters
-
-    public int getFavouritestatus() {
-        return favouritestatus;
-    }
-
-    public void setFavouritestatus(int favouritestatus) {
-        this.favouritestatus = favouritestatus;
+        this.services = services;
     }
 
     public String getId() {
@@ -69,15 +62,15 @@ public class Room {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public float getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
@@ -105,11 +98,19 @@ public class Room {
         this.capacity = capacity;
     }
 
-    public String getRoomCode() {
+    public int getFavouritestatus() {
+        return favouritestatus;
+    }
+
+    public void setFavouritestatus(int favouritestatus) {
+        this.favouritestatus = favouritestatus;
+    }
+
+    public String getRoom_code() {
         return room_code;
     }
 
-    public void setRoomCode(String room_code) {
+    public void setRoom_code(String room_code) {
         this.room_code = room_code;
     }
 
@@ -121,4 +122,11 @@ public class Room {
         this.status = status;
     }
 
+    public List<Service> getServices() {
+        return services;
+    }
+
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
 }
