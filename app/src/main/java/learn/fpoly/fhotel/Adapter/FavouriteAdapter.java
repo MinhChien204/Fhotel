@@ -53,7 +53,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
 
         // Gán ảnh phòng (sử dụng Glide)
         Glide.with(holder.itemView.getContext())
-                .load("http://10.0.2.2:3000/" + favourite.getRoom().getImage())
+                .load(favourite.getRoom().getImage())
                 .placeholder(R.drawable.ic_launcher_background) // Ảnh placeholder
                 .into(holder.ivRoomImage);
 

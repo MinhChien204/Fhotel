@@ -60,10 +60,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="15dp"
-            android:hint="Username">
+            android:hint="Name">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_username_register"
+                android:id="@+id/edt_name"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:drawableStart="@drawable/user"
@@ -85,6 +85,22 @@
                 android:inputType="textEmailAddress"
                 android:padding="15dp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:hint="Username">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_username_register"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:drawableStart="@drawable/user"
+                android:drawableTint="#9A9898"
+                android:padding="15dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -128,7 +144,7 @@
                 android:layout_height="55dp"
                 android:drawableStart="@drawable/phone"
                 android:inputType="phone"
-            android:padding="15dp" />
+                android:padding="15dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!--        <TextView-->

@@ -59,7 +59,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
             // Gán ảnh phòng (dùng thư viện Picasso hoặc Glide để tải ảnh)
             Glide.with(holder.itemView.getContext())
-                    .load("http://10.0.2.2:3000/" + booking.getRoom().getImage())
+                    .load(booking.getRoom().getImage())
                     .placeholder(R.drawable.ic_launcher_background)  // Ảnh mặc định nếu tải thất bại
                     .into(holder.ivRoomImage);
         }
