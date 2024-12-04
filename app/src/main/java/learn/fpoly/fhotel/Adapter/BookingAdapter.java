@@ -59,7 +59,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
             // Gán ảnh phòng (dùng thư viện Picasso hoặc Glide để tải ảnh)
             Glide.with(holder.itemView.getContext())
-                    .load(booking.getRoom().getImage())
+                    .load("http://10.0.2.2:3000/" + booking.getRoom().getImage())
                     .placeholder(R.drawable.ic_launcher_background)  // Ảnh mặc định nếu tải thất bại
                     .into(holder.ivRoomImage);
         }
@@ -132,7 +132,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     }
 
     public class BookingViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoomName, tvStartDate, tvEndDate, tvTotalPrice, tvBookingStatus,tvCreatedAt;
+        TextView tvRoomName, tvStartDate, tvEndDate, tvTotalPrice, tvBookingStatus, tvCreatedAt;
         ImageView ivRoomImage;
 
         public BookingViewHolder(View itemView) {
@@ -176,7 +176,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
             @Override
             public void onFailure(Call<Response<Booking>> call, Throwable t) {
-                Log.d("stbk", "onFailure: "+t);
+                Log.d("stbk", "onFailure: " + t);
                 Toast.makeText(context, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
