@@ -128,9 +128,10 @@ public class DetailsActivity extends AppCompatActivity {
 
         // Gửi yêu cầu đến server
         call.enqueue(new Callback<Response<Favourite>>() {
-            @Override public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
+            @Override
+            public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
                 if (response.isSuccessful()) {
-                    updatefavouritestatus(roomId, 1);
+
                     Toast.makeText(DetailsActivity.this, "create successful!", Toast.LENGTH_SHORT).show();
 
                 } else {
@@ -146,30 +147,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-    ///updatefavouritestatus
-    private void updatefavouritestatus(String roomId, int newfavouritestatus) {
-        HttpRequest httpRequest = new HttpRequest();
-        Call<Response<Room>> call = httpRequest.callAPI().updatefavouritestatus(roomId, new Room(newfavouritestatus));
 
-        call.enqueue(new Callback<Response<Room>>() {
-            @Override
-            public void onResponse(Call<Response<Room>> call, retrofit2.Response<Response<Room>> response) {
-                if (response.isSuccessful()) {
-                    // Kiểm tra và cập nhật thông tin của booking chỉ cần thiết
-
-                    Toast.makeText(DetailsActivity.this, "Trạng thái đã được cập nhật!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(DetailsActivity.this, "Không thể cập nhật trạng thái", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Response<Room>> call, Throwable t) {
-                Log.d("stbk", "onFailure: " + t);
-                Toast.makeText(DetailsActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     public void fetchRoomById(String roomId) {
         Call<Response<Room>> call = httpRequest.callAPI().getRoomById(roomId);
@@ -188,10 +166,6 @@ public class DetailsActivity extends AppCompatActivity {
                         txtstatusRoom.setText(room.getStatus());
                         txtprice_details.setText(String.valueOf(room.getPrice()));
                         txt_capacity.setText(String.valueOf(room.getCapacity()) + " person");
-                        favouritestatus = room.getFavouritestatus();
-                        if (favouritestatus == 1) {
-                            ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
-                        }
 
 
                         Glide.with(DetailsActivity.this)
@@ -239,7 +213,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
                 if (response.isSuccessful()) {
-                    updatefavouritestatus(roomId, 0); // Ví dụ: Cập nhật trạng thái về 0 sau khi xóa
+
                     Toast.makeText(DetailsActivity.this, "Delete successful!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(DetailsActivity.this, "Failed to delete favourite!", Toast.LENGTH_SHORT).show();
