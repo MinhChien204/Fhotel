@@ -1123,36 +1123,6 @@ router.get("/user/:userId/favourites", async (req, res) => {
   }
 });
 
-////// API cập nhật trangj thai yeu thich
-router.put("/update_room_favouritestatus/:id", async (req, res) => {
-  const { id } = req.params;
-  const { favouritestatus } = req.body;
-
-  try {
-    // Cập nhật trạng thái 'favouritestatus' của phòng
-    const room = await Room.findByIdAndUpdate(
-      id,
-      { favouritestatus },
-      { new: true }
-    );
-
-    if (!room) {
-      return res.status(404).json({ message: "Không tìm thấy room" });
-    }
-
-    // Loại bỏ trường 'services' khỏi phòng
-    const roomWithoutServices = { ...room.toObject() };
-    delete roomWithoutServices.services;
-
-    res.status(200).json({
-      message: "Room updated successfully",
-      data: roomWithoutServices,  // Trả về phòng đã loại bỏ 'services'
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Lỗi server", error });
-  }
-});
-
 //// add yêu thích {date test: userid = 6746aea316aac83085b8afef romid =6724d8252c88291f6771f7f2
 router.post("/addFavourite", async (req, res) => {
   try {
