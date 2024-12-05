@@ -70,7 +70,6 @@ public class FavouriteFragment extends Fragment {
                         ivLoadingGif.setVisibility(View.GONE);
                         tvNoFavourites.setVisibility(View.GONE); // Ẩn thông báo
                         adapter = new FavouriteAdapter(getContext(),favourites);
-                        adapter.sortByCreatedAtNewestFirst();
                         rcvListFavourite.setAdapter(adapter);
                     } else {
                         ivLoadingGif.setVisibility(View.VISIBLE);

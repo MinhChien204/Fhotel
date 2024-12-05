@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import learn.fpoly.fhotel.Model.Booking;
 import learn.fpoly.fhotel.Model.Notification;
@@ -32,8 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingViewHolder> {
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-    private SimpleDateFormat displayFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+    private SimpleDateFormat displayFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
     private List<Booking> bookings;
 
     private Context context;
@@ -66,11 +66,22 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         }
 
         try {
-            Date createdAt = dateFormat.parse(booking.getCreatedAt());
-            holder.tvCreatedAt.setText("Ngày đặt: " + displayFormat.format(createdAt));
+            // Định nghĩa định dạng ISO 8601
+            SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+            isoFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Đảm bảo khớp với múi giờ ISO
+
+            // Phân tích chuỗi ngày ISO 8601
+            Date createdAtDate = isoFormat.parse(booking.getCreatedAt());
+
+            // Chuyển đổi sang định dạng dd-MM-yyyy
+            String formattedDate = displayFormat.format(createdAtDate);
+
+            holder.tvCreatedAt.setText("Ngày đặt: " + formattedDate);
         } catch (Exception e) {
+            e.printStackTrace();
             holder.tvCreatedAt.setText("Ngày đặt: Không xác định");
         }
+
 
         String status = booking.getStatus().trim();
         holder.tvBookingStatus.setText("Trạng thái: " + status);
@@ -165,6 +176,17 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         }
     }
 
+    public void updateList(List<Booking> newBookings) {
+        this.bookings = newBookings;
+        notifyDataSetChanged();
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+
+
     private void updateBookingStatus(String bookingId, String newStatus) {
         HttpRequest httpRequest = new HttpRequest();
         Call<Response<Booking>> call = httpRequest.callAPI().updateBookingStatus(bookingId, new Booking(newStatus));
@@ -200,18 +222,6 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         });
     }
 
-    public void sortByCreatedAtNewestFirst() {
-        Collections.sort(bookings, (b1, b2) -> {
-            try {
-                Date date1 = dateFormat.parse(b1.getCreatedAt());
-                Date date2 = dateFormat.parse(b2.getCreatedAt());
-                return date2.compareTo(date1);
-            } catch (Exception e) {
-                return 0;
-            }
-        });
-        notifyDataSetChanged();
-    }
 
     private void createCancelNotification(String bookingId) {
         // Gọi API lấy chi tiết booking

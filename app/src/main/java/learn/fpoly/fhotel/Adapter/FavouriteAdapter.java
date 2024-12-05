@@ -88,17 +88,6 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         }
     }
 
-    public void sortByCreatedAtNewestFirst() {
-        Collections.sort(favoriteRooms, (b1, b2) -> {
-            try {
-                Date date1 = dateFormat.parse(b1.getCreatedAt());
-                Date date2 = dateFormat.parse(b2.getCreatedAt());
-                return date2.compareTo(date1);
-            } catch (Exception e) {
-                return 0;
-            }
-        });
-        notifyDataSetChanged();
-    }
+
 
 }

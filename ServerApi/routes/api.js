@@ -906,7 +906,7 @@ router.get("/user/:userId/bookings", async (req, res) => {
     const { userId } = req.params;
 
     // Truy vấn tất cả các booking của user
-    const bookings = await Booking.find({ userId });
+    const bookings = await Booking.find({ userId }).sort({ createdAt: -1 });
 
     if (!bookings || bookings.length === 0) {
       return res.status(200).json({ message: "No bookings found for this user", data: [] });
@@ -1083,7 +1083,7 @@ router.get("/user/:userId/favourites", async (req, res) => {
     const { userId } = req.params;
 
     // Truy vấn tất cả các favourite của user
-    const favourites = await Favourite.find({ userId });
+    const favourites = await Favourite.find({ userId }).sort({ createdAt: -1 });
 
     if (!favourites || favourites.length === 0) {
       // Trả về danh sách rỗng thay vì lỗi 404
