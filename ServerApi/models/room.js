@@ -9,7 +9,6 @@ const Room = new Schema({
     image: { type: String, required: true },
     capacity: { type: Number, required: true },
     status: { type: String, required: true },  // Chuyển sang String để lưu trạng thái như "available"
-    favouritestatus: { type: Number, required: true, default: 0 }, // chuyển trạng thái yêu thích (0:1)
     room_code: { type: String, required: true },
     services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'service' }]
 }, {

@@ -16,11 +16,17 @@ public class Favourite {
     private Room room;
     @SerializedName("createdAt")
     private String createdAt;
+    private int favouritestatus;
     public Favourite() {
     }
 
     public Favourite(String id) {
         this.id = id;
+    }
+
+
+    public Favourite(int favouritestatus) {
+        this.favouritestatus = favouritestatus;
     }
 
     public Favourite(String userId, String roomId) {
@@ -39,6 +45,14 @@ public class Favourite {
         this.userId = userId;
         this.roomId = roomId;
         this.room = room;
+    }
+
+    public int getFavouritestatus() {
+        return favouritestatus;
+    }
+
+    public void setFavouritestatus(int favouritestatus) {
+        this.favouritestatus = favouritestatus;
     }
 
     public String getId() {

@@ -95,8 +95,8 @@ public interface ApiService {
     @POST("api/addFavourite")
     Call<Response<Favourite>> createfavourite(@Body Favourite favourite);
     /////////////////
-    @PUT("api/update_room_favouritestatus/{id}")
-    Call<Response<Room>> updatefavouritestatus(@Path("id") String id, @Body Room status);
+    @PUT("api/update_Favourite_favouritestatus/{id}")
+    Call<Response<Favourite>> updatefavouritestatus(@Path("id") String id, @Body Favourite status);
     //////////////////
     @DELETE("api/delete_Favourite/{id}")
     Call<Void> deletefavourites(@Path("id") String favouritesId);
@@ -106,6 +106,9 @@ public interface ApiService {
 
     @GET("api/user/{userId}/favourites")
     Call<Response<List<Favourite>>> getUserFavourites(@Path("userId") String userId);
+    /////////////////// get one
+    @GET("api/favouritebyid/{id}")
+    Call<Response<Favourite>> getbyidFavourites(@Path("id") String id);
 
     //Type Room
     @GET("api/typerooms")

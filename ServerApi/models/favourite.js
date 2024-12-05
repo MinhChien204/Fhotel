@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const Favourite = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
     roomId: { type: mongoose.Schema.Types.ObjectId, ref: "room", required: true },
+    favouritestatus: { type: Number, required: true, default: 0 }, // chuyển trạng thái yêu thích (0:1)
     
    
 }, {
