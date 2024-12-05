@@ -95,8 +95,8 @@ public interface ApiService {
     @POST("api/addFavourite")
     Call<Response<Favourite>> createfavourite(@Body Favourite favourite);
     /////////////////
-    @PUT("api/update_Favourite_favouritestatus/{id}")
-    Call<Response<Favourite>> updatefavouritestatus(@Path("id") String id, @Body Favourite status);
+    @PUT("api/update_room_favouritestatus/{id}")
+    Call<Response<Room>> updatefavouritestatus(@Path("id") String id, @Body Room status);
     //////////////////
     @DELETE("api/delete_Favourite/{id}")
     Call<Void> deletefavourites(@Path("id") String favouritesId);

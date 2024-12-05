@@ -1122,52 +1122,31 @@ router.get("/user/:userId/favourites", async (req, res) => {
     res.status(500).json({ message: "An error occurred while retrieving Favourites" });
   }
 });
-//// get 1 yeu thich theo nguoi dung
 
-// API lấy tất cả các yêu thích
-router.get("/favouritebyid/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    // Truy vấn tất cả các favourite của user
-    const favourites = await Favourite.findById( id );
-
-    if (!favourites || favourites.length === 0) {
-      // Trả về danh sách rỗng thay vì lỗi 404
-      return res.status(404).json({ message: "No favourites found for this user"});
-    }
-
-    res.status(200).json({
-      message: "Favourites retrieved successfully",
-      data: favourites,
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ message: "An error occurred while retrieving Favourites" });
-  }
-});
-
-/////////////
 ////// API cập nhật trangj thai yeu thich
-router.put("/update_Favourite_favouritestatus/:id", async (req, res) => {
+router.put("/update_room_favouritestatus/:id", async (req, res) => {
   const { id } = req.params;
   const { favouritestatus } = req.body;
 
   try {
     // Cập nhật trạng thái 'favouritestatus' của phòng
-    const favourite = await Favourite.findByIdAndUpdate(
+    const room = await Room.findByIdAndUpdate(
       id,
       { favouritestatus },
       { new: true }
     );
 
-    if (!favourite) {
-      return res.status(404).json({ message: "Không tìm thấy favourite" });
+    if (!room) {
+      return res.status(404).json({ message: "Không tìm thấy room" });
     }
 
+    // Loại bỏ trường 'services' khỏi phòng
+    const roomWithoutServices = { ...room.toObject() };
+    delete roomWithoutServices.services;
+
     res.status(200).json({
-      message: "favourite updated successfully",
-      data: favourite,  // Trả về phòng đã loại bỏ 'services'
+      message: "Room updated successfully",
+      data: roomWithoutServices,  // Trả về phòng đã loại bỏ 'services'
     });
   } catch (error) {
     res.status(500).json({ message: "Lỗi server", error });
@@ -1177,34 +1156,23 @@ router.put("/update_Favourite_favouritestatus/:id", async (req, res) => {
 //// add yêu thích {date test: userid = 6746aea316aac83085b8afef romid =6724d8252c88291f6771f7f2
 router.post("/addFavourite", async (req, res) => {
   try {
-    const {userId, roomId ,favouritestatus} = req.body;
+    const { userId, roomId } = req.body;
 
-    // Kiểm tra user và phòng có tồn tại không
     const user = await User.findById(userId);
     const room = await Room.findById(roomId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (!user || !room) {
+      return res.status(404).json({ message: "User or Room not found" });
     }
-    if (!room) {
-      return res.status(404).json({ message: "Room not found" });
-    }
-    // Tạo yeu thich mới
-    const newFavourite = new Favourite({
-      userId,
-      roomId,
-      favouritestatus,
-    });
 
+    const newFavourite = new Favourite({ userId, roomId, status: 1 });
     const savedFavourite = await newFavourite.save();
-    res.status(201).json({
-      message: "Favourite booked successfully",
-      data: savedFavourite,
-    });
+
+    res.status(201).json({ message: "Added to favourites", data: savedFavourite });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ message: "An error occurred while booking room", error: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
+
 
 router.get('/favourites/check', async (req, res) => {
   const { userId, roomId } = req.query;
@@ -1290,20 +1258,18 @@ router.delete('/delete_typeroom/:id', async (req, res) => {
 router.delete("/delete_Favourite/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const deleteFavourite = await Favourite.findByIdAndDelete(id);
+    const deletedFavourite = await Favourite.findByIdAndDelete(id);
 
-    if (deleteFavourite) {
-      res.json({
-        message: "deleteFavourite deleted successfully"
-      });
-    } else {
-      res.status(404).json({ message: "deleteFavourite not found" });
+    if (!deletedFavourite) {
+      return res.status(404).json({ message: "Favourite not found" });
     }
+
+    res.json({ message: "Favourite removed successfully" });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ message: "An error occurred while deleting deleteFavourite" });
+    res.status(500).json({ message: error.message });
   }
 });
+
 
 // Lấy danh sách thông báo của một user
 router.get("/get-notification/:id", async (req, res) => {
@@ -1362,6 +1328,5 @@ router.post("/add_notification", async (req, res) => {
     console.error("Error:", error);
     res.status(500).json({ message: "An error occurred while booking room", error: error.message });
   }
-
 });
 module.exports = router;

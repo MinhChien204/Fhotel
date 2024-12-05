@@ -13,6 +13,7 @@ public class Room {
     private String description;
     private String image;
     private int capacity;
+    private int favouritestatus;
     private String room_code;
     private String status;
     private List<Service> services;
@@ -23,8 +24,11 @@ public class Room {
         this.status = status;
     }
 
+    public Room(int favouritestatus) {
+        this.favouritestatus = favouritestatus;
+    }
 
-    public Room(String id, String name, Double price, Float rating, String description, String image, int capacity, String room_code, String status, List<Service> services) {
+    public Room(String id, String name, Double price, Float rating, String description, String image, int capacity, int favouritestatus, String room_code, String status, List<Service> services) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -32,6 +36,7 @@ public class Room {
         this.description = description;
         this.image = image;
         this.capacity = capacity;
+        this.favouritestatus = favouritestatus;
         this.room_code = room_code;
         this.status = status;
         this.services = services;
@@ -91,6 +96,14 @@ public class Room {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public int getFavouritestatus() {
+        return favouritestatus;
+    }
+
+    public void setFavouritestatus(int favouritestatus) {
+        this.favouritestatus = favouritestatus;
     }
 
     public String getRoom_code() {

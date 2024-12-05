@@ -20,9 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import learn.fpoly.fhotel.Adapter.FavouriteAdapter;
 import learn.fpoly.fhotel.Adapter.ServiceAdapter;
 import learn.fpoly.fhotel.Fragment.PaymentFragment;
 import learn.fpoly.fhotel.Model.Favourite;
@@ -43,10 +41,8 @@ public class DetailsActivity extends AppCompatActivity {
     private String roomId;
     private RecyclerView rvServices;
     private ServiceAdapter serviceAdapter;
+    private Favourite favourite;
     private Room room;
-    // Nhận dữ liệu room_id từ Intent
-   private SharedPreferences sharedPreferences;
-    private String userId ;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -70,9 +66,9 @@ public class DetailsActivity extends AppCompatActivity {
         imgRom_details = findViewById(R.id.imgRom_details);
         serviceAdapter = new ServiceAdapter(this, new ArrayList<>());
         rvServices.setAdapter(serviceAdapter);
+        // Nhận dữ liệu room_id từ Intent
+        SharedPreferences sharedPreferences = DetailsActivity.this.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);String userId = sharedPreferences.getString("userId", null);
         roomId = getIntent().getStringExtra("room_id");
-        sharedPreferences = DetailsActivity.this.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId", null);
         // Xử lý sự kiện quay lại
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,11 +79,19 @@ public class DetailsActivity extends AppCompatActivity {
         ivFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(userId != null && roomId != null){
-                    checkFavourite(userId,roomId);
+                if (favourite == null) {
+                    // Nếu chưa yêu thích, tạo yêu thích mới
+                    createfavourite(new Favourite(userId, roomId));
+                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24); // Đổi sang biểu tượng đã yêu thích
+                } else {
+                    // Nếu đã yêu thích, xóa yêu thích
+                    deleteFavourite(favourite.getId());
+                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_border_24); // Đổi sang biểu tượng chưa yêu thích
                 }
             }
         });
+
+
         // Xử lý sự kiện khi nhấn nút đặt phòng
         btnBookingHotel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +118,6 @@ public class DetailsActivity extends AppCompatActivity {
                 transaction.commit();
             }
         });
-
     }
 
     //createfavourite
@@ -125,8 +128,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         // Gửi yêu cầu đến server
         call.enqueue(new Callback<Response<Favourite>>() {
-            @Override
-            public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
+            @Override public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
                 if (response.isSuccessful()) {
                     updatefavouritestatus(roomId, 1);
                     Toast.makeText(DetailsActivity.this, "create successful!", Toast.LENGTH_SHORT).show();
@@ -145,15 +147,16 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     ///updatefavouritestatus
-    private void updatefavouritestatus(String favouriteid, int newfavouritestatus) {
+    private void updatefavouritestatus(String roomId, int newfavouritestatus) {
         HttpRequest httpRequest = new HttpRequest();
-        Call<Response<Favourite>> call = httpRequest.callAPI().updatefavouritestatus(favouriteid, new Favourite(newfavouritestatus));
+        Call<Response<Room>> call = httpRequest.callAPI().updatefavouritestatus(roomId, new Room(newfavouritestatus));
 
-        call.enqueue(new Callback<Response<Favourite>>() {
+        call.enqueue(new Callback<Response<Room>>() {
             @Override
-            public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
+            public void onResponse(Call<Response<Room>> call, retrofit2.Response<Response<Room>> response) {
                 if (response.isSuccessful()) {
                     // Kiểm tra và cập nhật thông tin của booking chỉ cần thiết
+
                     Toast.makeText(DetailsActivity.this, "Trạng thái đã được cập nhật!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(DetailsActivity.this, "Không thể cập nhật trạng thái", Toast.LENGTH_SHORT).show();
@@ -161,7 +164,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Response<Favourite>> call, Throwable t) {
+            public void onFailure(Call<Response<Room>> call, Throwable t) {
                 Log.d("stbk", "onFailure: " + t);
                 Toast.makeText(DetailsActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -185,11 +188,10 @@ public class DetailsActivity extends AppCompatActivity {
                         txtstatusRoom.setText(room.getStatus());
                         txtprice_details.setText(String.valueOf(room.getPrice()));
                         txt_capacity.setText(String.valueOf(room.getCapacity()) + " person");
-//                        favouritestatus = room.getFavouritestatus();
-//                        if (favouritestatus == 1) {
-//                            ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
-//                        }
-//                        getFavourites();
+                        favouritestatus = room.getFavouritestatus();
+                        if (favouritestatus == 1) {
+                            ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
+                        }
 
 
                         Glide.with(DetailsActivity.this)
@@ -257,49 +259,16 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Favourite favourite = response.body().getData();
-
-                    if( favourite != null) {
-                        
-                        // Nếu Favourite tồn tại, xóa
-                        deleteFavourite(favourite.getId());
-                        ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_border_24);
-                    }
+                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24); // Đã yêu thích
+                    favourite = response.body().getData(); // Lưu thông tin Favourite
                 } else {
-                    // Nếu không tồn tại, tạo mới
-                    createfavourite(new Favourite(userId, roomId));
-                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
+                    ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_border_24); // Chưa yêu thích
                 }
             }
 
             @Override
             public void onFailure(Call<Response<Favourite>> call, Throwable t) {
                 Toast.makeText(DetailsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    /// dcm truong ngu fix
-    private void getFavourites(String id) {
-        HttpRequest httpRequest = new HttpRequest();
-        Call<Response<Favourite>> call = httpRequest.callAPI().getbyidFavourites(id);
-        call.enqueue(new Callback<Response<Favourite>>() {
-            @Override
-            public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
-                if (response.isSuccessful()) {
-                    Favourite favourite = response.body().getData();
-                    favouritestatus = favourite.getFavouritestatus();
-                    if (favouritestatus == 1) {
-                            ivFavorite.setBackgroundResource(R.drawable.baseline_favorite_24);
-                        }
-                } else {
-                    Toast.makeText(DetailsActivity.this, "Error fetching favourites.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Response<Favourite>> call, Throwable t) {
-                Toast.makeText(DetailsActivity.this, "Error."+t, Toast.LENGTH_LONG).show();
-                Log.d("err", "onFailure: "+t);
             }
         });
     }
@@ -311,12 +280,13 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         String roomId = getIntent().getStringExtra("room_id");
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", null);
         if (roomId != null && !roomId.isEmpty()) {
             fetchRoomById(roomId);
+            checkFavourite(userId, roomId); // Check favorite status here
         } else {
             Toast.makeText(this, "Invalid Room ID", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 }
