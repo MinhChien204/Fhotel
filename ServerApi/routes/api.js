@@ -179,6 +179,11 @@ router.put("/update_password/:id", async (req, res) => {
       return res.status(404).json({ message: "User not found!" });
     }
 
+    // Kiểm tra nếu tài khoản này là tài khoản Google (user không có mật khẩu)
+    if (!user.password) {
+      return res.status(400).json({ message: "You cannot change the password for Google login accounts." });
+    }
+
     // Kiểm tra mật khẩu cũ
     if (user.password !== oldPassword) {
       return res.status(400).json({ message: "Current password is incorrect" });
@@ -197,6 +202,7 @@ router.put("/update_password/:id", async (req, res) => {
     res.status(500).json({ message: "An error occurred while updating password", error: error.message });
   }
 });
+
 
 
 router.put("/upload_user_image/:id", upload.single("avatar"), async (req, res) => {

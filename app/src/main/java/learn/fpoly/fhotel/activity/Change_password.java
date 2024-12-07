@@ -73,6 +73,10 @@ public class Change_password extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     User user = response.body().getData();
                     if (user != null) {
+                        if (user.getPassword()==null){
+                            Toast.makeText(Change_password.this, "Khong the thay doi tai khoan google", Toast.LENGTH_LONG).show();
+                            return;
+                        }
                         // Kiểm tra mật khẩu cũ
                         if (user.getPassword().equals(oldPassword)) {
                             // Nếu đúng, gọi hàm để cập nhật mật khẩu mới
