@@ -3,10 +3,12 @@ package learn.fpoly.fhotel.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import learn.fpoly.fhotel.Model.LoginRequest;
+import learn.fpoly.fhotel.Model.TokenRequest;
 import learn.fpoly.fhotel.response.LoginResponse;
 import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.Model.User;
@@ -23,13 +26,23 @@ import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+
 
 public class Login extends AppCompatActivity {
     AppCompatButton btn_LOGIN;
     TextView txt_register_now, txt_forgot_Password;
     HttpRequest httpRequest;
     EditText edt_Username_login, edt_password_login;
-
+    // Thêm biến global
+    GoogleSignInClient mGoogleSignInClient;
+    int RC_SIGN_IN = 100;
+    Button btngoogle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +52,21 @@ public class Login extends AppCompatActivity {
         btn_LOGIN = findViewById(R.id.btn_LOGIN);
         txt_register_now = findViewById(R.id.txt_register_now);
         txt_forgot_Password = findViewById(R.id.txt_forgot_Password);
+        btngoogle = findViewById(R.id.btngoogle);
         httpRequest = new HttpRequest();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id)) // Thêm Client ID từ Google Console
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        btngoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
+            }
+        });
 
         txt_forgot_Password.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,4 +159,58 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                handleGoogleSignIn(account); // Xử lý đăng nhập thành công
+            } catch (ApiException e) {
+                Log.e("GoogleSignIn", "Sign-in failed", e);
+            }
+        }
+    }
+
+    private void handleGoogleSignIn(GoogleSignInAccount account) {
+        if (account != null) {
+
+            String idToken = account.getIdToken();
+            String email = account.getEmail();
+            String name = account.getDisplayName();
+            Log.d("GoogleSignIn", "Name: " + name + ", Email: " + email + ", Token: " + idToken);
+            Log.d("GoogleSignIn", "ID Token: " + idToken);
+
+            Call<Response<User>> call = httpRequest.callAPI().loginWithGoogle(new TokenRequest(idToken));
+            call.enqueue(new Callback<Response<User>>() {
+                @Override
+                public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
+                    if (response.isSuccessful()) {
+                        User user = response.body().getData();
+                        Log.d("GoogleSignIn", "User saved: " + user.getEmail());
+                        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isLoggedIn", true); // Lưu trạng thái đăng nhập
+                        editor.putInt("userRole", user.getRole()); // Lưu vai trò người dùng
+                        editor.putString("userId", user.get_id()); // Lưu ID người dùng
+                        editor.apply();
+                        Intent intent = new Intent(Login.this, Home_User.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Log.e("GoogleSignIn", "Failed to save user: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Response<User>> call, Throwable t) {
+                    Log.e("GoogleSignIn", "API call failed", t);
+
+
+                }
+            });
+        }
+    }
+
 }

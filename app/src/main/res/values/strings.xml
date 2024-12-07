@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Fhotel</string>
+    <string name="default_web_client_id">553708750696-p53911u7bcie35dceamd46rtap6eitfb.apps.googleusercontent.com</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="screen1">Upload a Video</string>

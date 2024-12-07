@@ -3,7 +3,7 @@ package learn.fpoly.fhotel.Model;
 public class User {
     private String _id, username, password, email, name,gender, phonenumber, address, avatar, available,birthday;
     private String createdAt, updatedAt;
-
+private int role;
     public User() {
     }
 
@@ -29,6 +29,14 @@ public class User {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 
     public String get_id() {

@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
-
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const multer = require("multer");
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/common/cloudinaryConfig');
@@ -635,6 +636,54 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Lỗi máy chủ nội bộ" });
+  }
+});
+router.post('/login/google', async (req, res) => {
+  const { idToken } = req.body;
+
+ 
+  try {
+      // Xác thực token
+        if (!idToken) {
+          return res.status(400).json({ message: 'ID Token is required' });
+        }
+      const ticket = await client.verifyIdToken({
+          idToken: idToken,
+          audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      const { email, name, picture } = payload;
+
+      // Kiểm tra xem người dùng đã tồn tại trong MongoDB chưa
+      let user = await User.findOne({ email });
+      if (!user) {
+          // Nếu chưa tồn tại, tạo người dùng mới
+          user = new User({
+              username: email,
+              email,
+              name,
+              gender: "",
+              address: "",
+              birthday: "",
+              avatar: picture,
+              phonenumber: "",
+              role: 1, 
+          });
+          await user.save();
+      }
+
+      // Tạo token JWT cho phiên đăng nhập
+      const accessToken = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
+
+      res.status(200).json({
+          status: 200,
+          message: 'Login successful',
+          data: user,
+          token: accessToken,
+      });
+  } catch (error) {
+      console.error('Google login error:', error);
+      res.status(500).json({ message: 'Login failed', error: error.message });
   }
 });
 //API Register and email

@@ -8,6 +8,7 @@ import learn.fpoly.fhotel.Model.Favourite;
 import learn.fpoly.fhotel.Model.LoginRequest;
 import learn.fpoly.fhotel.Model.Notification;
 import learn.fpoly.fhotel.Model.PasswordUpdateRequest;
+import learn.fpoly.fhotel.Model.TokenRequest;
 import learn.fpoly.fhotel.Model.TypeRoom;
 import learn.fpoly.fhotel.Model.UserVoucher;
 import learn.fpoly.fhotel.response.LoginResponse;
@@ -52,6 +53,9 @@ public interface ApiService {
     Call<Void> deleteUser(@Path("id") String userId);
     @POST("api/login")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
+    @POST("api/login/google")
+    Call<Response<User>> loginWithGoogle(@Body TokenRequest tokenRequest);
+
     @FormUrlEncoded
     @POST("api/register")
     Call<Response<User>> register(
