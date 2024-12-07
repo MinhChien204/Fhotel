@@ -22,6 +22,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import learn.fpoly.fhotel.Model.User;
 import learn.fpoly.fhotel.R;
@@ -38,7 +41,7 @@ public class TkhoanFragment extends Fragment {
     LinearLayout editProfile, editPassword, payment, booking, privacy, terms, btnLogOut, voucher;
     TextView txtName, txtEmail;
     ImageView imgProfile;
-
+    GoogleSignInClient mGoogleSignInClient;
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,7 +53,9 @@ public class TkhoanFragment extends Fragment {
         editProfile = view.findViewById(R.id.editProfile);
         voucher = view.findViewById(R.id.linearlayoutVoucher);
         editPassword = view.findViewById(R.id.editPassword);
-
+        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()  // Yêu cầu email khi đăng nhập
+                .build());
         txtName = view.findViewById(R.id.profile_name);
         txtEmail = view.findViewById(R.id.profile_email);
         imgProfile = view.findViewById(R.id.profile_image);
@@ -139,13 +144,20 @@ public class TkhoanFragment extends Fragment {
         builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear(); // Xóa toàn bộ dữ liệu đăng nhập
-                editor.apply();
-                Intent intent = new Intent(getActivity(), Login.class);
-                startActivity(intent);
-                getActivity().finish(); // Close the current activity
+                // Đăng xuất Google
+                GoogleSignIn.getClient(getContext(), new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .build()).signOut()
+                        .addOnCompleteListener(getActivity(), task -> {
+                            // Xóa thông tin người dùng trong SharedPreferences
+                            SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.clear(); // Xóa toàn bộ dữ liệu đăng nhập
+                            editor.apply();
+                            // Chuyển hướng về trang đăng nhập
+                            Intent intent = new Intent(getActivity(), Login.class);
+                            startActivity(intent);
+                            getActivity().finish(); // Close the current activity
+                        });
             }
         });
         builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
