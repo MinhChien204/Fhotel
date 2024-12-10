@@ -72,13 +72,16 @@
                 android:text="Google"
                 android:textColor="#000000" />
 
-            <com.facebook.login.widget.LoginButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/login_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="30dp" />
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button_white"
+                android:drawableStart="@drawable/facebook"
+                android:paddingLeft="20dp"
+                android:text="Google"
+                android:textColor="#000000" />
         </LinearLayout>
 
         <!-- Divider -->

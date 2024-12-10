@@ -43,6 +43,9 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import java.util.Arrays;
+
 public class Login extends AppCompatActivity {
     AppCompatButton btn_LOGIN;
     TextView txt_register_now, txt_forgot_Password;
@@ -51,9 +54,9 @@ public class Login extends AppCompatActivity {
     // Thêm biến global
     GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN = 100;
-    Button btngoogle;
+    Button btngoogle,btnfacebook;
     private CallbackManager callbackManager;
-    LoginButton btnfacebook;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,21 +84,25 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        btnfacebook.setPermissions("email"); // request permission to access email
-        btnfacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        btnfacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Bắt đầu quá trình đăng nhập với Facebook
+                LoginManager.getInstance().logInWithReadPermissions(Login.this, Arrays.asList("email"));
+            }
+        });
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // Login success
+                // Khi đăng nhập thành công, lấy token
                 String accessToken = loginResult.getAccessToken().getToken();
-                if (accessToken != null) {
-                    Log.d("FacebookLogin", "Login successful with token: " + accessToken);
-                    handleFacebookSignIn(accessToken);
-                    LoginManager.getInstance().logOut();
-                }else{
-                    Toast.makeText(Login.this, "AccessToken null", Toast.LENGTH_SHORT).show();
-                }
+                Log.d("FacebookLogin", "Login successful with token: " + accessToken);
 
+                // Xử lý đăng nhập với token
+                handleFacebookSignIn(accessToken);
 
+                // Đăng xuất sau khi xử lý
+                LoginManager.getInstance().logOut();
             }
 
             @Override
