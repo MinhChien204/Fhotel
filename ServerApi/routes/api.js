@@ -658,14 +658,15 @@ router.post('/login/google', async (req, res) => {
           audience: process.env.GOOGLE_CLIENT_ID,
       });
       const payload = ticket.getPayload();
-      const { email, name, picture } = payload;
+      const { sub,email, name, picture } = payload;
+console.log(sub);
 
       // Kiểm tra xem người dùng đã tồn tại trong MongoDB chưa
-      let user = await User.findOne({ email });
+      let user = await User.findOne({ username:sub });
       if (!user) {
           // Nếu chưa tồn tại, tạo người dùng mới
           user = new User({
-              username: email,
+              username: sub,
               email,
               name,
               gender: "",
@@ -692,6 +693,53 @@ router.post('/login/google', async (req, res) => {
       res.status(500).json({ message: 'Login failed', error: error.message });
   }
 });
+router.post('/login/facebook', async (req, res) => {
+  const { accessToken } = req.body;
+
+  if (!accessToken) {
+    return res.status(400).json({ message: 'Access Token is required' });
+  }
+
+  try {
+    const response = await fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email,picture`);
+    const data = await response.json();
+
+    if (response.status !== 200) {
+      return res.status(400).json({ message: 'Facebook login failed', data });
+    }
+
+    const { id, name, email, picture } = data;
+    console.log(id);
+
+    // Kiểm tra email, nếu không có thì tạo giá trị duy nhất
+    const userEmail = email || `unknown_${id}@facebook.com`;
+
+    const user = await User.findOne({ username: id });
+    if (!user) {
+      const newUser = new User({
+        username: id,
+        email: userEmail,
+        name: name,
+        gender: "",
+        address: "",
+        birthday: "",
+        phonenumber: "",
+        avatar: picture?.data?.url || "",
+        role: 1,
+      });
+
+      await newUser.save();
+      res.status(200).json({ message: 'Login successful', data: newUser });
+    } else {
+      res.status(200).json({ message: 'Login successful', data: user });
+    }
+  } catch (error) {
+    console.error('Facebook login error:', error);
+    res.status(500).json({ message: 'Server error', data: error.message });
+  }
+});
+
+
 //API Register and email
 // const Transporter = require('../config/common/mail')
 router.post("/register", async (req, res) => {

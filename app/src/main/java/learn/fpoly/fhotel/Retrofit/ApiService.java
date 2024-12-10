@@ -8,6 +8,7 @@ import learn.fpoly.fhotel.Model.Favourite;
 import learn.fpoly.fhotel.Model.LoginRequest;
 import learn.fpoly.fhotel.Model.Notification;
 import learn.fpoly.fhotel.Model.PasswordUpdateRequest;
+import learn.fpoly.fhotel.Model.TokenFacebookRequest;
 import learn.fpoly.fhotel.Model.TokenRequest;
 import learn.fpoly.fhotel.Model.TypeRoom;
 import learn.fpoly.fhotel.Model.UserVoucher;
@@ -55,7 +56,8 @@ public interface ApiService {
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
     @POST("api/login/google")
     Call<Response<User>> loginWithGoogle(@Body TokenRequest tokenRequest);
-
+    @POST("api/login/facebook")
+    Call<Response<User>> loginWithFacebook(@Body TokenFacebookRequest tokenFacebookRequest);
     @FormUrlEncoded
     @POST("api/register")
     Call<Response<User>> register(
@@ -98,7 +100,7 @@ public interface ApiService {
     /////////////
     @POST("api/addFavourite")
     Call<Response<Favourite>> createfavourite(@Body Favourite favourite);
-   
+
     //////////////////
     @DELETE("api/delete_Favourite/{id}")
     Call<Void> deletefavourites(@Path("id") String favouritesId);

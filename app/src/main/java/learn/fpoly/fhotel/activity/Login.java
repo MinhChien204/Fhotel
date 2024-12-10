@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import learn.fpoly.fhotel.Model.LoginRequest;
+import learn.fpoly.fhotel.Model.TokenFacebookRequest;
 import learn.fpoly.fhotel.Model.TokenRequest;
 import learn.fpoly.fhotel.response.LoginResponse;
 import learn.fpoly.fhotel.response.Response;
@@ -26,6 +27,8 @@ import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
+
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,7 +36,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 public class Login extends AppCompatActivity {
     AppCompatButton btn_LOGIN;
     TextView txt_register_now, txt_forgot_Password;
@@ -43,6 +52,8 @@ public class Login extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN = 100;
     Button btngoogle;
+    private CallbackManager callbackManager;
+    LoginButton btnfacebook;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +64,8 @@ public class Login extends AppCompatActivity {
         txt_register_now = findViewById(R.id.txt_register_now);
         txt_forgot_Password = findViewById(R.id.txt_forgot_Password);
         btngoogle = findViewById(R.id.btngoogle);
+        btnfacebook = findViewById(R.id.login_button);
+        callbackManager = CallbackManager.Factory.create();
         httpRequest = new HttpRequest();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id)) // Thêm Client ID từ Google Console
@@ -65,6 +78,36 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+            }
+        });
+
+        btnfacebook.setPermissions("email"); // request permission to access email
+        btnfacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // Login success
+                String accessToken = loginResult.getAccessToken().getToken();
+                if (accessToken != null) {
+                    Log.d("FacebookLogin", "Login successful with token: " + accessToken);
+                    handleFacebookSignIn(accessToken);
+                    LoginManager.getInstance().logOut();
+                }else{
+                    Toast.makeText(Login.this, "AccessToken null", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("FacebookLogin", "User cancelled login.");
+                Toast.makeText(Login.this, "Đăng nhập bị hủy", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.e("FacebookLogin", "Login error: " + error.getMessage());
+                Toast.makeText(Login.this, "Có lỗi xảy ra khi đăng nhập", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -162,6 +205,12 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (callbackManager.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -172,6 +221,7 @@ public class Login extends AppCompatActivity {
             }
         }
     }
+
 
     private void handleGoogleSignIn(GoogleSignInAccount account) {
         if (account != null) {
@@ -213,4 +263,39 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    //facebook
+    private void handleFacebookSignIn(String accessToken) {
+        // Call the API to authenticate the user using the Facebook token
+        Call<Response<User>> call = httpRequest.callAPI().loginWithFacebook(new TokenFacebookRequest(accessToken));
+        call.enqueue(new Callback<Response<User>>() {
+            @Override
+            public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body().getData();
+                    Log.d("FacebookSignIn", "User saved: " + user.getEmail());
+
+                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("isLoggedIn", true);
+                    editor.putInt("userRole", user.getRole());
+                    editor.putString("userId", user.get_id());
+                    editor.apply();
+
+                    Intent intent = new Intent(Login.this, Home_User.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Log.e("FacebookSignIn", "Failed to save user: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<User>> call, Throwable t) {
+                Log.e("FacebookSignIn", "API call failed", t);
+            }
+        });
+    }
+
+
 }
+

@@ -33,7 +33,7 @@ android {
 
 dependencies {
     implementation ("com.google.android.gms:play-services-auth:20.7.0")
-
+    implementation ("com.facebook.android:facebook-login:latest.release")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -58,6 +58,6 @@ dependencies {
     implementation (libs.jwtdecode)
 
     implementation (libs.android.gif.drawable)
-
+    implementation (libs.facebook.login)
 
 }

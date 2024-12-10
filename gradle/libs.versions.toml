@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.0"
+facebookLogin = "17.0.2"
 androidGifDrawable = "1.2.29"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -13,6 +14,7 @@ recyclerview = "1.3.2"
 
 [libraries]
 android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
+facebook-login = { group = "com.facebook.android", name = "facebook-login", version.ref = "facebookLogin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -25,4 +27,3 @@ recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-
