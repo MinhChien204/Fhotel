@@ -16,8 +16,8 @@ public class ViewPagerAdapter extends PagerAdapter {
     // Mảng chứa các tài nguyên ảnh và văn bản
     int[] sliderAllImages = {
             R.drawable.bg,
-            R.drawable.book_button_bg,
-            R.drawable.button_backgruod_login,
+            R.drawable.bg2,
+            R.drawable.bg3,
     };
     int[] sliderAllTitle = {
             R.string.screen1,
