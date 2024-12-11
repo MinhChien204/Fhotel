@@ -3,6 +3,7 @@ package learn.fpoly.fhotel.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -164,8 +165,8 @@ public class DetailsActivity extends AppCompatActivity {
                         txtRating_details.setRating(Float.parseFloat(String.valueOf(room.getRating())));
                         txtdescription_details.setText(room.getDescription());
                         txtstatusRoom.setText(room.getStatus());
-                        txtprice_details.setText(String.valueOf(room.getPrice()));
-                        txt_capacity.setText(String.valueOf(room.getCapacity()) + " person");
+                        txtprice_details.setText(room.getPrice()+" VND");
+                        txt_capacity.setText(room.getCapacity() + " người");
 
 
                         Glide.with(DetailsActivity.this)
@@ -179,12 +180,14 @@ public class DetailsActivity extends AppCompatActivity {
                         // Kiểm tra trạng thái phòng
                         if (room.getStatus().equals("unavailable")) {
                             btnBookingHotel.setText("Room Unavailable");
+                            txtstatusRoom.setTextColor(Color.RED);
                             btnBookingHotel.setBackgroundColor(getResources().getColor(R.color.black));
                             btnBookingHotel.setBackgroundResource(R.drawable.book_button_bg);
                             btnBookingHotel.setEnabled(false);
                         } else {
                             // Trạng thái phòng có sẵn, giữ nút Booking
                             btnBookingHotel.setText("Start Booking Your Trip");
+                            txtstatusRoom.setTextColor(Color.GREEN);
                             btnBookingHotel.setBackgroundColor(getResources().getColor(R.color.primaryColor));
                             btnBookingHotel.setBackgroundResource(R.drawable.book_button_bg);
                             btnBookingHotel.setEnabled(true);

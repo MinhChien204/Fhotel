@@ -1444,5 +1444,23 @@ router.get("/top-rooms", async (req, res) => {
   }
 });
 
+router.get('/search-rooms', async (req, res) => {
+  try {
+    const { query } = req.query;
+    const rooms = await Room.find({ 
+      name: { $regex: query, $options: "i" }
+    }).select("name image"); 
+
+    res.status(200).json({
+      status: 200,
+      message: "Rooms fetched successfully",
+      data: rooms,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred while searching for rooms",
+    });
+  }
+});
 
 module.exports = router;

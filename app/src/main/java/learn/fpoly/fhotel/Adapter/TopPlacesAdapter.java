@@ -1,6 +1,7 @@
 package learn.fpoly.fhotel.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
+import learn.fpoly.fhotel.activity.DetailsActivity;
 
 import java.util.List;
 
@@ -48,7 +50,17 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
         Glide.with(context)
                 .load(topPlacesDataList.get(position).getImage()) // URL của hình ảnh
                 .into(holder.room_image); // ImageView để hiển thị ảnh
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(context, DetailsActivity.class);
+                // Truyền dữ liệu qua Intent
+                i.putExtra("room_id", topPlacesDataList.get(position).getId());
 
+                // Bắt đầu Activity DetailsActivity
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override
