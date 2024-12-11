@@ -4,9 +4,9 @@
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="12dp"
-    app:cardElevation="4dp"
-    app:cardBackgroundColor="@android:color/white">
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,9 +19,9 @@
             android:id="@+id/room_image"
             android:layout_width="match_parent"
             android:layout_height="180dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_foreground"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Image.Rounded"
-            android:scaleType="centerCrop" />
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Image.Rounded" />
 
 
         <!-- Like Icon -->
@@ -34,35 +34,21 @@
             android:orientation="vertical"
             android:paddingTop="8dp">
 
-            <!-- Ratings and Reviews -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <RatingBar
+                android:id="@+id/ratingBarHome"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <RatingBar
-                    android:id="@+id/ratingBarHome"
-                    style="@style/Widget.AppCompat.RatingBar.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:isIndicator="false"
-                    android:numStars="5"
-                    android:progressBackgroundTint="@android:color/darker_gray"
-                    android:progressTint="@android:color/holo_orange_light"
-                    android:rating="4.5"
-                    android:scaleX="1.0"
-                    android:scaleY="1.1"
-                    android:secondaryProgressTint="@android:color/holo_orange_light"
-                    android:stepSize="0.5" />
-                <TextView
-                    android:id="@+id/ratingText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="(115 Reviews)"
-                    android:textColor="#FF9800"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                android:isIndicator="false"
+                android:numStars="5"
+                android:progressBackgroundTint="@android:color/darker_gray"
+                android:progressTint="@android:color/holo_orange_light"
+                android:rating="4.5"
+                android:scaleX="1.0"
+                android:scaleY="1.1"
+                android:secondaryProgressTint="@android:color/holo_orange_light"
+                android:stepSize="0.5" />
 
-            </LinearLayout>
 
             <!-- Room Title -->
             <TextView
@@ -77,23 +63,25 @@
                 android:textStyle="bold" />
 
             <!-- Location -->
-          <LinearLayout
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal">
-              <ImageView
-                  android:layout_width="17dp"
-                  android:layout_height="17dp"
-                  android:layout_marginRight="10dp"
-                  android:src="@drawable/room_code"/>
-              <TextView
-                  android:id="@+id/room_code"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Mumbai, Maharashtra"
-                  android:textColor="#808080"
-                  android:textSize="14sp" />
-          </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/room_code" />
+
+                <TextView
+                    android:id="@+id/room_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mumbai, Maharashtra"
+                    android:textColor="#808080"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <!-- Price -->
             <TextView

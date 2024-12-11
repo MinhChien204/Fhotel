@@ -74,7 +74,7 @@ public class Fragment_TrangChu extends Fragment {
         // Gọi API để lấy dữ liệu
         fetchdata(view);
         fetchRecentsData(view);
-        fetchTopPlacesData(view);
+        fetchTopRoom(view);
 
         // Lấy userId từ SharedPreferences
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
@@ -145,15 +145,14 @@ public class Fragment_TrangChu extends Fragment {
         });
     }
 
-    private void fetchTopPlacesData(View view) {
-        httpRequest.callAPI().getRooms().enqueue(new Callback<Response<ArrayList<Room>>>() {
+    private void fetchTopRoom(View view) {
+        httpRequest.callAPI().getTopRooms().enqueue(new Callback<Response<ArrayList<Room>>>() {
             @Override
             public void onResponse(Call<Response<ArrayList<Room>>> call, retrofit2.Response<Response<ArrayList<Room>>> response) {
 
                 if (response.isSuccessful() && response.body() != null) {
                     ArrayList<Room> topPlacesDataList = response.body().getData();
                     setTopPlacesRecycler(view, topPlacesDataList);
-//                    Toast.makeText(getContext(),"Get data success",Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getContext(), "Failed to load top places", Toast.LENGTH_SHORT).show();
                 }
