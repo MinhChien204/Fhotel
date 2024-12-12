@@ -2,6 +2,7 @@ package learn.fpoly.fhotel.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +23,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import learn.fpoly.fhotel.Adapter.ServiceAdapter;
-import learn.fpoly.fhotel.Fragment.PaymentFragment;
+import learn.fpoly.fhotel.Fragment.PaymentActivity;
 import learn.fpoly.fhotel.Model.Favourite;
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
@@ -96,26 +97,19 @@ public class DetailsActivity extends AppCompatActivity {
         btnBookingHotel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PaymentFragment paymentFragment = new PaymentFragment();
+                Intent intent = new Intent(DetailsActivity.this, PaymentActivity.class);
 
-                Bundle bundle = new Bundle();
-                bundle.putString("room_id", roomId);
-                bundle.putString("room_name", txtNamerom_details.getText().toString());
-                bundle.putFloat("room_rating", txtRating_details.getRating());
-                bundle.putString("room_description", txtdescription_details.getText().toString());
-                bundle.putString("room_price", txtprice_details.getText().toString());
-                bundle.putString("room_image", room.getImage());
-                bundle.putString("room_capacity", txt_capacity.getText().toString());
+                intent.putExtra("room_id", roomId);
+                intent.putExtra("room_name", txtNamerom_details.getText().toString());
+                intent.putExtra("room_rating", txtRating_details.getRating());
+                intent.putExtra("room_description", txtdescription_details.getText().toString());
+                intent.putExtra("room_price", txtprice_details.getText().toString());
+                intent.putExtra("room_image", room.getImage());
+                intent.putExtra("room_capacity", txt_capacity.getText().toString());
                 // Gán Bundle cho Fragment
-                paymentFragment.setArguments(bundle);
-
+                startActivity(intent);
                 // Use FragmentTransaction to replace the fragment container with PaymentFragment
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-                // Thay thế Fragment hiện tại bằng PaymentFragment
-                transaction.replace(R.id.fragment_container, paymentFragment);
-                transaction.addToBackStack(null);  // Add to backstack to allow back navigation
-                transaction.commit();
             }
         });
     }

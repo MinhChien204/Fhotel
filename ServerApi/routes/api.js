@@ -957,12 +957,12 @@ router.delete("/delete_uservoucher/:id", async (req, res) => {
 
 router.post("/book_room", async (req, res) => {
   try {
-    const { userId, roomId, startDate, endDate, totalPrice } = req.body;
+    const { userId, roomId, startDate, endDate, totalPrice, paymentMethod } = req.body;
 
     // Kiểm tra user và phòng có tồn tại không
     const user = await User.findById(userId);
     const room = await Room.findById(roomId);
-    if (!user) {
+    if (!user) { 
       return res.status(404).json({ message: "User not found" });
     }
     if (!room) {
@@ -982,6 +982,15 @@ router.post("/book_room", async (req, res) => {
       return res.status(400).json({ message: "Room is already booked during the selected dates" });
     }
 
+    // Xác định trạng thái thanh toán và trạng thái phòng
+    let paymentStatus = "unpaid"; // Mặc định là chưa thanh toán
+    let roomStatus = "pending"; // Mặc định là trạng thái phòng pending
+
+    if (paymentMethod === "zalopay") {
+      paymentStatus = "paid"; // Nếu thanh toán qua ZaloPay thì trạng thái là "paid"
+      roomStatus = "confirmed"; // Trạng thái phòng là "confirmed" khi thanh toán thành công
+    }
+
     // Tạo booking mới
     const newBooking = new Booking({
       userId,
@@ -989,7 +998,8 @@ router.post("/book_room", async (req, res) => {
       startDate,
       endDate,
       totalPrice,
-      status: "pending", // Trạng thái mặc định ban đầu
+      status: roomStatus, // Trạng thái phòng
+      paymentStatus, // Trạng thái thanh toán
     });
 
     const savedBooking = await newBooking.save();
@@ -1003,10 +1013,12 @@ router.post("/book_room", async (req, res) => {
   }
 });
 
+ 
+ 
 // Lấy tất cả bookings của user
 router.get("/user/:userId/bookings", async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { userId } = req.params; 
 
     // Truy vấn tất cả các booking của user
     const bookings = await Booking.find({ userId }).sort({ createdAt: -1 });
@@ -1050,27 +1062,43 @@ router.get("/user/:userId/bookings", async (req, res) => {
 // Cập nhật trạng thái booking
 router.put("/update-status-booking/:id", async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { status, paymentMethod } = req.body;
 
   try {
-
+    // Kiểm tra trạng thái hợp lệ
     if (!["pending", "confirmed", "cancelled"].includes(status)) {
       return res.status(400).json({ message: "Trạng thái không hợp lệ" });
     }
-
-    const booking = await Booking.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
-
+  
+    // Lấy booking theo id
+    const booking = await Booking.findById(id);
     if (!booking) {
       return res.status(404).json({ message: "Không tìm thấy booking" });
     }
 
+    // Xử lý cập nhật trạng thái thanh toán và phòng
+    if (paymentMethod) {
+      let paymentStatus = booking.paymentStatus;
+      let roomStatus = booking.status;
+
+      if (paymentMethod === "zalopay") {
+        paymentStatus = "paid";
+      } else if (paymentMethod === "cash") {
+        paymentStatus = "unpaid";
+        roomStatus = "pending";
+      }
+
+      booking.paymentStatus = paymentStatus; // Cập nhật trạng thái thanh toán
+      booking.status = roomStatus; // Cập nhật trạng thái phòng
+    }
+
+    // Cập nhật trạng thái của booking
+    booking.status = status; // Cập nhật trạng thái booking (pending, confirmed, cancelled)
+    const updatedBooking = await booking.save();
+
     res.status(200).json({
-      message: "Bookings update successfully",
-      data: booking,
+      message: "Bookings updated successfully",
+      data: updatedBooking,
     });
   } catch (error) {
     res.status(500).json({ message: "Lỗi server", error });
