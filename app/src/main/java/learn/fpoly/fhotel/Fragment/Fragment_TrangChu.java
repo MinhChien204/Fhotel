@@ -36,6 +36,7 @@ import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.Model.TypeRoom;
 import learn.fpoly.fhotel.Model.User;
 import learn.fpoly.fhotel.activity.Home_User;
+import learn.fpoly.fhotel.activity.seel_all;
 import learn.fpoly.fhotel.chatbot.ChatBotActivity;
 import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.R;
@@ -76,20 +77,33 @@ private RoomSearchAdapter roomSearchAdapter;
         topPlacesRecycler = view.findViewById(R.id.top_places_recycler);
         typeroomRecyclerview = view.findViewById(R.id.rcv_typeroom);
         floatingActionButton = view.findViewById(R.id.fab_chatbot);
+        txtSeeall = view.findViewById(R.id.txtSeeall);
         edtsearch = view.findViewById(R.id.edtsearch);
         roomsearchRecyclerView = view.findViewById(R.id.roomsearchRecyclerView);
         // Gọi API để lấy dữ liệu
         fetchdata(view);
         fetchRecentsData(view);
         fetchTopRoom(view);
-
+        txtSeeall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), seel_all.class);
+                startActivity(intent);
+            }
+        });
         edtsearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchRooms(s.toString());
+//                searchRooms(s.toString());
+                if (s.toString().trim().isEmpty()) {
+                    Toast.makeText(getContext(), "Please enter text to search", Toast.LENGTH_SHORT).show();
+                    roomsearchRecyclerView.setVisibility(View.GONE); // Ẩn RecyclerView khi rỗng
+                } else {
+                    searchRooms(s.toString());
+                }
             }
 
             @Override

@@ -105,6 +105,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rcv_typeroom" />
 
+            <TextView
+                android:id="@+id/txtSeeall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="16dp"
+                android:text="See all"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.955"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
+                app:layout_constraintTop_toBottomOf="@id/rcv_typeroom" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recent_recycler"
                 android:layout_width="match_parent"
