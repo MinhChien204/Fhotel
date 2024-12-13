@@ -1406,9 +1406,9 @@ router.delete('/delete_typeroom/:id', async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: 'Error deleting typeRoom', error });
   }
-});
+}); 
 
-
+ 
 //API delete yeu thich
 router.delete("/delete_Favourite/:id", async (req, res) => {
   try {
