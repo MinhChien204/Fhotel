@@ -10,6 +10,7 @@ import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ public class BookingFragment extends Fragment {
     private TextView tvNoBookings;
     private ImageView ivLoadingbookingGif, ivFilterBookings;
     private List<Booking> originalBookings = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +59,15 @@ public class BookingFragment extends Fragment {
         tvNoBookings = view.findViewById(R.id.tvNoBookings);
         ivLoadingbookingGif = view.findViewById(R.id.ivLoadingbookingGif);
         ivFilterBookings = view.findViewById(R.id.ivFilterBookings);
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        // Xử lý làm mới danh sách khi vuốt xuống
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (userId != null) {
+                getBookings(userId); // Gọi lại API để lấy danh sách mới
+            }
+        });
+
         // Ánh xạ RecyclerView
         rcvListUpcomingBooking = view.findViewById(R.id.rcv_listUpcomingBooking);
         rcvListUpcomingBooking.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -80,6 +91,7 @@ public class BookingFragment extends Fragment {
         call.enqueue(new Callback<Response<List<Booking>>>() {
             @Override
             public void onResponse(Call<Response<List<Booking>>> call, retrofit2.Response<Response<List<Booking>>> response) {
+                swipeRefreshLayout.setRefreshing(false); // Tắt trạng thái làm mới
                 if (response.isSuccessful()) {
                     List<Booking> bookings = response.body().getData();
                     if (bookings != null && !bookings.isEmpty()) {

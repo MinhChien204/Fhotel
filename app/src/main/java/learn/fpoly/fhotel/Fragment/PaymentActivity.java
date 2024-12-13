@@ -78,7 +78,7 @@ public class PaymentActivity extends AppCompatActivity {
         paymentMethodsGroup = findViewById(R.id.payment_methods_group);
 
         rbPayZalopay = findViewById(R.id.rb_pay_zalopay);
-        rbPayVNPay = findViewById(R.id.rb_pay_vnpay);
+//        rbPayVNPay = findViewById(R.id.rb_pay_vnpay);
         rbPayCash = findViewById(R.id.rb_pay_cash);
 
 
@@ -199,9 +199,11 @@ public class PaymentActivity extends AppCompatActivity {
                         e.printStackTrace();
                         Toast.makeText(this, "Error creating ZaloPay order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                } else if (selectedPaymentMethod == R.id.rb_pay_vnpay) {
-                    processVNPayPayment(startDate, endDate, total);
-                } else if (selectedPaymentMethod == R.id.rb_pay_cash) {
+                }
+//                else if (selectedPaymentMethod == R.id.rb_pay_vnpay) {
+//                    processVNPayPayment(startDate, endDate, total);
+//                }
+                else if (selectedPaymentMethod == R.id.rb_pay_cash) {
                     Booking booking = new Booking(userId, roomId, startDate, endDate, total);
                     booking.setStatus("pending");  // Trạng thái chờ xác nhận
                     booking.setPaymentStatus("unpaid");  // Chưa thanh toán

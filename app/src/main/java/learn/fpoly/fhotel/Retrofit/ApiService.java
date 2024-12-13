@@ -16,6 +16,7 @@ import learn.fpoly.fhotel.response.LoginResponse;
 import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.Model.User;
+import learn.fpoly.fhotel.response.UpdateFcmTokenRequest;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -128,4 +129,8 @@ public interface ApiService {
 
     @POST("api/add_notification")
     Call<Response<Notification>> createNotification(@Body Notification notification);
+
+    @POST("api/update-fcm-token")
+    Call<Response<Void>> updateFcmToken(@Body UpdateFcmTokenRequest request);
+
 }

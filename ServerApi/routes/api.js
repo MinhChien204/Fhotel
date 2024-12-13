@@ -6,6 +6,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/common/cloudinaryConfig');
 const path = require("path");
+const admin = require("firebase-admin");
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -29,6 +30,50 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.SECRET_KEY;
+
+
+// hàm thông báo từ administrator
+admin.initializeApp({
+  credential: admin.credential.cert("E:/DACN/Fhotel/ServerApi/config/serviceAccountKey.json"), // Đường dẫn đến file JSON từ Firebase Console
+});
+
+const sendNotification = async (fcmToken, title, body, data = {}) => {
+  const message = {
+    notification: {
+      title: title,
+      body: body,
+    },
+    data: data, // Thêm data nếu cần
+    token: fcmToken, // FCM Token của người dùng
+  };
+
+  try {
+    const response = await admin.messaging().send(message);
+    console.log("Notification sent successfully:", response);
+    return response;
+  } catch (error) {
+    console.error("Error sending notification:", error);
+    throw error;
+  }
+};
+
+router.post("/send-notification", async (req, res) => {
+  const { userId, title, body } = req.body;
+
+  try {
+    // Lấy thông tin user từ database
+    const user = await User.findById(userId);
+    if (!user || !user.fcmToken) {
+      return res.status(404).json({ message: "User or FCM Token not found" });
+    }
+
+    // Gửi thông báo
+    const response = await sendNotification(user.fcmToken, title, body);
+    res.status(200).json({ message: "Notification sent successfully", response });
+  } catch (error) {
+    res.status(500).json({ message: "Error sending notification", error: error.message });
+  }
+});
 
 
 //   CRUD User
@@ -959,20 +1004,16 @@ router.post("/book_room", async (req, res) => {
   try {
     const { userId, roomId, startDate, endDate, totalPrice, paymentMethod } = req.body;
 
-    // Kiểm tra user và phòng có tồn tại không
     const user = await User.findById(userId);
     const room = await Room.findById(roomId);
-    if (!user) { 
-      return res.status(404).json({ message: "User not found" });
-    }
-    if (!room) {
-      return res.status(404).json({ message: "Room not found" });
+
+    if (!user || !room) {
+      return res.status(404).json({ message: "User or Room not found" });
     }
 
-    // Kiểm tra phòng có bị đặt trùng thời gian không (ngoại trừ booking bị "cancelled")
     const overlappingBooking = await Booking.findOne({
       roomId,
-      status: { $ne: "cancelled" }, // Bỏ qua booking có trạng thái "cancelled"
+      status: { $ne: "cancelled" },
       $or: [
         { startDate: { $lte: endDate }, endDate: { $gte: startDate } },
       ],
@@ -982,39 +1023,98 @@ router.post("/book_room", async (req, res) => {
       return res.status(400).json({ message: "Room is already booked during the selected dates" });
     }
 
-    // Xác định trạng thái thanh toán và trạng thái phòng
-    let paymentStatus = "unpaid"; // Mặc định là chưa thanh toán
-    let roomStatus = "pending"; // Mặc định là trạng thái phòng pending
-
-    if (paymentMethod === "zalopay") {
-      paymentStatus = "paid"; // Nếu thanh toán qua ZaloPay thì trạng thái là "paid"
-      roomStatus = "confirmed"; // Trạng thái phòng là "confirmed" khi thanh toán thành công
-    }
-
-    // Tạo booking mới
     const newBooking = new Booking({
       userId,
       roomId,
       startDate,
       endDate,
       totalPrice,
-      status: roomStatus, // Trạng thái phòng
-      paymentStatus, // Trạng thái thanh toán
+      status: "pending",
+      paymentStatus: paymentMethod === "zalopay" ? "paid" : "unpaid",
     });
 
     const savedBooking = await newBooking.save();
-    res.status(201).json({
-      message: "Room booked successfully",
-      data: savedBooking,
-    });
+
+    // Gửi thông báo cho người dùng
+    if (user.fcmToken) {
+      sendNotification(
+        user.fcmToken,
+        "Đặt phòng thành công",
+        `Phòng ${room.name} đã được đặt. Chờ xác nhận từ admin.`
+      );
+    }
+
+    res.status(201).json({ message: "Room booked successfully", data: savedBooking });
   } catch (error) {
-    console.error("Error:", error);
     res.status(500).json({ message: "An error occurred while booking room", error: error.message });
   }
 });
 
- 
- 
+// Cập nhật trạng thái booking
+router.put("/update-status-booking/:id", async (req, res) => {
+  const { id } = req.params;
+  const { status, paymentMethod } = req.body;
+  try {
+    const booking = await Booking.findById(id);
+    if (!booking) {
+      return res.status(404).json({ message: "Không tìm thấy booking" });
+    }
+
+    booking.status = status;
+    booking.paymentStatus = paymentMethod === "zalopay" ? "paid" : "unpaid";
+    const updatedBooking = await booking.save();
+
+    const user = await User.findById(booking.userId);
+
+    // Gửi thông báo cho người dùng khi admin xác nhận
+    if (user.fcmToken) {
+      sendNotification(
+        user.fcmToken,
+        "Xác nhận đặt phòng",
+        `Admin đã xác nhận đặt phòng từ ${booking.startDate} đến ${booking.endDate}.`
+      );
+    }
+
+    res.status(200).json({ message: "Booking updated successfully", data: updatedBooking });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating booking", error });
+  }
+});
+router.post("/update-fcm-token", async (req, res) => {
+  const { userId, fcmToken } = req.body;
+
+  try {
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      // Cập nhật FCM Token
+      user.fcmToken = fcmToken;
+      await user.save();
+
+      res.status(200).json({ message: "FCM Token updated successfully" });
+  } catch (error) {
+      res.status(500).json({ message: "Error updating FCM Token", error: error.message });
+  }
+});
+
+router.get("/check-fcm-token/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user || !user.fcmToken) {
+      return res.status(404).json({ message: "FCM Token not found" });
+    }
+
+    res.status(200).json({ message: "FCM Token ", fcmToken: user.fcmToken });
+  } catch (error) {
+    res.status(500).json({ message: "Error checking FCM Token", error: error.message });
+  }
+});
+
+
 // Lấy tất cả bookings của user
 router.get("/user/:userId/bookings", async (req, res) => {
   try {
@@ -1058,52 +1158,6 @@ router.get("/user/:userId/bookings", async (req, res) => {
   }
 });
 
-
-// Cập nhật trạng thái booking
-router.put("/update-status-booking/:id", async (req, res) => {
-  const { id } = req.params;
-  const { status, paymentMethod } = req.body;
-
-  try {
-    // Kiểm tra trạng thái hợp lệ
-    if (!["pending", "confirmed", "cancelled"].includes(status)) {
-      return res.status(400).json({ message: "Trạng thái không hợp lệ" });
-    }
-  
-    // Lấy booking theo id
-    const booking = await Booking.findById(id);
-    if (!booking) {
-      return res.status(404).json({ message: "Không tìm thấy booking" });
-    }
-
-    // Xử lý cập nhật trạng thái thanh toán và phòng
-    if (paymentMethod) {
-      let paymentStatus = booking.paymentStatus;
-      let roomStatus = booking.status;
-
-      if (paymentMethod === "zalopay") {
-        paymentStatus = "paid";
-      } else if (paymentMethod === "cash") {
-        paymentStatus = "unpaid";
-        roomStatus = "pending";
-      }
-
-      booking.paymentStatus = paymentStatus; // Cập nhật trạng thái thanh toán
-      booking.status = roomStatus; // Cập nhật trạng thái phòng
-    }
-
-    // Cập nhật trạng thái của booking
-    booking.status = status; // Cập nhật trạng thái booking (pending, confirmed, cancelled)
-    const updatedBooking = await booking.save();
-
-    res.status(200).json({
-      message: "Bookings updated successfully",
-      data: updatedBooking,
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Lỗi server", error });
-  }
-});
 
 router.put("/update-status-room/:id", async (req, res) => {
   const { id } = req.params;

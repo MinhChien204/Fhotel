@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -64,6 +65,11 @@ dependencies {
 
     implementation (libs.android.gif.drawable)
     implementation (libs.facebook.login)
+
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation ("com.google.firebase:firebase-messaging:24.1.0")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-inappmessaging-display")
 
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation("commons-codec:commons-codec:1.14")
