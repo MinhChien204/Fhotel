@@ -85,8 +85,8 @@ public class PaymentActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        totalPrice.setText("$0.00");
-        tvPriceDetails.setText("Room Price: $0.00\nNumber of nights: 0\nTotal Price: $0.00");
+        totalPrice.setText("0.00đ");
+        tvPriceDetails.setText("Room Price: 0.00đ\nNumber of nights: 0\nTotal Price: 0.00đ");
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", null);
@@ -115,7 +115,7 @@ public class PaymentActivity extends AppCompatActivity {
                         // Nếu có số đêm hợp lệ, cập nhật tổng giá
                         updatePriceDetails();
                     } else {
-                        Toast.makeText(this, "Invalid date range selected", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Ngày bắt đầu và kết thúc không được trùng nhau", Toast.LENGTH_SHORT).show();
                     }
                 });
                 bottomSheet.show(getSupportFragmentManager(), "SelectDateBottomSheet");
@@ -217,7 +217,7 @@ public class PaymentActivity extends AppCompatActivity {
             btnback.setOnClickListener(view1 -> onBackPressed());
 
             tvnameKS.setText(roomName);
-            tvpriceKS.setText("đ " + roomPrice);
+            tvpriceKS.setText(roomPrice);
             ratingBar.setRating(roomRating);
             tvcapacityKS.setText(roomCapacity);
 
@@ -259,7 +259,7 @@ public class PaymentActivity extends AppCompatActivity {
                 long diffInMillis = endDate.getTime() - startDate.getTime();
                 return (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
             } else {
-                Log.e("PaymentActivity", "Start date must be before end date");
+                Log.e("PaymentActivity", "Ngày bắt đầu phải trước ngày kết thúc");
                 return 0;
             }
         } catch (Exception e) {
@@ -273,7 +273,7 @@ public class PaymentActivity extends AppCompatActivity {
     private void updatePriceDetails() {
         try {
             // Lấy giá trị từ TextView tvpriceKS và chuyển đổi sang float
-            String priceText = tvpriceKS.getText().toString().replace("đ ", "").trim();
+            String priceText = tvpriceKS.getText().toString().replace("đ", "").trim();
             float roomPrice = Float.parseFloat(priceText); // Chuyển đổi chuỗi thành số thực
 
             // Tính toán tổng giá

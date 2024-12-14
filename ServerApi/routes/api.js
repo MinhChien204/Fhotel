@@ -1067,11 +1067,23 @@ router.put("/update-status-booking/:id", async (req, res) => {
     const user = await User.findById(booking.userId);
 
     // Gửi thông báo cho người dùng khi admin xác nhận
-    if (user.fcmToken) {
+    if (user.fcmToken&& booking.status=="confirmed") {
       sendNotification(
         user.fcmToken,
         "Xác nhận đặt phòng",
         `Admin đã xác nhận đặt phòng từ ${booking.startDate} đến ${booking.endDate}.`
+      );
+    }else if(user.fcmToken && booking.status=="cancelled"){
+      sendNotification(
+        user.fcmToken,
+        "Hủy đặt phòng",
+        `Bạn đã hủy đặt phòng từ ${booking.startDate} đến ${booking.endDate}.`
+      );
+    }else{
+      sendNotification(
+        user.fcmToken,
+        "Trạng thái đặt phòng",
+        `Đơn đặt phòng từ ${booking.startDate} đến ${booking.endDate} là đang xử lý.`
       );
     }
 

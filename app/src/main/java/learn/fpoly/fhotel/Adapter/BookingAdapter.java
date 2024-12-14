@@ -105,7 +105,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         // Gán các thông tin khác
         holder.tvStartDate.setText("Ngày bắt đầu: " + booking.getStartDate());
         holder.tvEndDate.setText("Ngày kết thúc: " + booking.getEndDate());
-        holder.tvTotalPrice.setText(booking.getTotalPrice()+"VND");
+        holder.tvTotalPrice.setText(booking.getTotalPrice()+"đ");
 
         // Sự kiện khi nhấn vào item (chuyển đến màn chi tiết phòng)
         holder.itemView.setOnClickListener(v -> {

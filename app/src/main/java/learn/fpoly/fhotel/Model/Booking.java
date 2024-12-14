@@ -33,7 +33,8 @@ public class Booking {
     @SerializedName("createdAt")
     private String createdAt;
 
-    public Booking(String newStatus) {
+    public Booking(String status) {
+        this.status = status;
     }
 
     public Booking(String userId, String roomId, String startDate, String endDate, double totalPrice) {

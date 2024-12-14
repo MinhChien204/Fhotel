@@ -159,7 +159,7 @@ public class DetailsActivity extends AppCompatActivity {
                         txtRating_details.setRating(Float.parseFloat(String.valueOf(room.getRating())));
                         txtdescription_details.setText(room.getDescription());
                         txtstatusRoom.setText(room.getStatus());
-                        txtprice_details.setText(room.getPrice()+" VND");
+                        txtprice_details.setText(room.getPrice()+" đ");
                         txt_capacity.setText(room.getCapacity() + " người");
 
 
