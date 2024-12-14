@@ -82,4 +82,11 @@ public class SeelallAdapter  extends RecyclerView.Adapter<SeelallAdapter.SeeAllV
             ratingBar = itemView.findViewById(R.id.ratingBarHome);
         }
     }
+    public void updateList(List<Room> newRoomList) {
+        this.SeelallDataList.clear();
+        this.SeelallDataList.addAll(newRoomList);
+        notifyDataSetChanged(); // Thông báo cập nhật dữ liệu
+    }
+
+
 }
