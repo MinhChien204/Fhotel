@@ -20,7 +20,6 @@ async function fetchUsers() {
         <td>${user.name}</td>
         <td>${user.birthday}</td>
         <td>${gender}</td> <!-- Sử dụng giá trị đã chuẩn hóa -->
-        <td>${user.email}</td>
         <td>${user.phonenumber}</td>
         <td>${user.address}</td>
         <td>${user.role === 0 ? "Admin" : "User"}</td>

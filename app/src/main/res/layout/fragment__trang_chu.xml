@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Nội dung cuộn sẽ được bọc trong NestedScrollView -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
@@ -17,7 +16,6 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white">
 
-            <!-- Header section with background image -->
             <LinearLayout
                 android:id="@+id/header_section"
                 android:layout_width="match_parent"
@@ -35,6 +33,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20sp"
                     android:text="FHOTEL"
+                    android:fontFamily="serif"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     android:textStyle="bold" />
@@ -50,19 +49,16 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:layout_marginRight="10dp"
-                        android:src="@drawable/profile" />
+                        android:src="@drawable/user" />
 
-                    <!-- Search Bar -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/search_bar_bg"
-                        android:orientation="horizontal">
-
-                        <!-- Search Input -->
+                        android:orientation="vertical">
                         <EditText
-                            android:id="@+id/editText"
-                            android:layout_width="0dp"
+                            android:id="@+id/edtsearch"
+                            android:layout_width="wrap_content"
                             android:layout_height="40dp"
                             android:layout_weight="1"
                             android:background="@android:color/transparent"
@@ -73,20 +69,20 @@
                             android:paddingEnd="12dp"
                             android:textColor="#3E4A59"
                             android:textSize="16sp" />
-
-                        <!-- Filter Icon -->
-                        <ImageView
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            android:layout_gravity="center"
-                            android:layout_marginStart="8dp"
-                            android:background="?attr/selectableItemBackground"
-                            android:padding="12dp"
-                            android:src="@drawable/filter"
-                            app:tint="#3E4A59" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/roomsearchRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:elevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_section" />
 
             <!-- RecyclerView for Type Room -->
             <androidx.recyclerview.widget.RecyclerView
@@ -96,18 +92,31 @@
                 android:layout_margin="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/header_section" />
-
-            <!-- Nearby your location section -->
+                app:layout_constraintTop_toBottomOf="@id/roomsearchRecyclerView" />
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="10dp"
                 android:text="Nearby your location"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rcv_typeroom" />
+
+            <TextView
+                android:id="@+id/txtSeeall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="16dp"
+                android:text="See all"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.955"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
                 app:layout_constraintTop_toBottomOf="@id/rcv_typeroom" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -121,11 +130,12 @@
 
             <!-- Recent section -->
             <TextView
+                android:layout_marginHorizontal="10dp"
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Recent"
+                android:text="Hot"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -136,14 +146,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textView5" />
+                android:elevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- FloatingActionButton trong CoordinatorLayout sẽ đứng yên khi cuộn -->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_chatbot"
         android:layout_width="wrap_content"

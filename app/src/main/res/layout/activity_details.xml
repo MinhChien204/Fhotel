@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/maindt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -63,6 +63,8 @@
                     app:srcCompat="@drawable/bg" />
 
                 <LinearLayout
+                    android:layout_marginVertical="5dp"
+                   android:layout_marginHorizontal="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -86,30 +88,36 @@
                         android:id="@+id/ratingText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="4.5 (115 Reviews)"
+                        android:text=" (115 Reviews)"
                         android:textColor="#FF9800"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <TextView
+                    android:textStyle="bold"
+                    android:layout_marginVertical="5dp"
                     android:id="@+id/txtNamerom_details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:text="Mughal Gardens, Srinagar"
                     android:textColor="@android:color/background_dark"
                     android:textSize="18sp" />
 
                 <LinearLayout
+                    android:layout_marginVertical="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textStyle="bold"
                         android:id="@+id/textView8"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Available flight :"
+                        android:layout_height="match_parent"
+                        android:text="Trạng thái phòng: "
                         android:textColor="#044363"
                         android:textSize="14sp" />
 
@@ -117,42 +125,48 @@
                         android:id="@+id/textView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="18 April, 2020"
-                        android:textSize="12sp" />
+                        android:textStyle="bold"
+                        android:text=" available"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textStyle="bold"
                         android:id="@+id/textView9"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Price range : "
+                        android:layout_height="match_parent"
+                        android:textSize="14sp"
+                        android:text="Giá phòng : "
                         android:textColor="#044363" />
 
                     <TextView
                         android:id="@+id/txtprice_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:textStyle="bold"
                         android:text="$3,00 - $8,00"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Available flight :"
+                        android:text="Sức chứa: "
                         android:textColor="#044363"
                         android:textSize="14sp" />
 
@@ -160,20 +174,14 @@
                         android:id="@+id/tvcapacity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="4 person"
-                        android:textSize="12sp" />
+                        android:textStyle="bold"
+                        android:text=" person"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Photogellery"
-                    android:textColor="@android:color/background_dark" />
-
-                <TextView
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="10dp"
                     android:id="@+id/textView20"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -189,6 +197,7 @@
                     android:layout_marginTop="10dp" />
 
                 <TextView
+                    android:textStyle="bold"
                     android:id="@+id/textView13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

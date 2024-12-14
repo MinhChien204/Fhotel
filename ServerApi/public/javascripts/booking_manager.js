@@ -16,7 +16,6 @@ async function fetchBookings() {
           <td>${booking.totalPrice}</td>
           <td>${booking.startDate}</td>
           <td>${booking.endDate}</td>
-          <td>${booking.userId?.email}</td>
           <td>${booking.userId?.phonenumber}</td>
           <td>
             <select

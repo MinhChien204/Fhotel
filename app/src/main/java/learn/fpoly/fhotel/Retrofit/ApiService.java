@@ -35,9 +35,15 @@ public interface ApiService {
     String DOMAIN ="http://10.0.2.2:3000/";
     @GET("api/rooms")
     Call<Response<ArrayList<Room>>> getRooms();
+    @GET("api/top-rooms")
+    Call<Response<ArrayList<Room>>> getTopRooms();
     //API user
     @GET("api/room/{id}")
     Call<Response<Room>> getRoomById(@Path("id") String roomId);
+
+    @GET("api/search-rooms")
+    Call<Response<ArrayList<Room>>> searchRooms(@Query("query") String query);
+
     //
     @GET("api/user")
     Call<List<User>> getUsers();

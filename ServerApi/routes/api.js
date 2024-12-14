@@ -1484,4 +1484,65 @@ router.post("/add_notification", async (req, res) => {
     res.status(500).json({ message: "An error occurred while booking room", error: error.message });
   }
 });
+
+
+router.get("/top-rooms", async (req, res) => {
+  try {
+    const rooms = await Booking.aggregate([
+      { $group: { _id: "$roomId", bookings: { $sum: 1 } } }, // Đếm số lần đặt phòng của từng phòng
+      { $sort: { bookings: -1 } }, // Sắp xếp theo số lần đặt giảm dần
+      { $limit: 5 }, // Lấy top 5 phòng phổ biến nhất
+      {
+        $lookup: {
+          from: "rooms",
+          localField: "_id",
+          foreignField: "_id",
+          as: "roomInfo"
+        }
+      }, // Kết nối với bảng (collection) rooms để lấy thông tin chi tiết
+      { $unwind: "$roomInfo" }, // Mở rộng roomInfo thành object thay vì array
+      {
+        $project: {
+          name: "$roomInfo.name", // Chỉ lấy trường name từ roomInfo
+          image: "$roomInfo.image", // Thêm trường ảnh của phòng
+          room_code: "$roomInfo.room_code", // Thêm trường ảnh của phòng
+          price: "$roomInfo.price", // Thêm trường ảnh của phòng
+          rating: "$roomInfo.rating", // Thêm trường ảnh của phòng
+          bookings: 1 // Giữ lại trường bookings
+        }
+      }
+    ]);
+
+    res.status(200).json({
+      status: 200,
+      message: 'Rooms fetched successfully',
+      data: rooms, // Trả về danh sách phòng phổ biến cùng với dịch vụ
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+router.get('/search-rooms', async (req, res) => {
+  try {
+    const { query } = req.query;
+    const rooms = await Room.find({ 
+      name: { $regex: query, $options: "i" }
+    }).select("name image"); 
+
+    res.status(200).json({
+      status: 200,
+      message: "Rooms fetched successfully",
+      data: rooms,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred while searching for rooms",
+    });
+  }
+});
+
 module.exports = router;

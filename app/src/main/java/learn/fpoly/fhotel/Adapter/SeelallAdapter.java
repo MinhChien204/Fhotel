@@ -14,67 +14,65 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.List;
+
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.activity.DetailsActivity;
 
-import java.util.List;
-
-public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopPlacesViewHolder> {
-
+public class SeelallAdapter  extends RecyclerView.Adapter<SeelallAdapter.SeeAllViewHolder>{
     Context context;
-    List<Room> topPlacesDataList;
-
-    public TopPlacesAdapter(Context context, List<Room> topPlacesDataList) {
+    List<Room> SeelallDataList;
+    public SeelallAdapter(Context context, List<Room> SeelallDataList) {
         this.context = context;
-        this.topPlacesDataList = topPlacesDataList;
+        this.SeelallDataList = SeelallDataList;
     }
-
     @NonNull
     @Override
-    public TopPlacesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(context).inflate(R.layout.top_places_row_item, parent, false);
+    public SeelallAdapter.SeeAllViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.seeall_row_item, parent, false);
 
         // here we create a recyclerview row item layout file
-        return new TopPlacesViewHolder(view);
+        return new SeeAllViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TopPlacesViewHolder holder, int position) {
-
-        holder.room_name.setText(topPlacesDataList.get(position).getName());
-        holder.room_code.setText(topPlacesDataList.get(position).getRoom_code());
-        holder.price_room.setText(String.valueOf(topPlacesDataList.get(position).getPrice() + " vnd/night"));
-        holder.ratingBar.setRating(topPlacesDataList.get(position).getRating());
+    public void onBindViewHolder(@NonNull SeelallAdapter.SeeAllViewHolder holder, int position) {
+        Room room = SeelallDataList.get(position);
+        holder.room_name.setText(room.getName());
+        holder.room_code.setText(room.getRoom_code());
+        holder.price_room.setText(String.valueOf(room.getPrice() + "vnd/night"));
+        holder.ratingBar.setRating(room.getRating());
         Glide.with(context)
-                .load(topPlacesDataList.get(position).getImage()) // URL của hình ảnh
+                .load(room.getImage()) // URL của hình ảnh
                 .into(holder.room_image); // ImageView để hiển thị ảnh
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, DetailsActivity.class);
                 // Truyền dữ liệu qua Intent
-                i.putExtra("room_id", topPlacesDataList.get(position).getId());
+                i.putExtra("room_id", room.getId());
 
                 // Bắt đầu Activity DetailsActivity
                 context.startActivity(i);
             }
         });
+
     }
 
     @Override
     public int getItemCount() {
-        return topPlacesDataList.size();
+        return SeelallDataList.size();
     }
 
-    public static final class TopPlacesViewHolder extends RecyclerView.ViewHolder {
+    public static final class SeeAllViewHolder extends RecyclerView.ViewHolder {
 
         ImageView room_image;
         TextView room_name, room_code, price_room;
         RatingBar ratingBar;
 
-        public TopPlacesViewHolder(@NonNull View itemView) {
+        public SeeAllViewHolder(@NonNull View itemView) {
             super(itemView);
 
             room_image = itemView.findViewById(R.id.room_image);
@@ -85,4 +83,3 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
         }
     }
 }
-
