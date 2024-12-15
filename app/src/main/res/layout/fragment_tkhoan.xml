@@ -126,7 +126,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Edit Profile"
+                    android:text="Chỉnh sửa cá nhân"
                     android:textColor="#000000"
                     android:textSize="20sp" />
 
@@ -159,7 +159,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Change Password"
+                    android:text="Đổi mật khẩu"
                     android:textColor="#000000"
                     android:textSize="20sp" />
 
@@ -191,7 +191,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Payment Method"
+                    android:text="Phương thức thanh toán"
                     android:textColor="#000000"
                     android:textSize="20sp" />
 
@@ -203,6 +203,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layoutBooking"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -223,7 +224,40 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="My Bookings"
+                    android:text="Đơn đặt phòng của tôi"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/angleright"
+                    app:tint="#574C4C" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearlayoutBill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingVertical="12dp">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/booking" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Hóa đơn của tôi"
                     android:textColor="#000000"
                     android:textSize="20sp" />
 

@@ -3,6 +3,7 @@ package learn.fpoly.fhotel.Retrofit;
 import java.util.ArrayList;
 import java.util.List;
 
+import learn.fpoly.fhotel.Model.Bill;
 import learn.fpoly.fhotel.Model.Booking;
 import learn.fpoly.fhotel.Model.Favourite;
 import learn.fpoly.fhotel.Model.LoginRequest;
@@ -139,4 +140,9 @@ public interface ApiService {
     @POST("api/update-fcm-token")
     Call<Response<Void>> updateFcmToken(@Body UpdateFcmTokenRequest request);
 
+    //bill
+    @POST("api/create_bill")
+    Call<Response<Bill>> createBill(@Body Bill bill);
+    @GET("api/user/{userId}/bills")
+    Call<Response<List<Bill>>> getUserBills(@Path("userId") String userId);
 }

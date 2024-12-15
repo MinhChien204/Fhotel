@@ -26,6 +26,7 @@ const TypeRooms = require("../models/typeRooms");
 const Favourite = require("../models/favourite");
 const UserVoucher=require("../models/uservoucher");
 const Notification=require("../models/notification");
+const Bill=require("../models/bill");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
@@ -1557,4 +1558,95 @@ router.get('/search-rooms', async (req, res) => {
   }
 });
 
+//bill
+router.post("/create_bill", async (req, res) => {
+  try {
+    const { userId, roomId, startDate, endDate, totalPrice, paymentMethod } = req.body;
+
+    const user = await User.findById(userId);
+    const room = await Room.findById(roomId);
+
+    if (!user || !room) {
+      return res.status(404).json({ message: "User or Room not found" });
+    }
+
+
+    const newBill = new Bill({
+      userId,
+      roomId,
+      startDate,
+      endDate,
+      totalPrice,
+      status: "pending",
+      paymentStatus: paymentMethod === "zalopay" ? "paid" : "unpaid",
+    });
+
+    const savedBill = await newBill.save();
+
+    res.status(201).json({ message: "Room booked successfully", data: savedBill });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while booking room", error: error.message });
+  }
+});
+router.get("/user/:userId/bills", async (req, res) => {
+  try {
+    const { userId } = req.params; 
+
+    // Truy vấn tất cả các booking của user
+    const bills = await Bill.find({ userId }).sort({ createdAt: -1 });
+
+    if (!bills || bills.length === 0) {
+      return res.status(200).json({ message: "No bills found for this user", data: [] });
+    }
+
+    // Lấy tất cả roomId của các booking
+    const roomIds = bills.map(bill => bill.roomId);
+    const userIds = bills.map(bill => bill.userId);
+
+    // Truy vấn thông tin các phòng dựa trên roomIds
+    const rooms = await Room.find({ '_id': { $in: roomIds } });
+    const users = await User.find({ '_id': { $in: userIds } });
+
+    if (!rooms || rooms.length === 0) {
+      return res.status(200).json({ message: "No rooms found for the bookings", data: [] });
+    }
+
+    
+    const billsWithRooms = bills.map(bill => {
+      const room = rooms.find(room => room._id.toString() === bill.roomId.toString());
+      const user = users.find(user => user._id.toString() === bill.userId.toString());
+      const roomWithoutServices = { ...room.toObject() };
+      delete roomWithoutServices.services;
+
+      return { ...bill.toObject(), room: roomWithoutServices,user:user }; 
+    });
+
+    res.status(200).json({
+      message: "Bookings retrieved successfully",
+      data: billsWithRooms,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "An error occurred while retrieving bookings" });
+  }
+});
+//get all bill
+router.get('/bills', async (req, res) => {
+  try {
+    // Lấy danh sách phòng và populate thông tin dịch vụ
+    const bills = await Bill.find();
+
+    // Nếu thành công, trả về kết quả
+    res.status(200).json({
+      status: 200,
+      message: 'bills fetched successfully',
+      data: bills, // Bao gồm cả thông tin dịch vụ
+    });
+  } catch (error) {
+    console.error("Error fetching bills:", error);
+    res.status(500).json({
+      message: 'An error occurred while fetching bills',
+    });
+  }
+});
 module.exports = router;

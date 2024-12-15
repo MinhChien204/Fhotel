@@ -38,7 +38,7 @@ import retrofit2.Callback;
 
 public class TkhoanFragment extends Fragment {
     private HttpRequest httpRequest;
-    LinearLayout editProfile, editPassword, payment, booking, privacy, terms, btnLogOut, voucher;
+    LinearLayout editProfile, editPassword, payment, booking, privacy, terms, btnLogOut, voucher,bill,layoutBooking;
     TextView txtName, txtEmail;
     ImageView imgProfile;
     GoogleSignInClient mGoogleSignInClient;
@@ -52,6 +52,8 @@ public class TkhoanFragment extends Fragment {
         btnLogOut = view.findViewById(R.id.btnLogOut);
         editProfile = view.findViewById(R.id.editProfile);
         voucher = view.findViewById(R.id.linearlayoutVoucher);
+        bill = view.findViewById(R.id.linearlayoutBill);
+        layoutBooking = view.findViewById(R.id.layoutBooking);
         editPassword = view.findViewById(R.id.editPassword);
         mGoogleSignInClient = GoogleSignIn.getClient(getContext(), new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()  // Yêu cầu email khi đăng nhập
@@ -83,6 +85,19 @@ public class TkhoanFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 replaceFragment(new EditProfileFragment());
+            }
+        });
+
+        bill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new BillFragment());
+            }
+        });
+        layoutBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new BookingFragment());
             }
         });
         voucher.setOnClickListener(new View.OnClickListener() {

@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import learn.fpoly.fhotel.Model.Bill;
 import learn.fpoly.fhotel.Model.Booking;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
@@ -174,10 +175,11 @@ public class PaymentActivity extends AppCompatActivity {
 
                                     // Cập nhật booking thành công
                                     Booking booking = new Booking(userId, roomId, startDate, endDate, total);
+                                    Bill bill = new Bill(userId, roomId, startDate, endDate, total);
                                     booking.setStatus("confirmed");  // Đã xác nhận
-                                    booking.setPaymentStatus("paid");  // Đã thanh toán
+                                    booking.setPaymentStatus("zalopay");
                                     createBooking(booking);
-
+                                    createBill(bill);
                                     // Điều hướng sang màn hình thông báo thanh toán thành công
                                     startActivity(intent1);
                                 }
@@ -205,9 +207,11 @@ public class PaymentActivity extends AppCompatActivity {
 //                }
                 else if (selectedPaymentMethod == R.id.rb_pay_cash) {
                     Booking booking = new Booking(userId, roomId, startDate, endDate, total);
+                    Bill bill = new Bill(userId, roomId, startDate, endDate, total);
                     booking.setStatus("pending");  // Trạng thái chờ xác nhận
                     booking.setPaymentStatus("unpaid");  // Chưa thanh toán
                     createBooking(booking);
+                    createBill(bill);
                 } else {
                     Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
                 }
@@ -335,6 +339,37 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
 
+    //bill
+    private void createBill(Bill bill) {
+        // Khởi tạo Retrofit
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Bill>> call = httpRequest.callAPI().createBill(bill);
+
+        // Gửi yêu cầu đến server
+        call.enqueue(new Callback<Response<Bill>>() {
+            @Override
+            public void onResponse(Call<Response<Bill>> call, retrofit2.Response<Response<Bill>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null && response.body().getData() != null) {
+                        Toast.makeText(PaymentActivity.this, "Bill successful!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.e("Booking", "Bill failed with no data in response.");
+                        Toast.makeText(PaymentActivity.this, "Error: No data in Bill response", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.e("Booking", "Booking failed: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Bill>> call, Throwable t) {
+                Log.e("Bill", "Error creating Bill: " + t.getMessage());
+                Toast.makeText(PaymentActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    //
     private void processVNPayPayment(String startDate, String endDate, float totalAmount) {
         try {
             String paymentUrl = VNPayUtils.generateVNPayUrl(roomId, (long) totalAmount);
