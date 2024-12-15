@@ -208,9 +208,7 @@ public class PaymentActivity extends AppCompatActivity {
 //                }
                 else if (selectedPaymentMethod == R.id.rb_pay_cash) {
                     Booking booking = new Booking(userId, roomId, startDate, endDate, total);
-                    Bill bill = new Bill(userId, roomId, startDate, endDate, total);
-                    createBooking(booking);
-                    createBill(bill);
+                    createBookingCash(booking);
                 } else {
                     Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
                 }
@@ -413,6 +411,40 @@ public class PaymentActivity extends AppCompatActivity {
             public void onFailure(Call<Response<Booking>> call, Throwable t) {
                 Log.d("stbk", "onFailure: " + t);
                 Toast.makeText(PaymentActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void createBookingCash(Booking booking) {
+        // Khởi tạo Retrofit
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Booking>> call = httpRequest.callAPI().createBooking(booking);
+
+        // Gửi yêu cầu đến server
+        call.enqueue(new Callback<Response<Booking>>() {
+            @Override
+            public void onResponse(Call<Response<Booking>> call, retrofit2.Response<Response<Booking>> response) {
+                if (response.isSuccessful()) {
+                    // Kiểm tra kết quả từ API
+                    if (response.body() != null && response.body().getData() != null) {
+                        Log.d("Booking", "Booking successful: " + response.body().getData().toString());
+                        Toast.makeText(PaymentActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(PaymentActivity.this, PaymentNotification.class);
+                        intent.putExtra("result", "Thanh toán thành cong");
+                        startActivity(intent);
+                    } else {
+                        Log.e("Booking", "Booking failed with no data in response.");
+                        Toast.makeText(PaymentActivity.this, "Error: No data in booking response", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.e("Booking", "Booking failed: " + response.message());
+                    Toast.makeText(PaymentActivity.this, "Đã có người đặt cùng ngày phòng này", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Booking>> call, Throwable t) {
+                Log.e("Booking", "Error creating booking: " + t.getMessage());
+                Toast.makeText(PaymentActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

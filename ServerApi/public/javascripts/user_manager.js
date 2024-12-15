@@ -25,7 +25,6 @@ async function fetchUsers() {
         <td>${user.role === 0 ? "Admin" : "User"}</td>
         <td>
           <img onclick="editUser('${user._id}')" src="./img/edit.png" style="width:20px;height:20px" alt="Edit">
-          <img onclick="deleteUser('${user._id}')" src="./img/delete.png" style="width:20px;height:20px" alt="Delete">
         </td>
       `;
       tableBody.appendChild(row);
