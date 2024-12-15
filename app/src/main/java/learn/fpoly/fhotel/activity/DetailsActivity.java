@@ -103,7 +103,7 @@ public class DetailsActivity extends AppCompatActivity {
                 intent.putExtra("room_name", txtNamerom_details.getText().toString());
                 intent.putExtra("room_rating", txtRating_details.getRating());
                 intent.putExtra("room_description", txtdescription_details.getText().toString());
-                intent.putExtra("room_price", txtprice_details.getText().toString());
+                intent.putExtra("room_price", String.format(txtprice_details.getText().toString()));
                 intent.putExtra("room_image", room.getImage());
                 intent.putExtra("room_capacity", txt_capacity.getText().toString());
                 // Gán Bundle cho Fragment

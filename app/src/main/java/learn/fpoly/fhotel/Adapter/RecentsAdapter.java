@@ -1,5 +1,6 @@
 package learn.fpoly.fhotel.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -40,12 +41,14 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
         return new RecentsViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecentsViewHolder holder, int position) {
         Room room = recentsDataList.get(position);
         holder.room_name.setText(room.getName());
         holder.room_code.setText(room.getRoom_code());
-        holder.price_room.setText(String.valueOf(room.getPrice() + "vnd/night"));
+        holder.price_room.setText(String.format("%.0fđ/night", room.getPrice()));
+
         holder.ratingBar.setRating(room.getRating());
         Glide.with(context)
                 .load(room.getImage()) // URL của hình ảnh
