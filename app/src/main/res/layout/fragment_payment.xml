@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".Fragment.PaymentFragment">
+    tools:context=".Fragment.PaymentActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -228,10 +228,16 @@
                 android:layout_marginTop="16dp">
 
                 <RadioButton
-                    android:id="@+id/rb_pay_vnpay"
+                    android:id="@+id/rb_pay_zalopay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thanh toán qua VNPay" />
+                    android:text="Thanh toán qua ZaloPay" />
+
+<!--                <RadioButton-->
+<!--                    android:id="@+id/rb_pay_vnpay"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Thanh toán qua VNPay" />-->
 
                 <RadioButton
                     android:id="@+id/rb_pay_cash"
@@ -356,7 +362,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="$320.00"
+                android:text="0đ"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>

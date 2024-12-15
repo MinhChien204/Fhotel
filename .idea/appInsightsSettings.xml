@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="learn.fpoly.fhotel" />
+                  <option name="mobileSdkAppId" value="1:100574244282:android:648b64988415fc487f8183" />
+                  <option name="projectId" value="fhotel-ca77d" />
+                  <option name="projectNumber" value="100574244282" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

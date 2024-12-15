@@ -3,14 +3,14 @@ package learn.fpoly.fhotel.Model;
 import com.google.gson.annotations.SerializedName;
 
 public class Booking {
+
     @SerializedName("_id")
     private String id;
 
     @SerializedName("userId")
     private String userId;
 
-
-    @SerializedName("roomId") 
+    @SerializedName("roomId")
     private String roomId;
 
     @SerializedName("startDate")
@@ -22,13 +22,17 @@ public class Booking {
     @SerializedName("totalPrice")
     private double totalPrice;
 
-    private String status;
+    @SerializedName("status")
+    private String status;  // Trạng thái của booking (confirmed, pending, etc.)
+
+    @SerializedName("paymentStatus")
+    private String paymentStatus;  // Trạng thái thanh toán (paid, unpaid)
+
     private Room room;
+
     @SerializedName("createdAt")
     private String createdAt;
 
-    public Booking() {
-    }
     public Booking(String status) {
         this.status = status;
     }
@@ -41,25 +45,18 @@ public class Booking {
         this.totalPrice = totalPrice;
     }
 
-
-    //get
-    public Booking(String userId, String roomId, String startDate, String endDate, double totalPrice, Room room) {
+    // Constructor với trạng thái
+    public Booking(String userId, String roomId, String startDate, String endDate, double totalPrice, String status, String paymentStatus) {
         this.userId = userId;
         this.roomId = roomId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalPrice = totalPrice;
-        this.room = room;
+        this.status = status;
+        this.paymentStatus = paymentStatus;
     }
 
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
+    // Getters và setters
     public String getId() {
         return id;
     }
@@ -76,7 +73,13 @@ public class Booking {
         this.userId = userId;
     }
 
+    public String getRoomId() {
+        return roomId;
+    }
 
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
 
     public String getStartDate() {
         return startDate;
@@ -102,20 +105,28 @@ public class Booking {
         this.totalPrice = totalPrice;
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     public String getCreatedAt() {

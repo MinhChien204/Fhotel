@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
-const Scheme = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-const Users = new Scheme({
-    username: { type: String, unique: true,  required: true},
+const Users = new Schema({
+    username: { type: String, unique: true, required: true },
     password: { type: String },
     email: { type: String },
     name: { type: String },
-    gender:{type:String},
-    address:{type:String},
+    gender: { type: String },
+    address: { type: String },
     avatar: { type: String },
     available: { type: Boolean, default: false },
-    phonenumber:{type:String},
-    birthday:{type:String},
-    role: { type: Number,  required: true,default: 1 }
+    phonenumber: { type: String },
+    birthday: { type: String },
+    role: { type: Number, required: true, default: 1 },
+    fcmToken: { type: String }, // Thêm trường FCM Token
 }, {
     timestamps: true
-}
-)
+});
 
-module.exports = mongoose.model('user', Users)
+module.exports = mongoose.model('user', Users);

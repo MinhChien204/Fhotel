@@ -25,6 +25,7 @@ import learn.fpoly.fhotel.response.Response;
 import learn.fpoly.fhotel.Model.User;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
+import learn.fpoly.fhotel.response.UpdateFcmTokenRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -43,6 +44,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Arrays;
 
@@ -164,44 +166,43 @@ public class Login extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse userResponse = response.body();
                     if (userResponse.getStatus() == 200) {
-
-                        // Tiến hành lưu thông tin người dùng và điều hướng
                         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("isLoggedIn", true); // Lưu trạng thái đăng nhập
-                        editor.putInt("userRole", userResponse.getRole()); // Lưu vai trò người dùng
-                        editor.putString("userId", userResponse.getId()); // Lưu ID người dùng
+                        editor.putBoolean("isLoggedIn", true);
+                        editor.putInt("userRole", userResponse.getRole());
+                        editor.putString("userId", userResponse.getId());
                         editor.apply();
 
-                        // Chuyển hướng dựa trên vai trò người dùng
+                        // Lấy FCM token
+                        FirebaseMessaging.getInstance().getToken()
+                                .addOnCompleteListener(task -> {
+                                    if (!task.isSuccessful()) {
+                                        Log.w("FCM", "Fetching FCM token failed", task.getException());
+                                        return;
+                                    }
+                                    String fcmToken = task.getResult();
+                                    Log.d("FCM", "FCM Token: " + fcmToken);
+
+                                    // Gửi FCM token lên server
+                                    sendFcmTokenToServer(userResponse.getId(), fcmToken);
+                                });
+
+                        // Điều hướng theo vai trò người dùng
                         if (userResponse.getRole() == 0) {
-                            // Admin
-                            Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(Login.this, TrangChuAdmin.class));
                         } else if (userResponse.getRole() == 1) {
-                            // User
-                            Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(Login.this, Home_User.class));
-                        } else {
-                            Log.d("Login", "Unrecognized role");
                         }
-
-                        finish(); // Hoàn thành hoạt động login
+                        finish();
                     } else {
-                        // Thông báo lỗi từ server
-                        Log.d("Login", "Login failed: " + userResponse.getMessenger());
                         edt_Username_login.setError("Tài khoản hoặc mật khẩu không đúng");
                         edt_Username_login.requestFocus();
                     }
                 } else {
-                    // Khi response không thành công hoặc không có dữ liệu
-                    Log.d("Login", "Response unsuccessful or empty");
                     edt_password_login.setError("Tài khoản hoặc mật khẩu không chính xác");
-                    edt_Username_login.setError("Tài khoản hoặc mật khẩu không chính xác");
-                    edt_password_login.requestFocus();
+                    edt_Username_login.requestFocus();
                 }
             }
-
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable throwable) {
@@ -209,6 +210,27 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
+    public void sendFcmTokenToServer(String userId, String fcmToken) {
+        UpdateFcmTokenRequest request = new UpdateFcmTokenRequest(userId, fcmToken);
+        Call<Response<Void>> call = httpRequest.callAPI().updateFcmToken(request);
+        call.enqueue(new Callback<Response<Void>>() {
+            @Override
+            public void onResponse(Call<Response<Void>> call, retrofit2.Response<Response<Void>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("FCM", "FCM Token updated successfully on server");
+                } else {
+                    Log.e("FCM", "Failed to update FCM token: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Void>> call, Throwable t) {
+                Log.e("FCM", "Error updating FCM token: " + t.getMessage());
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -232,55 +254,56 @@ public class Login extends AppCompatActivity {
 
     private void handleGoogleSignIn(GoogleSignInAccount account) {
         if (account != null) {
-
             String idToken = account.getIdToken();
-            String email = account.getEmail();
-            String name = account.getDisplayName();
-            Log.d("GoogleSignIn", "Name: " + name + ", Email: " + email + ", Token: " + idToken);
-            Log.d("GoogleSignIn", "ID Token: " + idToken);
-
             Call<Response<User>> call = httpRequest.callAPI().loginWithGoogle(new TokenRequest(idToken));
             call.enqueue(new Callback<Response<User>>() {
                 @Override
                 public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful() && response.body() != null) {
                         User user = response.body().getData();
-                        Log.d("GoogleSignIn", "User saved: " + user.getEmail());
                         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("isLoggedIn", true); // Lưu trạng thái đăng nhập
-                        editor.putInt("userRole", user.getRole()); // Lưu vai trò người dùng
-                        editor.putString("userId", user.get_id()); // Lưu ID người dùng
+                        editor.putBoolean("isLoggedIn", true);
+                        editor.putInt("userRole", user.getRole());
+                        editor.putString("userId", user.get_id());
                         editor.apply();
-                        Intent intent = new Intent(Login.this, Home_User.class);
-                        startActivity(intent);
+
+                        // Lấy FCM token
+                        FirebaseMessaging.getInstance().getToken()
+                                .addOnCompleteListener(task -> {
+                                    if (!task.isSuccessful()) {
+                                        Log.w("FCM", "Fetching FCM token failed", task.getException());
+                                        return;
+                                    }
+                                    String fcmToken = task.getResult();
+                                    Log.d("FCM", "FCM Token: " + fcmToken);
+
+                                    // Gửi FCM token lên server
+                                    sendFcmTokenToServer(user.get_id(), fcmToken);
+                                });
+
+                        startActivity(new Intent(Login.this, Home_User.class));
                         finish();
-                    } else {
-                        Log.e("GoogleSignIn", "Failed to save user: " + response.message());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Response<User>> call, Throwable t) {
                     Log.e("GoogleSignIn", "API call failed", t);
-
-
                 }
             });
         }
     }
 
+
     //facebook
     private void handleFacebookSignIn(String accessToken) {
-        // Call the API to authenticate the user using the Facebook token
         Call<Response<User>> call = httpRequest.callAPI().loginWithFacebook(new TokenFacebookRequest(accessToken));
         call.enqueue(new Callback<Response<User>>() {
             @Override
             public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     User user = response.body().getData();
-                    Log.d("FacebookSignIn", "User saved: " + user.getEmail());
-
                     SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("isLoggedIn", true);
@@ -288,11 +311,22 @@ public class Login extends AppCompatActivity {
                     editor.putString("userId", user.get_id());
                     editor.apply();
 
-                    Intent intent = new Intent(Login.this, Home_User.class);
-                    startActivity(intent);
+                    // Lấy FCM token
+                    FirebaseMessaging.getInstance().getToken()
+                            .addOnCompleteListener(task -> {
+                                if (!task.isSuccessful()) {
+                                    Log.w("FCM", "Fetching FCM token failed", task.getException());
+                                    return;
+                                }
+                                String fcmToken = task.getResult();
+                                Log.d("FCM", "FCM Token: " + fcmToken);
+
+                                // Gửi FCM token lên server
+                                sendFcmTokenToServer(user.get_id(), fcmToken);
+                            });
+
+                    startActivity(new Intent(Login.this, Home_User.class));
                     finish();
-                } else {
-                    Log.e("FacebookSignIn", "Failed to save user: " + response.message());
                 }
             }
 
@@ -302,6 +336,7 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
 
 
 }

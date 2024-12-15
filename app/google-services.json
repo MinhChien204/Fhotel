@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "100574244282",
+    "project_id": "fhotel-ca77d",
+    "storage_bucket": "fhotel-ca77d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:100574244282:android:648b64988415fc487f8183",
+        "android_client_info": {
+          "package_name": "learn.fpoly.fhotel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI6Be7KyDZuijLEA8Vu3mcEb9W6WCk8hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

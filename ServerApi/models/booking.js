@@ -8,6 +8,7 @@ const bookingSchema = new Schema({
   endDate: { type: String, required: true },
   totalPrice: { type: Number, required: true },
   status: { type: String, enum: ["pending", "confirmed", "cancelled"], default: "pending" },
+  paymentStatus: { type: String, enum: ["unpaid", "paid"], default: "unpaid" }, // Trạng thái thanh toán
   createdAt: { type: Date, default: Date.now },
 });
 

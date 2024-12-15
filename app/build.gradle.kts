@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -39,6 +40,11 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.recyclerview)
+    implementation(fileTree(mapOf(
+        "dir" to "C:\\Users\\Admin\\OneDrive\\Desktop\\ZaloLib",
+        "include" to listOf("*.aar", "*.jar"),
+        "exclude" to listOf("")
+    )))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -49,7 +55,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
-    implementation ("com.squareup.okhttp3:okhttp:4.12.0")
+
     implementation ("androidx.media:media:1.7.0")
     implementation ("com.squareup.picasso:picasso:2.71828")
     implementation ("com.google.android.material:material:1.12.0")
@@ -60,4 +66,11 @@ dependencies {
     implementation (libs.android.gif.drawable)
     implementation (libs.facebook.login)
 
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation ("com.google.firebase:firebase-messaging:24.1.0")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-inappmessaging-display")
+
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
 }
