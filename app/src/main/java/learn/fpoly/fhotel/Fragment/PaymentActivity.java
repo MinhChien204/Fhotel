@@ -1,5 +1,7 @@
 package learn.fpoly.fhotel.Fragment;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -176,9 +178,8 @@ public class PaymentActivity extends AppCompatActivity {
                                     // Cập nhật booking thành công
                                     Booking booking = new Booking(userId, roomId, startDate, endDate, total);
                                     Bill bill = new Bill(userId, roomId, startDate, endDate, total);
-                                    booking.setStatus("confirmed");  // Đã xác nhận
-                                    booking.setPaymentStatus("zalopay");
                                     createBooking(booking);
+
                                     createBill(bill);
                                     // Điều hướng sang màn hình thông báo thanh toán thành công
                                     startActivity(intent1);
@@ -208,8 +209,6 @@ public class PaymentActivity extends AppCompatActivity {
                 else if (selectedPaymentMethod == R.id.rb_pay_cash) {
                     Booking booking = new Booking(userId, roomId, startDate, endDate, total);
                     Bill bill = new Bill(userId, roomId, startDate, endDate, total);
-                    booking.setStatus("pending");  // Trạng thái chờ xác nhận
-                    booking.setPaymentStatus("unpaid");  // Chưa thanh toán
                     createBooking(booking);
                     createBill(bill);
                 } else {
@@ -317,6 +316,9 @@ public class PaymentActivity extends AppCompatActivity {
                     if (response.body() != null && response.body().getData() != null) {
                         Log.d("Booking", "Booking successful: " + response.body().getData().toString());
                         Toast.makeText(PaymentActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
+                        String bookingId = response.body().getData().getId();
+                        Log.d(TAG, "onResponse: ");
+                        updateBookingStatus(bookingId, "confirmed", "paid"); // Trạng thái đã xác nhận và đã thanh toán
                         Intent intent = new Intent(PaymentActivity.this, PaymentNotification.class);
                         intent.putExtra("result", "Thanh toán thành cong");
                         startActivity(intent);
@@ -388,5 +390,30 @@ public class PaymentActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         ZaloPaySDK.getInstance().onResult(intent);
+    }
+
+    private void updateBookingStatus(String bookingId, String newStatus,String paymentStatus) {
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Booking>> call = httpRequest.callAPI().updateBookingStatus(bookingId, new Booking(newStatus,paymentStatus));
+
+        call.enqueue(new Callback<Response<Booking>>() {
+            @Override
+            public void onResponse(Call<Response<Booking>> call, retrofit2.Response<Response<Booking>> response) {
+                if (response.isSuccessful()) {
+                    // Kiểm tra và cập nhật thông tin của booking chỉ cần thiết
+
+                    Toast.makeText(PaymentActivity.this, "Trạng thái đã được cập nhật!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PaymentActivity.this, "Không thể cập nhật trạng thái", Toast.LENGTH_SHORT).show();
+                    Log.d("BookingStatus", "Response: " + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Booking>> call, Throwable t) {
+                Log.d("stbk", "onFailure: " + t);
+                Toast.makeText(PaymentActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

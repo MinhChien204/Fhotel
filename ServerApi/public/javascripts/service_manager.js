@@ -68,12 +68,9 @@ function displayService(services) {
         <td>${index + 1}</td>
         <td><img src="${service.image}" alt="${service.name}" width="50" height="50" /></td>
         <td>${service.name}</td>
-        <td>$${service.price}</td>
-        <td>${service.description}</td>
 
         <td class="actions-cell">
           <button class="btn-edit" onclick="editService('${service._id}')">Edit</button>
-          <button class="btn-delete" onclick="deleteService('${service._id}')">Delete</button>
         </td>
       `;
 

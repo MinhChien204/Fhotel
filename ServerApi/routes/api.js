@@ -35,7 +35,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 // hàm thông báo từ administrator
 admin.initializeApp({
-  credential: admin.credential.cert("E:/DACN/Fhotel/ServerApi/config/serviceAccountKey.json"), // Đường dẫn đến file JSON từ Firebase Console
+  credential: admin.credential.cert(__dirname + '/../config/serviceAccountKey.json'), // Điều chỉnh đường dẫn
 });
 
 const sendNotification = async (fcmToken, title, body, data = {}) => {
@@ -1003,7 +1003,7 @@ router.delete("/delete_uservoucher/:id", async (req, res) => {
 
 router.post("/book_room", async (req, res) => {
   try {
-    const { userId, roomId, startDate, endDate, totalPrice, paymentMethod } = req.body;
+    const { userId, roomId, startDate, endDate, totalPrice, paymentStatus } = req.body;
 
     const user = await User.findById(userId);
     const room = await Room.findById(roomId);
@@ -1030,8 +1030,6 @@ router.post("/book_room", async (req, res) => {
       startDate,
       endDate,
       totalPrice,
-      status: "pending",
-      paymentStatus: paymentMethod === "zalopay" ? "paid" : "unpaid",
     });
 
     const savedBooking = await newBooking.save();
@@ -1054,7 +1052,7 @@ router.post("/book_room", async (req, res) => {
 // Cập nhật trạng thái booking
 router.put("/update-status-booking/:id", async (req, res) => {
   const { id } = req.params;
-  const { status, paymentMethod } = req.body;
+  const { status, paymentStatus } = req.body;
   try {
     const booking = await Booking.findById(id);
     if (!booking) {
@@ -1062,7 +1060,7 @@ router.put("/update-status-booking/:id", async (req, res) => {
     }
 
     booking.status = status;
-    booking.paymentStatus = paymentMethod === "zalopay" ? "paid" : "unpaid";
+    booking.paymentStatus = paymentStatus;
     const updatedBooking = await booking.save();
 
     const user = await User.findById(booking.userId);

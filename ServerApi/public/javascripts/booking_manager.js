@@ -13,7 +13,7 @@ async function fetchBookings() {
           <td>${index + 1}</td>
           <td>${booking.userId?.name || "Unknown "}</td>
           <td>${booking.roomId?.name || "Unknown "}</td>
-          <td>${booking.totalPrice}</td>
+          <td>${booking.totalPrice}đ</td>
           <td>${booking.startDate}</td>
           <td>${booking.endDate}</td>
           <td>${booking.userId?.phonenumber}</td>
@@ -29,7 +29,7 @@ async function fetchBookings() {
             </select>
           </td>
           <td>
-            <button onclick="deleteBooking('${booking._id}')">Delete</button>
+            
           </td>
         `;
         tableBody.appendChild(row);
@@ -40,7 +40,6 @@ async function fetchBookings() {
   }
   
   
-  // Call the function to populate the table when the page loads
   fetchBookings();
   
   // Example edit and delete functions (implement backend for these)

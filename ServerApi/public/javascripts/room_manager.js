@@ -4,17 +4,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const roomFormModal = document.getElementById("roomFormModal");
 const roomForm = document.getElementById("roomForm");
-const imageIcon = document.querySelector('.bi-image');
-const imagePreviewContainer = document.querySelector('.image-preview-container'); // Get the existing preview container
-
+const imageIcon = document.querySelector(".bi-image");
+const imagePreviewContainer = document.querySelector(
+  ".image-preview-container"
+); // Get the existing preview container
 
 let imageFiles = [];
-imageIcon.addEventListener('click', () => {
-  const imageInput = document.createElement('input');
-  imageInput.type = 'file';
+imageIcon.addEventListener("click", () => {
+  const imageInput = document.createElement("input");
+  imageInput.type = "file";
   imageInput.multiple = true;
-  imageInput.accept = 'image/*'; // Limit to image types
-  imageInput.style.display = 'none'; // Hide the input
+  imageInput.accept = "image/*"; // Limit to image types
+  imageInput.style.display = "none"; // Hide the input
 
   document.body.appendChild(imageInput);
   imageInput.click();
@@ -24,15 +25,15 @@ imageIcon.addEventListener('click', () => {
     imageFiles = Array.from(files); // Convert FileList to Array
 
     // Clear previous previews
-    imagePreviewContainer.innerHTML = '';
+    imagePreviewContainer.innerHTML = "";
 
     // Display selected images in the HTML
     imageFiles.forEach((file) => {
-      const img = document.createElement('img');
+      const img = document.createElement("img");
       img.src = URL.createObjectURL(file);
-      img.style.width = '100px'; // Set a fixed width for previews
-      img.style.marginRight = '10px'; // Spacing between images
-      img.style.borderRadius = '5px'; // Rounded corners
+      img.style.width = "100px"; // Set a fixed width for previews
+      img.style.marginRight = "10px"; // Spacing between images
+      img.style.borderRadius = "5px"; // Rounded corners
       imagePreviewContainer.appendChild(img);
     });
 
@@ -68,13 +69,15 @@ function displayRooms(rooms) {
 
     row.innerHTML = `
       <td>${index + 1}</td>
-      <td><img src="${room.image}" alt="${room.name}" width="100" height="100" /></td>
+      <td><img src="${room.image}" alt="${
+      room.name
+    }" width="100" height="100" /></td>
       <td>${room.name}</td>
       <td>$${room.price}</td>
       <td>${stars}</td>
       
       <td>${room.room_code}</td>
-      <td>${room.description}</td>
+      <td style=" max-width: 180px;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;/">${room.description}</td>
       <td>${room.capacity}</td>
     <td class="status-cell">
   <select
@@ -82,16 +85,18 @@ function displayRooms(rooms) {
     data-room-id="${room._id}"
     onchange="updateRoomStatus('${room._id}', this.value)"
   >
-    <option value="unavailable" ${room.status === "unavailable" ? "selected" : ""
-      }>Unavailable</option>
-    <option value="available" ${room.status === "available" ? "selected" : ""
-      }>Available</option>
+    <option value="unavailable" ${
+      room.status === "unavailable" ? "selected" : ""
+    }>Unavailable</option>
+    <option value="available" ${
+      room.status === "available" ? "selected" : ""
+    }>Available</option>
   </select>
 </td>
 
       <td class="actions-cell">
         <button class="btn-edit" onclick="editRoom('${room._id}')">Edit</button>
-        <button class="btn-delete" onclick="deleteRoom('${room._id}')">Delete</button>
+        
       </td>
     `;
 
@@ -134,11 +139,11 @@ function openModal(room = null) {
     .then((response) => response.json())
     .then((data) => {
       if (data.status === 200) {
-        populateServiceOptions(data.data);  // Truyền mảng dịch vụ vào hàm
+        populateServiceOptions(data.data); // Truyền mảng dịch vụ vào hàm
 
         // Nếu có phòng đã được chọn, hãy gán các dịch vụ đã chọn cho checkbox
         if (room && room.services) {
-          const selectedServices = room.services.map(service => service._id);
+          const selectedServices = room.services.map((service) => service._id);
           setSelectedServices(selectedServices);
         }
       } else {
@@ -162,21 +167,19 @@ function openModal(room = null) {
   }
 }
 
-
-
 function populateServiceOptions(responseData) {
   const serviceContainer = document.getElementById("roomServices");
-  serviceContainer.innerHTML = ''; // Xóa tất cả checkbox trước khi thêm mới
+  serviceContainer.innerHTML = ""; // Xóa tất cả checkbox trước khi thêm mới
 
   if (responseData && Array.isArray(responseData)) {
-    responseData.forEach(service => {
+    responseData.forEach((service) => {
       const label = document.createElement("label");
-      label.textContent = service.name;  // Tên dịch vụ
+      label.textContent = service.name; // Tên dịch vụ
 
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.name = "service"; // Tên của checkbox (giống tên trong form)
-      checkbox.value = service._id;  // ID của dịch vụ là giá trị của checkbox
+      checkbox.value = service._id; // ID của dịch vụ là giá trị của checkbox
 
       // Kiểm tra nếu dịch vụ này đã được chọn trong phòng (chỉ cần tham số `room.services`)
       checkbox.checked = false;
@@ -198,14 +201,16 @@ function setSelectedServices(selectedServices) {
   const serviceSelect = document.getElementById("roomServices");
 
   // Kiểm tra tất cả các checkbox và đánh dấu những cái được chọn
-  Array.from(serviceSelect.querySelectorAll("input[name='service']")).forEach(checkbox => {
-    // Nếu giá trị checkbox có trong selectedServices, đánh dấu checkbox đó
-    if (selectedServices && selectedServices.includes(checkbox.value)) {
-      checkbox.checked = true;
-    } else {
-      checkbox.checked = false;
+  Array.from(serviceSelect.querySelectorAll("input[name='service']")).forEach(
+    (checkbox) => {
+      // Nếu giá trị checkbox có trong selectedServices, đánh dấu checkbox đó
+      if (selectedServices && selectedServices.includes(checkbox.value)) {
+        checkbox.checked = true;
+      } else {
+        checkbox.checked = false;
+      }
     }
-  });
+  );
 }
 
 // Close the modal
@@ -229,28 +234,30 @@ roomForm.addEventListener("submit", (event) => {
     status = document.getElementById("roomStatus").value;
 
   const roomData = new FormData(roomForm);
-  roomData.append('name', name);
-  roomData.append('price', price);
-  roomData.append('rating', rating);
-  roomData.append('room_code', roomcode);
-  roomData.append('description', description);
-  roomData.append('capacity', capacity);
-  roomData.append('status', status);
+  roomData.append("name", name);
+  roomData.append("price", price);
+  roomData.append("rating", rating);
+  roomData.append("room_code", roomcode);
+  roomData.append("description", description);
+  roomData.append("capacity", capacity);
+  roomData.append("status", status);
 
   const selectedServices = [];
-  document.querySelectorAll('input[name="service"]:checked').forEach(checkbox => {
-    selectedServices.push(checkbox.value);
-  });
-  const servicesString = selectedServices.join(',');
+  document
+    .querySelectorAll('input[name="service"]:checked')
+    .forEach((checkbox) => {
+      selectedServices.push(checkbox.value);
+    });
+  const servicesString = selectedServices.join(",");
 
-  roomData.append('services', servicesString);
+  roomData.append("services", servicesString);
 
   imageFiles.forEach((image) => {
-    roomData.append('image', image);
+    roomData.append("image", image);
   });
 
-  const endpoint = roomId ? `/api/update_room/${roomId}` : '/api/add_room';
-  const method = roomId ? 'PUT' : 'POST';
+  const endpoint = roomId ? `/api/update_room/${roomId}` : "/api/add_room";
+  const method = roomId ? "PUT" : "POST";
 
   // Gửi yêu cầu đến server để tạo hoặc cập nhật dịch vụ
   fetch(endpoint, {
@@ -260,7 +267,7 @@ roomForm.addEventListener("submit", (event) => {
     .then((response) => {
       if (!response.ok) {
         return response.json().then((errorData) => {
-          throw new Error(errorData.message || 'Unknown error');
+          throw new Error(errorData.message || "Unknown error");
         });
       }
       return response.json();
@@ -277,17 +284,18 @@ roomForm.addEventListener("submit", (event) => {
     })
     .catch((error) => {
       console.error("Error creating/updating Room:", error);
-      alert(`An error occurred while processing your request: ${error.message}`);
+      alert(
+        `An error occurred while processing your request: ${error.message}`
+      );
     });
 });
 
-
-// Edit room functionality 
+// Edit room functionality
 function editRoom(roomId) {
   fetch(`/api/room/${roomId}`)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      console.log(data);
       if (data.status === 200) {
         openModal(data.data);
       } else {

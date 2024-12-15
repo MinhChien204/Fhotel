@@ -21,6 +21,9 @@ router.get('/servicemanagerment', function(req, res, next) {
 router.get('/bookingmanagerment', function(req, res, next) {
   res.render('bookingmanagerment', { title: 'Booking Managerment' });
 });
+router.get('/billmanagerment', function(req, res, next) {
+  res.render('billmanagerment', { title: 'Bill Managerment' });
+});
 router.get('/setting', function(req, res, next) {
   res.render('setting', { title: 'Setting' });
 });
