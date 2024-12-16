@@ -49,6 +49,7 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class PaymentActivity extends AppCompatActivity {
 
+
     TextView tvdate, tvPerson, tvnameKS, tvpriceKS, tvcapacityKS, totalPrice, tvPriceDetails;
     ImageView btnback, roomImage;
     Button btnpay;
@@ -58,7 +59,6 @@ public class PaymentActivity extends AppCompatActivity {
 
     private String userId, roomId;
     private int numberOfNights = 0; // Số đêm mặc định
-    private float roomPricePerNight = 120; // Giá phòng mỗi đêm mặc định
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -160,59 +160,68 @@ public class PaymentActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Kiểm tra phương thức thanh toán
-                int selectedPaymentMethod = paymentMethodsGroup.getCheckedRadioButtonId();
-                if(selectedPaymentMethod == R.id.rb_pay_zalopay){
-                    CreateOrder orderApi = new CreateOrder();
-                    try {
-                        JSONObject data = orderApi.createOrder(String.valueOf((long) total));
-                        String code = data.getString("return_code");
-                        if (code.equals("1")) {
-                            String token = data.getString("zp_trans_token");
-                            ZaloPaySDK.getInstance().payOrder(PaymentActivity.this, token, "demozpdk://app", new PayOrderListener() {
-                                @Override
-                                public void onPaymentSucceeded(String s, String s1, String s2) {
-                                    Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
-                                    intent1.putExtra("result", "Thanh toán thành công");
+                // Kiểm tra phòng đã được đặt chưa
+                checkRoomAvailability(roomId, startDate, endDate, isAvailable -> {
+                    if (isAvailable) {
+                        // Nếu phòng chưa được đặt, tiến hành thanh toán với ZaloPay
+                        int selectedPaymentMethod = paymentMethodsGroup.getCheckedRadioButtonId();
+                        if (selectedPaymentMethod == R.id.rb_pay_zalopay) {
+                            // Thực hiện thanh toán qua ZaloPay
+                            CreateOrder orderApi = new CreateOrder();
+                            try {
+                                JSONObject data = orderApi.createOrder(String.valueOf((long) total));
+                                String code = data.getString("return_code");
+                                if (code.equals("1")) {
+                                    String token = data.getString("zp_trans_token");
+                                    ZaloPaySDK.getInstance().payOrder(PaymentActivity.this, token, "demozpdk://app", new PayOrderListener() {
+                                        @Override
+                                        public void onPaymentSucceeded(String s, String s1, String s2) {
+                                            Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
+                                            intent1.putExtra("result", "Thanh toán thành công");
 
-                                    // Cập nhật booking thành công
-                                    Booking booking = new Booking(userId, roomId, startDate, endDate, total);
-                                    Bill bill = new Bill(userId, roomId, startDate, endDate, total);
-                                    createBooking(booking);
+                                            // Cập nhật booking thành công
+                                            Booking booking = new Booking(userId, roomId, startDate, endDate, total);
+                                            Bill bill = new Bill(userId, roomId, startDate, endDate, total);
+                                            createBooking(booking);
 
-                                    createBill(bill);
-                                    // Điều hướng sang màn hình thông báo thanh toán thành công
-                                    startActivity(intent1);
+                                            createBill(bill);
+                                            // Điều hướng sang màn hình thông báo thanh toán thành công
+                                            startActivity(intent1);
+                                        }
+
+                                        @Override
+                                        public void onPaymentCanceled(String s, String s1) {
+                                            Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
+                                            intent1.putExtra("result", "Hủy thanh toán");
+                                            startActivity(intent1);
+                                        }
+
+                                        @Override
+                                        public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
+                                            Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
+                                            intent1.putExtra("result", "Lỗi thanh toán");
+                                            startActivity(intent1);
+                                        }
+                                    });
                                 }
-                                @Override
-                                public void onPaymentCanceled(String s, String s1) {
-                                    Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
-                                    intent1.putExtra("result", "Hủy thanh toán");
-                                    startActivity(intent1);
-                                }
-                                @Override
-                                public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
-                                    Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
-                                    intent1.putExtra("result", "Lỗi thanh toán");
-                                    startActivity(intent1);
-                                }
-                            });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(this, "Error creating ZaloPay order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (selectedPaymentMethod == R.id.rb_pay_cash) {
+                            // Xử lý thanh toán tiền mặt
+                            Booking booking = new Booking(userId, roomId, startDate, endDate, total);
+                            createBookingCash(booking);
+                        } else {
+                            Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(this, "Error creating ZaloPay order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(PaymentActivity.this, "Phòng đã được đặt trong khoảng thời gian này.", Toast.LENGTH_SHORT).show();
                     }
-                }
-//                else if (selectedPaymentMethod == R.id.rb_pay_vnpay) {
-//                    processVNPayPayment(startDate, endDate, total);
-//                }
-                else if (selectedPaymentMethod == R.id.rb_pay_cash) {
-                    Booking booking = new Booking(userId, roomId, startDate, endDate, total);
-                    createBookingCash(booking);
-                } else {
-                    Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
-                }
+                });
             });
+
+
 
 
             btnback.setOnClickListener(view1 -> onBackPressed());
@@ -448,4 +457,30 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
     }
+    private void checkRoomAvailability(String roomId, String startDate, String endDate, CheckAvailabilityCallback callback) {
+        // Gọi API hoặc truy vấn cơ sở dữ liệu để kiểm tra xem phòng đã được đặt chưa
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Boolean>> call = httpRequest.callAPI().checkRoomAvailability(roomId, startDate, endDate);
+
+        call.enqueue(new Callback<Response<Boolean>>() {
+            @Override
+            public void onResponse(Call<Response<Boolean>> call, retrofit2.Response<Response<Boolean>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onResult(response.body().getData());
+                } else {
+                    callback.onResult(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Boolean>> call, Throwable t) {
+                callback.onResult(false);
+            }
+        });
+    }
+
+    interface CheckAvailabilityCallback {
+        void onResult(boolean isAvailable);
+    }
+
 }

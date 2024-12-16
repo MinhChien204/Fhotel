@@ -143,6 +143,13 @@ public interface ApiService {
     //bill
     @POST("api/create_bill")
     Call<Response<Bill>> createBill(@Body Bill bill);
+
     @GET("api/user/{userId}/bills")
     Call<Response<List<Bill>>> getUserBills(@Path("userId") String userId);
+
+    @POST("check_room_availability")
+    Call<Response<Boolean>> checkRoomAvailability(@Query("roomId") String roomId,
+                                                  @Query("startDate") String startDate,
+                                                  @Query("endDate") String endDate);
+
 }

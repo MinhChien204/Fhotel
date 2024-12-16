@@ -32,11 +32,29 @@ const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.SECRET_KEY;
 
-
 // hàm thông báo từ administrator
 admin.initializeApp({
   credential: admin.credential.cert(__dirname + '/../config/serviceAccountKey.json'), // Điều chỉnh đường dẫn
 });
+
+const sendAdminNotification = async (title, body) => {
+  const adminFCMToken = "admin-fcm-token";  // Lấy FCM token của quản trị viên từ database
+
+  const message = {
+    notification: {
+      title: title,
+      body: body,
+    },
+    token: adminFCMToken,  // Token của người quản trị
+  };
+
+  try {
+    const response = await admin.messaging().send(message);
+    console.log("Notification sent to admin successfully:", response);
+  } catch (error) {
+    console.error("Error sending notification to admin:", error);
+  }
+};
 
 const sendNotification = async (fcmToken, title, body, data = {}) => {
   const message = {
@@ -1035,11 +1053,17 @@ router.post("/book_room", async (req, res) => {
     const savedBooking = await newBooking.save();
 
     // Gửi thông báo cho người dùng
+    sendAdminNotification(
+      "New Room Booking",
+      `Phòng ${room.name} đã được đặt bởi ${user.name}.`
+    );
+
+    // Gửi thông báo cho người dùng
     if (user.fcmToken) {
       sendNotification(
         user.fcmToken,
         "Đặt phòng thành công",
-        `Phòng ${room.name} đã được đặt. Chờ xác nhận từ admin.`
+        `Phòng ${room.name} đã được đặt. Vui lòng chờ xác nhận.`
       );
     }
 
@@ -1070,7 +1094,7 @@ router.put("/update-status-booking/:id", async (req, res) => {
       sendNotification(
         user.fcmToken,
         "Xác nhận đặt phòng",
-        `Admin đã xác nhận đặt phòng từ ${booking.startDate} đến ${booking.endDate}.`
+        `Bạn đã đặt phòng từ ${booking.startDate} đến ${booking.endDate}.`
       );
     }else if(user.fcmToken && booking.status=="cancelled"){
       sendNotification(
@@ -1559,7 +1583,7 @@ router.get('/search-rooms', async (req, res) => {
 //bill
 router.post("/create_bill", async (req, res) => {
   try {
-    const { userId, roomId, startDate, endDate, totalPrice, paymentMethod } = req.body;
+    const { userId, roomId, startDate, endDate, totalPrice, paymentStatus } = req.body;
 
     const user = await User.findById(userId);
     const room = await Room.findById(roomId);
@@ -1575,8 +1599,6 @@ router.post("/create_bill", async (req, res) => {
       startDate,
       endDate,
       totalPrice,
-      status: "pending",
-      paymentStatus: paymentMethod === "zalopay" ? "paid" : "unpaid",
     });
 
     const savedBill = await newBill.save();
@@ -1647,4 +1669,29 @@ router.get('/bills', async (req, res) => {
     });
   }
 });
+
+router.post("/check_room_availability", async (req, res) => {
+  const { roomId, startDate, endDate } = req.body;
+
+  try {
+    const overlappingBooking = await Booking.findOne({
+      roomId,
+      status: { $ne: "cancelled" },
+      $or: [
+        { startDate: { $lte: endDate }, endDate: { $gte: startDate } },
+      ],
+    });
+
+    if (overlappingBooking) {
+      return res.status(400).json({ available: false });
+    }
+
+    return res.status(200).json({ available: true });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred", error: error.message });
+  }
+});
+
+
+
 module.exports = router;
