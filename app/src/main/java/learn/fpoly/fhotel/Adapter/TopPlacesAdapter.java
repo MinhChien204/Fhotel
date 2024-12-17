@@ -18,7 +18,9 @@ import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.activity.DetailsActivity;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopPlacesViewHolder> {
 
@@ -45,7 +47,7 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
 
         holder.room_name.setText(topPlacesDataList.get(position).getName());
         holder.room_code.setText(topPlacesDataList.get(position).getRoom_code());
-        holder.price_room.setText(String.valueOf(topPlacesDataList.get(position).getPrice() + " vnd/night"));
+        holder.price_room.setText(formatCurrency(topPlacesDataList.get(position).getPrice()) + "/night");
         holder.ratingBar.setRating(topPlacesDataList.get(position).getRating());
         Glide.with(context)
                 .load(topPlacesDataList.get(position).getImage()) // URL của hình ảnh
@@ -83,6 +85,10 @@ public class TopPlacesAdapter extends RecyclerView.Adapter<TopPlacesAdapter.TopP
             price_room = itemView.findViewById(R.id.price_room);
             ratingBar = itemView.findViewById(R.id.ratingBarHome);
         }
+    }
+    private String formatCurrency(double amount) {
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        return formatter.format(amount) + "đ";
     }
 }
 

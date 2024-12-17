@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -107,7 +108,10 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         // Gán các thông tin khác
         holder.tvStartDate.setText("Ngày bắt đầu: " + booking.getStartDate());
         holder.tvEndDate.setText("Ngày kết thúc: " + booking.getEndDate());
-        holder.tvTotalPrice.setText("Tổng tiền: " +booking.getTotalPrice()+"đ");
+        double totalPrice = booking.getTotalPrice();
+        String formattedTotalPrice = formatCurrency(totalPrice);
+
+        holder.tvTotalPrice.setText("Tổng tiền: " + formattedTotalPrice + "đ");
 
         // Sự kiện khi nhấn vào item (chuyển đến màn chi tiết phòng)
         holder.itemView.setOnClickListener(v -> {
@@ -283,6 +287,12 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             }
         });
     }
-
+    private String formatCurrency(double amount) {
+        // Định dạng theo kiểu 300.000
+        DecimalFormat formatter = new DecimalFormat("#,###.###");
+        String formatted = formatter.format(amount);
+        // Thay dấu "," thành dấu "."
+        return formatted.replace(',', '.');
+    }
 }
 

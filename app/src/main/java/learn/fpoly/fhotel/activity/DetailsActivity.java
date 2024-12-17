@@ -21,7 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import learn.fpoly.fhotel.Adapter.ServiceAdapter;
 import learn.fpoly.fhotel.Fragment.PaymentActivity;
@@ -142,7 +144,10 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-
+    private String formatCurrency(double amount) {
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        return formatter.format(amount) + "đ";
+    }
 
     public void fetchRoomById(String roomId) {
         Call<Response<Room>> call = httpRequest.callAPI().getRoomById(roomId);
@@ -159,7 +164,7 @@ public class DetailsActivity extends AppCompatActivity {
                         txtRating_details.setRating(Float.parseFloat(String.valueOf(room.getRating())));
                         txtdescription_details.setText(room.getDescription());
                         txtstatusRoom.setText(room.getStatus());
-                        txtprice_details.setText(room.getPrice()+" đ");
+                        txtprice_details.setText(formatCurrency(room.getPrice()));
                         txt_capacity.setText(room.getCapacity() + " người");
 
 

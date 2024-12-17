@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -48,9 +49,9 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
 
         // Gán tên phòng
         holder.tvRoomName.setText(favourite.getRoom().getName());
-
-        // Gán giá phòng
-        holder.tvRoomPrice.setText(String.valueOf(favourite.getRoom().getPrice()));
+        double price = favourite.getRoom().getPrice();
+        String formattedPrice = formatCurrency(price);
+        holder.tvRoomPrice.setText(formattedPrice + "đ");
         holder.tvroom_code.setText(String.valueOf(favourite.getRoom().getRoom_code()));
         holder.tvratingBarHome.setRating(favourite.getRoom().getRating());
 
@@ -93,6 +94,12 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         }
     }
 
-
+    // Hàm định dạng giá phòng
+    private String formatCurrency(double amount) {
+        // Định dạng số thành dạng 300.000
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        String formatted = formatter.format(amount);
+        return formatted.replace(',', '.');
+    }
 
 }

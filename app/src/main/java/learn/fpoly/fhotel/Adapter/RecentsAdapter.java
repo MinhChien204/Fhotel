@@ -18,7 +18,9 @@ import learn.fpoly.fhotel.activity.DetailsActivity;
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsViewHolder> {
 
@@ -45,7 +47,8 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
         Room room = recentsDataList.get(position);
         holder.room_name.setText(room.getName());
         holder.room_code.setText(room.getRoom_code());
-        holder.price_room.setText(String.valueOf(room.getPrice() + "đ/night"));
+        holder.price_room.setText(formatCurrency(room.getPrice()) + "/night");
+
         holder.ratingBar.setRating(room.getRating());
         Glide.with(context)
                 .load(room.getImage()) // URL của hình ảnh
@@ -85,5 +88,9 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
             price_room = itemView.findViewById(R.id.price_room);
             ratingBar = itemView.findViewById(R.id.ratingBarHome);
         }
+    }
+    private String formatCurrency(double amount) {
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        return formatter.format(amount) + "đ";
     }
 }

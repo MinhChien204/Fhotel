@@ -84,7 +84,7 @@ public class PaymentActivity extends AppCompatActivity {
         rbPayZalopay = findViewById(R.id.rb_pay_zalopay);
 //        rbPayVNPay = findViewById(R.id.rb_pay_vnpay);
         rbPayCash = findViewById(R.id.rb_pay_cash);
-
+        handleIncomingIntent(getIntent());
 
 
         Intent intent = getIntent();
@@ -94,15 +94,6 @@ public class PaymentActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", null);
 
-        // Extract the roomId from the intent extras
-        if (intent != null) {
-            roomId = intent.getStringExtra("room_id");
-            Log.d("roomid nek", "onCreate: " + roomId);
-            String roomName = intent.getStringExtra("room_name");
-            float roomRating = intent.getFloatExtra("room_rating", 0);
-            String roomPrice = intent.getStringExtra("room_price");
-            String roomImageURL = intent.getStringExtra("room_image");
-            String roomCapacity = intent.getStringExtra("room_capacity");
 
             // Xử lý sự kiện chọn ngày
             tvdate.setOnClickListener(v -> {
@@ -144,11 +135,11 @@ public class PaymentActivity extends AppCompatActivity {
                 String startDate = dateRange.split("To:")[0].replace("From:", "").trim();
                 String endDate = dateRange.split("To:")[1].trim();
 
-                // Lấy giá trị tổng tiền bằng cách loại bỏ "VND " và chuyển đổi thành float
-                String totalText = totalPrice.getText().toString().replace("đ", "").trim();
+                // Lấy giá trị tổng tiền bằng cách loại bỏ "đ" nhưng giữ nguyên định dạng số tiền
+                String totalText = totalPrice.getText().toString().replace("đ", "").trim(); // Loại bỏ ký tự "đ"
                 float total;
                 try {
-                    total = Float.parseFloat(totalText);
+                    total = Float.parseFloat(totalText.replace(".", "").trim());  // Loại bỏ dấu "." để chuyển thành float
                 } catch (NumberFormatException e) {
                     Toast.makeText(this, "Lỗi định dạng tổng tiền!", Toast.LENGTH_SHORT).show();
                     Log.e("PaymentActivity", "Error parsing total price: " + e.getMessage());
@@ -178,7 +169,7 @@ public class PaymentActivity extends AppCompatActivity {
                                         @Override
                                         public void onPaymentSucceeded(String s, String s1, String s2) {
                                             Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
-                                            intent1.putExtra("result", "Thanh toán thành công");
+                                            intent1.putExtra("result", "Đặt phòng thành công!");
 
                                             // Cập nhật booking thành công
                                             Booking booking = new Booking(userId, roomId, startDate, endDate, total);
@@ -227,16 +218,7 @@ public class PaymentActivity extends AppCompatActivity {
 
             btnback.setOnClickListener(view1 -> onBackPressed());
 
-            tvnameKS.setText(roomName);
-            tvpriceKS.setText(roomPrice);
-            ratingBar.setRating(roomRating);
-            tvcapacityKS.setText(roomCapacity);
 
-            // Hiển thị ảnh với Glide
-            Glide.with(this)
-                    .load(roomImageURL)
-                    .into(roomImage);
-        }
     }
 
     private void showSelectGuestBottomSheet() {
@@ -283,27 +265,31 @@ public class PaymentActivity extends AppCompatActivity {
     // Trong phương thức updatePriceDetails:
     private void updatePriceDetails() {
         try {
-            // Lấy giá trị từ TextView tvpriceKS và chuyển đổi sang float
-            String priceText = tvpriceKS.getText().toString().replace("đ", "").trim();
-            float roomPrice = Float.parseFloat(priceText); // Chuyển đổi chuỗi thành số thực
-
-            // Tính toán tổng giá
-            if (numberOfNights > 0 && roomPrice > 0) {
-                float totalPriceValue = roomPrice * numberOfNights;
-
-                // Hiển thị tổng giá và chi tiết, thay "VND " phía trước thành " VND" phía sau
-                totalPrice.setText(String.format("%.0f đ", totalPriceValue)); // Thêm "VND" vào sau
-                tvPriceDetails.setText(String.format("Giá phòng: %.0f đ\nSố ngày: %d\nGiá: %.0f đ", roomPrice, numberOfNights, totalPriceValue));
+            String priceText = tvpriceKS.getText().toString().trim();
+            if (!priceText.isEmpty()) {
+                // Tính toán tổng giá
+                if (numberOfNights > 0) {
+                    String cleanPriceText = priceText.replace("đ", "").trim();
+                    float roomPrice = Float.parseFloat(cleanPriceText.replace(".", ""));
+                    float totalPriceValue = roomPrice * numberOfNights;
+                    totalPrice.setText(String.format("%,.0f đ", totalPriceValue).replace(',', '.'));
+                    tvPriceDetails.setText(String.format("Giá phòng: %,.0f đ\nSố ngày: %d\nGiá: %,.0f đ", roomPrice, numberOfNights, totalPriceValue).replace(',', '.'));
+                } else {
+                    totalPrice.setText("0 đ");
+                    tvPriceDetails.setText("Số ngày: 0\nTổng giá: 0 đ");
+                }
             } else {
+                Log.e("PaymentActivity", "Room price is empty or invalid");
                 totalPrice.setText("0 đ");
-                tvPriceDetails.setText("Number of nights: 0\nTotal Price: 0 đ");
+                tvPriceDetails.setText("Lỗi tính tổng giá");
             }
         } catch (NumberFormatException e) {
             Log.e("PaymentActivity", "Error parsing room price: " + e.getMessage());
             totalPrice.setText("0 đ");
-            tvPriceDetails.setText("Error calculating total price");
+            tvPriceDetails.setText("Lỗi tính tổng giá");
         }
     }
+
 
 
 
@@ -400,9 +386,36 @@ public class PaymentActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        setIntent(intent);
         ZaloPaySDK.getInstance().onResult(intent);
+        handleIncomingIntent(intent);
     }
+    private void handleIncomingIntent(Intent intent) {
+        if (intent != null && intent.hasExtra("room_id")) {
+            roomId = intent.getStringExtra("room_id");
+            String roomName = intent.getStringExtra("room_name");
+            float roomRating = intent.getFloatExtra("room_rating", 0);
+            String roomPrice = intent.getStringExtra("room_price");
+            String roomImageURL = intent.getStringExtra("room_image");
+            String roomCapacity = intent.getStringExtra("room_capacity");
 
+            // Cập nhật giao diện
+            tvnameKS.setText(roomName);
+            tvpriceKS.setText(roomPrice);
+            ratingBar.setRating(roomRating);
+            tvcapacityKS.setText(roomCapacity);
+
+            // Hiển thị ảnh với Glide
+            Glide.with(this).load(roomImageURL).into(roomImage);
+
+            // Làm mới tổng giá và các chi tiết liên quan
+            numberOfNights = 0;
+            tvdate.setText("");
+            tvPerson.setText("");
+            totalPrice.setText("0.00đ");
+            tvPriceDetails.setText("Giá phòng: 0.00đ\nSố ngày: 0\nGiá: 0.00đ");
+        }
+    }
     private void updateBookingStatus(String bookingId, String newStatus,String paymentStatus) {
         HttpRequest httpRequest = new HttpRequest();
         Call<Response<Booking>> call = httpRequest.callAPI().updateBookingStatus(bookingId, new Booking(newStatus,paymentStatus));
