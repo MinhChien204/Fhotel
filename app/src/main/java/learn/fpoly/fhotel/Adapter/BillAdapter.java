@@ -2,6 +2,7 @@ package learn.fpoly.fhotel.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,16 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
         holder.tvStartDate.setText("Ngày bắt đầu: "+bill.getStartDate());
         holder.tvEndDate.setText("Ngày kết thúc: "+bill.getEndDate());
         holder.tvTotalPrice.setText("Tổng giá: "+bill.getTotalPrice()+"VND");
+        if ("paid".equalsIgnoreCase(bill.getPaymentStatus())) {
+            holder.tvPaymentStatus.setText("Trạng thái: Đã thanh toán");
+            holder.tvPaymentStatus.setTextColor(Color.GREEN);
+        } else if ("unpaid".equalsIgnoreCase(bill.getPaymentStatus())) {
+            holder.tvPaymentStatus.setText("Trạng thái: Chưa thanh toán");
+            holder.tvPaymentStatus.setTextColor(Color.RED);
+        } else {
+            holder.tvPaymentStatus.setText("Trạng thái thanh toán: Không xác định");
+            holder.tvPaymentStatus.setTextColor(Color.GRAY);
+        }
 
 
 
@@ -72,7 +83,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
     }
 
     public class BillViewHolder extends RecyclerView.ViewHolder {
-        TextView tvUserName, tvUserPhone,tvUserAddress,tvUserEmail,tvRoomName,tvRoomPrice,tvRoomCode,tvStartDate,tvEndDate,tvTotalPrice;
+        TextView tvUserName, tvUserPhone,tvUserAddress,tvUserEmail,tvRoomName,tvRoomPrice,tvRoomCode,tvStartDate,tvEndDate,tvTotalPrice,tvPaymentStatus;
 
         public BillViewHolder(View itemView) {
             super(itemView);
@@ -86,6 +97,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
             tvStartDate = itemView.findViewById(R.id.tvStartDate);
             tvEndDate = itemView.findViewById(R.id.tvEndDate);
             tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
+            tvPaymentStatus = itemView.findViewById(R.id.tvPaymentStatus);
         }
     }
     private String formatDate(String isoDate) {

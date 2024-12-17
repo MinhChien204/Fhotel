@@ -74,10 +74,10 @@ public class seel_all extends AppCompatActivity {
 
     private void showFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Filter Rooms");
+        builder.setTitle("Lọc phòng");
 
         // Các tiêu chí lọc
-        String[] filterOptions = {"Lọc theo giá", "lọc theo sao", "Xem tất cả"};
+        String[] filterOptions = {"Lọc theo giá", "Lọc theo sao", "Xem tất cả"};
         builder.setItems(filterOptions, (dialog, which) -> {
             switch (which) {
                 case 0:
@@ -99,7 +99,7 @@ public class seel_all extends AppCompatActivity {
     }
     private void showPriceFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Filter by Price");
+        builder.setTitle("Lọc theo giá trị");
 
         View view = getLayoutInflater().inflate(R.layout.dialog_filter_price, null);
         builder.setView(view);
@@ -107,7 +107,7 @@ public class seel_all extends AppCompatActivity {
         EditText etMinPrice = view.findViewById(R.id.etMinPrice);
         EditText etMaxPrice = view.findViewById(R.id.etMaxPrice);
 
-        builder.setPositiveButton("Filter", (dialog, which) -> {
+        builder.setPositiveButton("Lọc", (dialog, which) -> {
             String minPriceStr = etMinPrice.getText().toString().trim();
             String maxPriceStr = etMaxPrice.getText().toString().trim();
 
@@ -120,7 +120,7 @@ public class seel_all extends AppCompatActivity {
             }
         });
 
-        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton("Hủy", null);
         builder.create().show();
     }
 
@@ -137,7 +137,7 @@ public class seel_all extends AppCompatActivity {
     private void showRatingFilterDialog() {
         String[] ratings = {"5 stars", "4 stars", "3 stars"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Filter by Rating");
+        builder.setTitle("Lọc theo rating");
 
         builder.setItems(ratings, (dialog, which) -> {
             int minRating = 5 - which; // 5 sao, 4 sao, 3 sao

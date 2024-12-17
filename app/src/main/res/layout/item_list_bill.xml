@@ -109,6 +109,7 @@
 
             <TextView
                 android:id="@+id/tvRoomPrice"
+                android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Price: $200 per night"
@@ -140,6 +141,15 @@
                 android:layout_height="wrap_content"
                 android:text="End Date: 14/12/2024"
                 android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+            <TextView
+                android:id="@+id/tvPaymentStatus"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Da thanh toan"
+                android:textColor="#30D909"
                 android:textSize="14sp"
                 android:layout_marginTop="4dp" />
         </LinearLayout>

@@ -1,21 +1,27 @@
 package learn.fpoly.fhotel.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import learn.fpoly.fhotel.Model.Notification;
 import learn.fpoly.fhotel.R;
+import learn.fpoly.fhotel.activity.DetailsActivity;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder> {
     private Context context;
@@ -37,8 +43,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(NotificationViewHolder holder, int position) {
         Notification notification = notifications.get(position);
         holder.tvmessage.setText(notification.getMessage());
-        holder.tvtype.setText(formatDate(notification.getCreatedAt()));
-
+        holder.tvCreationDate.setText(formatDate(notification.getCreatedAt()));
         // Customize based on type
         switch (notification.getType()) {
             case "password_change":
@@ -47,7 +52,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             case "booking_confirmed":
                 holder.iconImageView.setImageResource(R.drawable.ic_booking_confirmed);
                 break;
-            case "booking_canceled":
+            case "booking_cancelled":
                 holder.iconImageView.setImageResource(R.drawable.ic_booking_cancelled);
                 break;
             case "voucher_received":
@@ -62,13 +67,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     public class NotificationViewHolder extends RecyclerView.ViewHolder {
-        TextView tvmessage, tvtype;
+        TextView tvmessage,tvCreationDate;
         ImageView iconImageView;
 
         public NotificationViewHolder(View itemView) {
             super(itemView);
             tvmessage = itemView.findViewById(R.id.tvmessage);
-            tvtype = itemView.findViewById(R.id.tvtype);
+            tvCreationDate = itemView.findViewById(R.id.tvCreationDate);
             iconImageView = itemView.findViewById(R.id.iconImageView);
         }
     }

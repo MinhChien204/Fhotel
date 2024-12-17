@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/primary_blue"
                 android:fontFamily="serif"
-                android:text=""
+                android:text="Tất cả phòng"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold"

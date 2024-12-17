@@ -131,7 +131,7 @@ public interface ApiService {
     Call<Response<List<UserVoucher>>> getUserVouchers(@Path("userId") String userId);
 
     //Notification
-    @GET("/api/notifications")
+    @GET("/api/get-notification/{userId}")
     Call<Response<List<Notification>>> getNotifications(@Query("userId") String userId);
 
     @POST("api/add_notification")

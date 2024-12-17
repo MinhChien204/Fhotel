@@ -18,7 +18,7 @@
             android:fontFamily="serif"
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
-            android:text="Favourite"
+            android:text="Yêu thích"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />

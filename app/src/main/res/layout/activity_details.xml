@@ -202,7 +202,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="Description"
+                    android:text="Mô tả"
                     android:textColor="@android:color/background_dark" />
 
                 <TextView
@@ -242,7 +242,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/book_button_bg"
                 android:backgroundTint="@color/primary_blue"
-                android:text="Start Booking Your Trip"
+                android:text="Bắt đầu đặt phòng của bạn"
                 android:textColor="#fff" />
         </LinearLayout>
 

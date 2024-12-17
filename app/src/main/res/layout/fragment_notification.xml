@@ -18,7 +18,7 @@
             android:fontFamily="serif"
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
-            android:text="Notification"
+            android:text="Thông báo"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />

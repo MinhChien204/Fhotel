@@ -146,7 +146,7 @@ public class BookingFragment extends Fragment {
     private void showStatusFilterDialog() {
         String[] statuses = {"pending", "confirmed", "cancelled"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Filter by Status");
+        builder.setTitle("Lọc theo trạng thái");
 
         builder.setItems(statuses, (dialog, which) -> {
             String selectedStatus = statuses[which];

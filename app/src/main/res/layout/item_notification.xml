@@ -9,49 +9,56 @@
     android:background="@android:color/white"
     android:radius="12dp">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="12dp">
 
-        <!-- Image Section -->
-        <ImageView
-            android:id="@+id/iconImageView"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="12dp"
-            android:src="@drawable/sale"
-            android:scaleType="centerCrop"
-            android:contentDescription="Voucher Image" />
+        <!-- Creation Date -->
+        <TextView
+            android:id="@+id/tvCreationDate"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Created on: 17/12/2024"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp" />
 
-        <!-- Text Section -->
+        <!-- Content Section -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <!-- Room Name -->
-            <TextView
-                android:id="@+id/tvmessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Luxury Room Voucher"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            <!-- Image Section -->
+            <ImageView
+                android:id="@+id/iconImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/sale"
+                android:scaleType="centerCrop"
+                android:contentDescription="Voucher Image" />
 
-            <!-- Discount -->
-            <TextView
-                android:id="@+id/tvtype"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="$100 Discount"
-                android:textColor="#E90707"
-                android:textSize="16sp" />
+            <!-- Text Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Room Name -->
+                <TextView
+                    android:id="@+id/tvmessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Luxury Room Voucher"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

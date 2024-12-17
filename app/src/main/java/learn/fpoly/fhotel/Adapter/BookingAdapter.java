@@ -4,6 +4,7 @@ package learn.fpoly.fhotel.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,17 +86,18 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
         String status = booking.getStatus().trim();
         holder.tvBookingStatus.setText("Trạng thái: " + status);
-
-        // Đổi màu dựa trên trạng thái
         switch (status.toLowerCase(Locale.ROOT)) {
             case "pending":
                 holder.tvBookingStatus.setTextColor(context.getResources().getColor(android.R.color.holo_orange_dark)); // Màu vàng
+                holder.tvBookingStatus.setText("Trạng thái: Đang xử lý");
                 break;
             case "confirmed":
-                holder.tvBookingStatus.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark)); // Màu xanh lá
+                holder.tvBookingStatus.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
+                holder.tvBookingStatus.setText("Trạng thái: Đã xác nhận");
                 break;
             case "cancelled":
                 holder.tvBookingStatus.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark)); // Màu đỏ
+                holder.tvBookingStatus.setText("Trạng thái: Đã hủy");
                 break;
             default:
                 holder.tvBookingStatus.setTextColor(context.getResources().getColor(android.R.color.darker_gray)); // Màu xám
@@ -105,7 +107,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         // Gán các thông tin khác
         holder.tvStartDate.setText("Ngày bắt đầu: " + booking.getStartDate());
         holder.tvEndDate.setText("Ngày kết thúc: " + booking.getEndDate());
-        holder.tvTotalPrice.setText(booking.getTotalPrice()+"đ");
+        holder.tvTotalPrice.setText("Tổng tiền: " +booking.getTotalPrice()+"đ");
 
         // Sự kiện khi nhấn vào item (chuyển đến màn chi tiết phòng)
         holder.itemView.setOnClickListener(v -> {
@@ -234,10 +236,10 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
                 if (response.isSuccessful()) {
                     Booking booking = response.body().getData();
                     if (booking != null && booking.getRoom() != null) {
-                        String roomName = booking.getRoom().getName(); // Lấy tên phòng từ booking
-                        Log.d("rname", "onResponse: "+roomName);
-                        // Sau khi có thông tin phòng, tạo thông báo
-                        String message = "Your booking for room " + roomName;
+                        String roomName = booking.getRoom().getName();
+                        String startDate = booking.getStartDate();
+                        String endDate = booking.getEndDate();
+                        String message = "Bạn đã hủy đặt phòng " + roomName+" từ ngày "+startDate+" đến ngày "+endDate;
                         sendNotification(booking.getUserId(), message, "booking_cancelled");
                     } else {
                         Log.e("Notification", "Room information not found for booking ID: " + bookingId);

@@ -1064,8 +1064,18 @@ router.post("/book_room", async (req, res) => {
         `Phòng ${room.name} đã được đặt. Vui lòng chờ xác nhận.`
       );
     }
-
-    res.status(201).json({ message: "Room booked successfully", data: savedBooking });
+    const bookingWithRoom = {
+      ...savedBooking.toObject(),  // Thông tin booking
+      room: {                 // Thông tin phòng
+        _id: room._id,
+        name: room.name,
+        price: room.price,
+        image: room.image,
+        description: room.description,   
+        status: room.status,           
+      },
+    };
+    res.status(201).json({ message: "Room booked successfully", data: bookingWithRoom });
   } catch (error) {
     res.status(500).json({ message: "An error occurred while booking room", error: error.message });
   }
@@ -1461,9 +1471,11 @@ router.delete("/delete_Favourite/:id", async (req, res) => {
 
 // Lấy danh sách thông báo của một user
 router.get("/get-notification/:id", async (req, res) => {
-  const { id } = req.params; // Thay đổi 'userId' thành 'id' vì bạn đang dùng ':id'
+  const { userId } = req.query;
+  console.log(userId);
+  
   try {
-    const notifications = await Notification.find({ userId: id }).sort({ createdAt: -1 });
+    const notifications = await Notification.find({ userId: userId }).sort({ createdAt: -1 });
     if (!notifications || notifications.length === 0) {
       return res.status(200).json({ message: "No notifications found for this user", data: [] });
     }
@@ -1597,6 +1609,8 @@ router.post("/create_bill", async (req, res) => {
       startDate,
       endDate,
       totalPrice,
+      status:"confirmed",
+      paymentStatus:"paid"
     });
 
     const savedBill = await newBill.save();
@@ -1704,7 +1718,7 @@ router.get("/searchUsersByName"),async (req, res) => {
     });
 
     res.json(users);
-  } catch (error) { 
+  } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Lỗi khi tìm kiếm người dùng" });
   }

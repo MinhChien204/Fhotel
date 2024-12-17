@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 import learn.fpoly.fhotel.Model.Bill;
 import learn.fpoly.fhotel.Model.Booking;
+import learn.fpoly.fhotel.Model.Notification;
 import learn.fpoly.fhotel.R;
 import learn.fpoly.fhotel.Retrofit.HttpRequest;
 import learn.fpoly.fhotel.activity.Home_User;
@@ -320,12 +321,15 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response<Booking>> call, retrofit2.Response<Response<Booking>> response) {
                 if (response.isSuccessful()) {
-                    // Kiểm tra kết quả từ API
+                    Booking booking = response.body().getData();
                     if (response.body() != null && response.body().getData() != null) {
-                        Log.d("Booking", "Booking successful: " + response.body().getData().toString());
+                        String roomName = booking.getRoom().getName();
+                        String startDate = booking.getStartDate();
+                        String endDate = booking.getEndDate();
+                        String message = "Bạn đã đặt phòng " + roomName+" từ ngày "+startDate+" đến ngày "+endDate;
+                        sendNotification(booking.getUserId(), message, "booking_confirmed");
                         Toast.makeText(PaymentActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
                         String bookingId = response.body().getData().getId();
-                        Log.d(TAG, "onResponse: ");
                         updateBookingStatus(bookingId, "confirmed", "paid"); // Trạng thái đã xác nhận và đã thanh toán
                         Intent intent = new Intent(PaymentActivity.this, PaymentNotification.class);
                         intent.putExtra("result", "Thanh toán thành cong");
@@ -434,9 +438,13 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response<Booking>> call, retrofit2.Response<Response<Booking>> response) {
                 if (response.isSuccessful()) {
-                    // Kiểm tra kết quả từ API
+                    Booking booking = response.body().getData();
                     if (response.body() != null && response.body().getData() != null) {
-                        Log.d("Booking", "Booking successful: " + response.body().getData().toString());
+                        String roomName = booking.getRoom().getName();
+                        String startDate = booking.getStartDate();
+                        String endDate = booking.getEndDate();
+                        String message = "Bạn đã đặt phòng " + roomName+" từ ngày "+startDate+" đến ngày "+endDate;
+                        sendNotification(booking.getUserId(), message, "booking_confirmed");
                         Toast.makeText(PaymentActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(PaymentActivity.this, PaymentNotification.class);
                         intent.putExtra("result", "Thanh toán thành cong");
@@ -484,4 +492,31 @@ public class PaymentActivity extends AppCompatActivity {
         void onResult(boolean isAvailable);
     }
 
+    private void sendNotification(String userId, String message, String type) {
+        // Chuẩn bị thông tin thông báo
+        Notification notification = new Notification();
+        notification.setUserId(userId);
+        notification.setMessage(message);
+        notification.setType(type);
+
+        // Gọi API thêm thông báo
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Notification>> notificationCall = httpRequest.callAPI().createNotification(notification);
+
+        notificationCall.enqueue(new Callback<Response<Notification>>() {
+            @Override
+            public void onResponse(Call<Response<Notification>> call, retrofit2.Response<Response<Notification>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("Notification", "Notification created successfully");
+                } else {
+                    Log.e("Notification", "Failed to create notification");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Notification>> call, Throwable t) {
+                Log.e("Notification", "Error: " + t.getMessage());
+            }
+        });
+    }
 }

@@ -20,7 +20,7 @@
         android:id="@+id/textViewNotify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Thanh toán thành công!"
+        android:text="Đặt phòng thành công!"
         android:layout_marginTop="20dp"
         android:textSize="22sp"
         android:textStyle="bold"

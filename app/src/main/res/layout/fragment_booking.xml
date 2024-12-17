@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:text="Bookings"
                 android:fontFamily="serif"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"

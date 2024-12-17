@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
 
         // Gán giá phòng
         holder.tvRoomPrice.setText(String.valueOf(favourite.getRoom().getPrice()));
+        holder.tvroom_code.setText(String.valueOf(favourite.getRoom().getRoom_code()));
+        holder.tvratingBarHome.setRating(favourite.getRoom().getRating());
 
         // Gán ảnh phòng (sử dụng Glide)
         Glide.with(holder.itemView.getContext())
@@ -77,13 +80,15 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
     }
 
     public class FavouriteViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoomName, tvRoomPrice;
+        TextView tvRoomName, tvRoomPrice,tvroom_code;
         ImageView ivRoomImage;
-
+        RatingBar tvratingBarHome;
         public FavouriteViewHolder(View itemView) {
             super(itemView);
             tvRoomName = itemView.findViewById(R.id.tvRoomName);
             tvRoomPrice = itemView.findViewById(R.id.tvRoomPrice);
+            tvroom_code = itemView.findViewById(R.id.tvroom_code);
+            tvratingBarHome = itemView.findViewById(R.id.tvratingBarHome);
             ivRoomImage = itemView.findViewById(R.id.ivRoomImage);
         }
     }

@@ -89,7 +89,7 @@ public class NotificationFragment extends Fragment {
                         rcv_listNotification.setAdapter(adapter);
                     }
                 } else {
-                    Toast.makeText(getContext(), "No room was found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Khong co thong bao.", Toast.LENGTH_SHORT).show();
                 }
             }
 
