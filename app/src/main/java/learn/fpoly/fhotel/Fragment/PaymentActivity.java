@@ -90,8 +90,7 @@ public class PaymentActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         totalPrice.setText("0.00đ");
-        tvPriceDetails.setText("Room Price: 0.00đ\nNumber of nights: 0\nTotal Price: 0.00đ");
-
+        tvPriceDetails.setText("Giá phòng: 0.00đ\nSố ngày:: 0\nGiá: 0.00đ");
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", null);
 
@@ -294,7 +293,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                 // Hiển thị tổng giá và chi tiết, thay "VND " phía trước thành " VND" phía sau
                 totalPrice.setText(String.format("%.0f đ", totalPriceValue)); // Thêm "VND" vào sau
-                tvPriceDetails.setText(String.format("Room Price: %.0f đ\nNumber of nights: %d\nTotal Price: %.0f đ", roomPrice, numberOfNights, totalPriceValue));
+                tvPriceDetails.setText(String.format("Giá phòng: %.0f đ\nSố ngày: %d\nGiá: %.0f đ", roomPrice, numberOfNights, totalPriceValue));
             } else {
                 totalPrice.setText("0 đ");
                 tvPriceDetails.setText("Number of nights: 0\nTotal Price: 0 đ");

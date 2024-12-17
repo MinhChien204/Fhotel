@@ -173,14 +173,14 @@ public class DetailsActivity extends AppCompatActivity {
                         }
                         // Kiểm tra trạng thái phòng
                         if (room.getStatus().equals("unavailable")) {
-                            btnBookingHotel.setText("Room Unavailable");
+                            btnBookingHotel.setText("Phòng không có sẵn");
                             txtstatusRoom.setTextColor(Color.RED);
                             btnBookingHotel.setBackgroundColor(getResources().getColor(R.color.black));
                             btnBookingHotel.setBackgroundResource(R.drawable.book_button_bg);
                             btnBookingHotel.setEnabled(false);
                         } else {
                             // Trạng thái phòng có sẵn, giữ nút Booking
-                            btnBookingHotel.setText("Start Booking Your Trip");
+                            btnBookingHotel.setText("Bắt đầu đặt phòng của bạn");
                             txtstatusRoom.setTextColor(Color.GREEN);
                             btnBookingHotel.setBackgroundColor(getResources().getColor(R.color.primaryColor));
                             btnBookingHotel.setBackgroundResource(R.drawable.book_button_bg);
