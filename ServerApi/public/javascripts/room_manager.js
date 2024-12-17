@@ -93,9 +93,8 @@ function displayRooms(rooms) {
     }>Available</option>
   </select>
 </td>
-
       <td class="actions-cell">
-        <button class="btn-edit" onclick="editRoom('${room._id}')">Edit</button>
+        <img class="btn-edit" src="./img/edit.png" style="width:20px;height:20px" onclick="editRoom('${room._id}')"></img>
         
       </td>
     `;

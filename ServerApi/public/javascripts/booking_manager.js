@@ -28,8 +28,7 @@ async function fetchBookings() {
               <option value="cancelled" ${booking.status === "cancelled" ? "selected" : ""}>Cancelled</option>
             </select>
           </td>
-          <td>
-            
+          <td>   
           </td>
         `;
         tableBody.appendChild(row);
@@ -89,3 +88,76 @@ async function fetchBookings() {
     }
   }
   
+  //firebase notifications
+  // Firebase messaging initialization
+const messaging = firebase.messaging();
+
+// Request permission to receive notifications
+async function requestNotificationPermission() {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      const token = await messaging.getToken({
+        vapidKey: "YOUR_VAPID_KEY" // Thêm VAPID key của bạn
+      });
+      console.log("FCM Token:", token);
+
+      // Lưu token vào server (để sau này gửi thông báo)
+      // Ví dụ gửi token lên server của bạn
+      await fetch("/api/save-fcm-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token })
+      });
+    }
+  } catch (error) {
+    console.error("Error getting permission or token:", error);
+  }
+}
+
+// Khi trang web được tải, yêu cầu quyền nhận thông báo
+requestNotificationPermission();
+
+// Lắng nghe thông báo khi app đang mở
+messaging.onMessage((payload) => {
+  console.log("Message received. ", payload);
+  // Hiển thị thông báo trên giao diện người dùng (web admin)
+  showNotificationOnAdminDashboard(payload.notification);
+});
+
+// Hàm hiển thị thông báo trên giao diện
+// Hàm hiển thị thông báo và tự động xóa sau một khoảng thời gian
+function showNotificationOnAdminDashboard(notification) {
+  const notificationArea = document.querySelector(".notification-list");
+  const notificationCount = document.querySelector(".notification .num");
+  notificationCount.textContent = parseInt(notificationCount.textContent) + 1;
+
+  const notificationItem = document.createElement("div");
+  notificationItem.classList.add("notification-item", "new");
+  notificationItem.innerHTML = `
+    <span class="notification-title">${notification.title}</span>
+    <p class="notification-body">${notification.body}</p>
+    <span class="close" onclick="closeNotification(this)">x</span>
+  `;
+
+  notificationArea.appendChild(notificationItem);
+
+  // Tự động xóa thông báo sau 5 giây
+  setTimeout(() => {
+    notificationItem.classList.remove("new"); // Bỏ hiệu ứng pulse
+    notificationItem.style.opacity = 0; // Làm mờ thông báo
+    setTimeout(() => notificationItem.remove(), 1000); // Xóa thông báo sau 1 giây
+    notificationCount.textContent = parseInt(notificationCount.textContent) - 1; // Giảm số lượng thông báo
+  }, 5000); // 5000ms = 5 giây
+}
+
+// Hàm đóng thông báo thủ công
+function closeNotification(closeButton) {
+  const notificationItem = closeButton.parentElement;
+  notificationItem.remove();
+  const notificationCount = document.querySelector(".notification .num");
+  notificationCount.textContent = parseInt(notificationCount.textContent) - 1; // Giảm số lượng thông báo
+}
+

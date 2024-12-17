@@ -2,6 +2,8 @@ package learn.fpoly.fhotel.Model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 public class Booking {
 
     @SerializedName("_id")
@@ -36,6 +38,12 @@ public class Booking {
     public Booking(String status, String paymentStatus) {
         this.status = status;
         this.paymentStatus = paymentStatus;
+    }
+
+    public Booking(String roomId, String startDate, String endDate) {
+        this.roomId = roomId;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Booking(String status) {

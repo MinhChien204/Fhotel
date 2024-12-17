@@ -36,6 +36,8 @@ public class Bill {
     public Bill() {
     }
 
+
+
     public Bill(String userId, String roomId, String startDate, String endDate, double totalPrice) {
         this.userId = userId;
         this.roomId = roomId;

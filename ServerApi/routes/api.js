@@ -810,12 +810,9 @@ router.post("/register", async (req, res) => {
   try {
     const data = req.body;
 
-    // Mã hóa mật khẩu
-    const hashedPassword = await bcrypt.hash(data.password, saltRounds);
-
     const newUser = new User({
       username: data.username,
-      password: hashedPassword, // Lưu mật khẩu đã mã hóa
+      password: data.password, // Lưu mật khẩu chưa mã hóa
       email: data.email,
       phonenumber: data.phonenumber,
       name: data.name,
@@ -850,6 +847,7 @@ router.post("/register", async (req, res) => {
     });
   }
 });
+
 
 //API voucher
 router.post('/add_voucher', async (req, res) => {
@@ -1670,10 +1668,16 @@ router.get('/bills', async (req, res) => {
   }
 });
 
-router.post("/check_room_availability", async (req, res) => {
-  const { roomId, startDate, endDate } = req.body;
+router.get("/check_room_availability", async (req, res) => {
+  const { roomId, startDate, endDate } = req.query;
+console.log(roomId);
 
   try {
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
     const overlappingBooking = await Booking.findOne({
       roomId,
       status: { $ne: "cancelled" },
@@ -1683,15 +1687,28 @@ router.post("/check_room_availability", async (req, res) => {
     });
 
     if (overlappingBooking) {
-      return res.status(400).json({ available: false });
+      return res.status(400).json({ message: "An error occurred while retrieving bookings" });
     }
 
-    return res.status(200).json({ available: true });
+    return res.status(200).json({ data: true });
   } catch (error) {
     res.status(500).json({ message: "An error occurred", error: error.message });
   }
 });
 
+router.get("/searchUsersByName"),async (req, res) => {
+  try {
+    const { name } = req.query; // Lấy tên từ query parameter
+    const users = await User.find({
+      name: { $regex: name, $options: 'i' } // Tìm kiếm không phân biệt chữ hoa chữ thường
+    });
+
+    res.json(users);
+  } catch (error) { 
+    console.error(error);
+    res.status(500).json({ message: "Lỗi khi tìm kiếm người dùng" });
+  }
+};
 
 
 module.exports = router;

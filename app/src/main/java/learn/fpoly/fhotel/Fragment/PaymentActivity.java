@@ -161,7 +161,8 @@ public class PaymentActivity extends AppCompatActivity {
                 }
 
                 // Kiểm tra phòng đã được đặt chưa
-                checkRoomAvailability(roomId, startDate, endDate, isAvailable -> {
+                checkRoomAvailable(roomId, startDate, endDate, isAvailable -> {
+                    Log.d("kkk", "onCreate: "+isAvailable);
                     if (isAvailable) {
                         // Nếu phòng chưa được đặt, tiến hành thanh toán với ZaloPay
                         int selectedPaymentMethod = paymentMethodsGroup.getCheckedRadioButtonId();
@@ -457,7 +458,7 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
     }
-    private void checkRoomAvailability(String roomId, String startDate, String endDate, CheckAvailabilityCallback callback) {
+    private void checkRoomAvailable(String roomId, String startDate, String endDate, CheckAvailabilityCallback callback) {
         // Gọi API hoặc truy vấn cơ sở dữ liệu để kiểm tra xem phòng đã được đặt chưa
         HttpRequest httpRequest = new HttpRequest();
         Call<Response<Boolean>> call = httpRequest.callAPI().checkRoomAvailability(roomId, startDate, endDate);
@@ -465,7 +466,7 @@ public class PaymentActivity extends AppCompatActivity {
         call.enqueue(new Callback<Response<Boolean>>() {
             @Override
             public void onResponse(Call<Response<Boolean>> call, retrofit2.Response<Response<Boolean>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful()) {
                     callback.onResult(response.body().getData());
                 } else {
                     callback.onResult(false);

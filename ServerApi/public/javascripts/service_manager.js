@@ -70,7 +70,7 @@ function displayService(services) {
         <td>${service.name}</td>
 
         <td class="actions-cell">
-          <button class="btn-edit" onclick="editService('${service._id}')">Edit</button>
+          <img class="btn-edit" src="./img/edit.png" style="width:20px;height:20px" onclick="editService('${service._id}')"></img>
         </td>
       `;
 

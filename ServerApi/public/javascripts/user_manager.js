@@ -126,3 +126,52 @@ async function fetchUsers() {
   // Load users on page load
   document.addEventListener("DOMContentLoaded", fetchUsers);
   
+
+  //tìm kiếm theo tên người dùng
+document.querySelector('form').addEventListener('submit', async (e) => {
+  e.preventDefault(); // Ngừng sự kiện submit mặc định
+  
+  const searchQuery = document.querySelector('input[type="search"]').value; // Lấy giá trị tìm kiếm
+
+  if (searchQuery) {
+    const response = await fetch(`/api/searchUsersByName?name=${searchQuery}`);
+    const users = await response.json();
+    populateTable(users);
+  } else {
+    // Nếu không có gì để tìm, tải lại tất cả người dùng
+    fetchUsers();
+  }
+});
+
+// Fetch all users and populate the table (cập nhật lại sau khi tìm kiếm)
+async function fetchUsers() {
+  const response = await fetch("/api/user");
+  const users = await response.json();
+  populateTable(users);
+}
+
+// Populate the user table
+function populateTable(users) {
+  const tableBody = document.getElementById("userTableBody");
+  tableBody.innerHTML = ""; // Xóa các hàng hiện tại
+
+  users.forEach((user, index) => {
+    const gender = user.gender.toLowerCase() === "nam" ? "Nam" : "Nữ"; // Chuẩn hóa chữ thường/hoa
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td><img src="${user.avatar}" alt="User Image" class="product-image" width="50"></td>
+      <td>${user.name}</td>
+      <td>${user.birthday}</td>
+      <td>${gender}</td>
+      <td>${user.phonenumber}</td>
+      <td>${user.address}</td>
+      <td>${user.role === 0 ? "Admin" : "User"}</td>
+      <td>
+        <img onclick="editUser('${user._id}')" src="./img/edit.png" style="width:20px;height:20px" alt="Edit">
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
+}

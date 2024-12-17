@@ -85,10 +85,13 @@
         </form>
         <input type="checkbox" id="switch-mode" hidden />
         <label for="switch-mode" class="switch-mode"></label>
-        <a href="#" class="notification">
-          <i class="bx bxs-bell"></i>
-          <span class="num">8</span>
-        </a>
+       <a href="#" class="notification">
+        <i class="bx bxs-bell"></i>
+         <span class="num">0</span>
+          </a>
+          {{!-- khu vực hiển thị thông báo --}}
+          <div class="notification-list"></div>
+
         <a href="#" class="profile">
           <img src="img/avatar.png" />
         </a>
@@ -106,6 +109,7 @@
           <div class="head">
             <h3>Danh sách Booking</h3>
             <i id="addRoomBtn" class="bx bx-plus btn-add"></i>
+             <i class="bx bx-filter"></i>
           </div>
           <table>
             <thead>
@@ -135,5 +139,8 @@
 
     <script src="./javascripts/booking_manager.js"></script>
     <script src="./javascripts/script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging.js"></script>
+
   </body>
 </html>
