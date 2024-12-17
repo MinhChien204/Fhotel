@@ -73,12 +73,12 @@ function displayRooms(rooms) {
       room.name
     }" width="100" height="100" /></td>
       <td>${room.name}</td>
-      <td>$${room.price}</td>
+      <td>${room.price}đ</td>
       <td>${stars}</td>
       
-      <td>${room.room_code}</td>
+      <td style="text-align:center">${room.room_code}</td>
       <td style=" max-width: 180px;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;/">${room.description}</td>
-      <td>${room.capacity}</td>
+      <td style="text-align:center">${room.capacity}</td>
     <td class="status-cell">
   <select
     class="status-dropdown"
@@ -94,8 +94,7 @@ function displayRooms(rooms) {
   </select>
 </td>
       <td class="actions-cell">
-        <img class="btn-edit" src="./img/edit.png" style="width:20px;height:20px" onclick="editRoom('${room._id}')"></img>
-        
+        <img class="btn-edit" src="./img/edit.png" style="width:20px;height:20px;margin:20px" onclick="editRoom('${room._id}')"></img>
       </td>
     `;
 
@@ -155,7 +154,7 @@ function openModal(room = null) {
     document.getElementById("roomId").value = room._id;
     document.getElementById("roomName").value = room.name;
     document.getElementById("roomPrice").value = room.price;
-    document.getElementById("roomRating").value = room.rating;
+  document.getElementById("roomPrice").setAttribute("readonly", true);
     document.getElementById("roomCode").value = room.room_code;
     document.getElementById("roomDescription").value = room.description;
     document.getElementById("roomCapacity").value = room.capacity;
@@ -164,6 +163,7 @@ function openModal(room = null) {
     document.getElementById("roomId").value = "";
     roomForm.reset();
   }
+
 }
 
 function populateServiceOptions(responseData) {
@@ -354,3 +354,34 @@ function updateRoomStatus(roomId, newStatus) {
 document.getElementById("addRoomBtn").addEventListener("click", () => {
   openModal();
 });
+
+//tìm kiếm theo giá tiền
+document.getElementById("searchForm").addEventListener("submit", (event) => {
+  event.preventDefault(); // Ngăn chặn việc gửi form
+
+  const minPrice = document.getElementById("minPrice").value;
+  const maxPrice = document.getElementById("maxPrice").value;
+
+  // Tạo điều kiện lọc giá
+  fetchSearchRooms(minPrice, maxPrice); 
+});
+
+function fetchSearchRooms(minPrice = null, maxPrice = null) {
+  // Xây dựng URL để tìm kiếm theo giá
+  let url = "/api/searchRooms"; // Đây là URL mặc định lấy tất cả các phòng
+
+  if (minPrice !== null || maxPrice !== null) {
+    url += `?minPrice=${minPrice || 0}&maxPrice=${maxPrice || 10000000}`;
+  }
+
+  fetch(url) // Gửi yêu cầu tìm kiếm phòng theo giá
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === 200) {
+        displayRooms(data.data); // Hiển thị các phòng tìm được
+      } else {
+        console.error("Error fetching rooms:", data.message);
+      }
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}

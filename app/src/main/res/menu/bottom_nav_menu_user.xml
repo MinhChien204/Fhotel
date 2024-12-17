@@ -11,7 +11,7 @@
     <item
         android:id="@+id/navBooking_u"
         android:icon="@drawable/notes"
-        android:title="Booking" />
+        android:title="Đặt Phòng" />
     <item
         android:id="@+id/navFavourite_u"
         android:icon="@drawable/favourite"

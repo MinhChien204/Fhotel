@@ -98,7 +98,7 @@ async function requestNotificationPermission() {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
       const token = await messaging.getToken({
-        vapidKey: "YOUR_VAPID_KEY" // Thêm VAPID key của bạn
+        vapidKey: process.env.VAPIDKEY, // Thêm VAPID key của bạn
       });
       console.log("FCM Token:", token);
 
@@ -161,3 +161,56 @@ function closeNotification(closeButton) {
   notificationCount.textContent = parseInt(notificationCount.textContent) - 1; // Giảm số lượng thông báo
 }
 
+//tìm kiếm theo ngày
+document.getElementById("searchForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  
+  const startDate = document.getElementById("startDate").value;
+  const endDate = document.getElementById("endDate").value;
+
+  fetchSearchBookings(startDate, endDate); // Gửi yêu cầu tìm kiếm
+});
+
+async function fetchSearchBookings(startDate = "", endDate = "") {
+  try {
+    const url = new URL("/api/searchbookings");
+    if (startDate && endDate) {
+      url.searchParams.append("startDate", startDate);
+      url.searchParams.append("endDate", endDate);
+    }
+
+    const response = await fetch(url); // Fetch data with date range parameters
+    const bookings = await response.json();
+
+    const tableBody = document.getElementById("BookingTableBody");
+    tableBody.innerHTML = ""; // Clear the table before rendering
+
+    bookings.forEach((booking, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${booking.userId?.name || "Unknown "}</td>
+        <td>${booking.roomId?.name || "Unknown "}</td>
+        <td>${booking.totalPrice}đ</td>
+        <td>${booking.startDate}</td>
+        <td>${booking.endDate}</td>
+        <td>${booking.userId?.phonenumber}</td>
+        <td>
+          <select
+            class="status-dropdown"
+            data-booking-id="${booking._id}"
+            onchange="updateBookingStatus('${booking._id}', this.value)"
+          >
+            <option value="pending" ${booking.status === "pending" ? "selected" : ""}>Pending</option>
+            <option value="confirmed" ${booking.status === "confirmed" ? "selected" : ""}>Confirmed</option>
+            <option value="cancelled" ${booking.status === "cancelled" ? "selected" : ""}>Cancelled</option>
+          </select>
+        </td>
+        <td></td>
+      `;
+      tableBody.appendChild(row);
+    });
+  } catch (error) {
+    console.error("Failed to fetch bookings:", error);
+  }
+}

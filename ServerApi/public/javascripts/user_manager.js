@@ -8,20 +8,20 @@ async function fetchUsers() {
   // Populate the user table
   function populateTable(users) {
     const tableBody = document.getElementById("userTableBody");
-    tableBody.innerHTML = ""; // Xóa các hàng hiện tại
+    tableBody.innerHTML = ""; // Xóa bảng hiện tại
   
     users.forEach((user, index) => {
-      const gender = user.gender.toLowerCase() === "nam" ? "Nam" : "Nữ"; // Chuẩn hóa chữ thường/hoa
+      const gender = user.gender?.toLowerCase() === "nam" ? "Nam" : "Nữ"; // Kiểm tra giới tính
   
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${index + 1}</td>
         <td><img src="${user.avatar}" alt="User Image" class="product-image" width="50"></td>
         <td>${user.name}</td>
-        <td>${user.birthday}</td>
-        <td>${gender}</td> <!-- Sử dụng giá trị đã chuẩn hóa -->
-        <td>${user.phonenumber}</td>
-        <td>${user.address}</td>
+        <td>${formatDate(user.birthday)}</td> <!-- Chuyển định dạng ngày -->
+        <td>${gender}</td>
+        <td>${user.phonenumber || "N/A"}</td>
+        <td>${user.address || "N/A"}</td>
         <td>${user.role === 0 ? "Admin" : "User"}</td>
         <td>
           <img onclick="editUser('${user._id}')" src="./img/edit.png" style="width:20px;height:20px" alt="Edit">
@@ -30,7 +30,6 @@ async function fetchUsers() {
       tableBody.appendChild(row);
     });
   }
-  
   
   // Add or Edit User
   document.getElementById("userForm").addEventListener("submit", async (e) => {
@@ -139,13 +138,13 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     populateTable(users);
   } else {
     // Nếu không có gì để tìm, tải lại tất cả người dùng
-    fetchUsers();
+    fetchSearchUsers();
   }
 });
 
 // Fetch all users and populate the table (cập nhật lại sau khi tìm kiếm)
-async function fetchUsers() {
-  const response = await fetch("/api/user");
+async function fetchSearchUsers() {
+  const response = await fetch("/api/searchUsersByName");
   const users = await response.json();
   populateTable(users);
 }
@@ -160,18 +159,27 @@ function populateTable(users) {
 
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${index + 1}</td>
+      <td style="margin-top:20px;margin-left:10px">${index + 1}</td>
       <td><img src="${user.avatar}" alt="User Image" class="product-image" width="50"></td>
       <td>${user.name}</td>
-      <td>${user.birthday}</td>
-      <td>${gender}</td>
+      <td>${formatDate(user.birthday)}</td>
+      <td style="text-align:center">${gender}</td>
       <td>${user.phonenumber}</td>
       <td>${user.address}</td>
       <td>${user.role === 0 ? "Admin" : "User"}</td>
       <td>
-        <img onclick="editUser('${user._id}')" src="./img/edit.png" style="width:20px;height:20px" alt="Edit">
+        <img onclick="editUser('${user._id}')" src="./img/edit.png" style="width:20px;height:20px;text-align:center" alt="Edit">
       </td>
     `;
     tableBody.appendChild(row);
   });
+}
+
+function formatDate(dateString) {
+  if (!dateString) return "N/A"; // Trả về N/A nếu không có ngày
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, "0"); // Thêm 0 nếu nhỏ hơn 10
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
 }

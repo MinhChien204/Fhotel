@@ -84,14 +84,7 @@
                         android:secondaryProgressTint="@android:color/holo_orange_light"
                         android:stepSize="0.5" />
 
-                    <TextView
-                        android:id="@+id/ratingText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" (115 Reviews)"
-                        android:textColor="#FF9800"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+
                 </LinearLayout>
 
                 <TextView
@@ -186,7 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Service"
+                    android:text="Dịch Vụ Phòng"
                     android:textColor="@android:color/background_dark" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -211,8 +204,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="8dp"
+                    android:textColor="@color/black"
+                    android:textStyle="normal|bold"
+                    android:textSize="14dp"
                     android:lineSpacingExtra="4dp"
-                    android:text="Mughal Gardens which have truly changed the face of the Mughal Empire is one of the most popular and the most visited tourist attractions of Srinagar." />
+                    android:text="chào em nha" />
             </LinearLayout>
         </ScrollView>
 

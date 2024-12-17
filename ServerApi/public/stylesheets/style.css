@@ -289,20 +289,20 @@ body {
 	/* Làm checkbox to hơn một chút */
 	cursor: pointer;
 	/* Thêm hiệu ứng con trỏ khi hover */
-	accent-color: #4caf50;
+	accent-color: #3C91E6;
 	/* Thay đổi màu sắc khi được chọn */
 }
 
 /* Thêm hiệu ứng khi checkbox được chọn */
 #roomServices input[type="checkbox"]:checked {
-	accent-color: #4caf50;
+	accent-color: #3C91E6;
 	/* Màu xanh lá khi checkbox được chọn */
 }
 
 /* Thêm border khi focus vào checkbox */
 #roomServices input[type="checkbox"]:focus {
 	outline: none;
-	border: 2px solid #4caf50;
+	border: 2px solid #3C91E6;
 }
 
 
@@ -664,9 +664,9 @@ body {
 }
 
 #content main .table-data .order table td img {
-	width: 36px;
-	height: 36px;
-	border-radius: 50%;
+	width: 60px;
+	height: 60px;
+	border-radius: 20%;
 	object-fit: cover;
 }
 
@@ -810,3 +810,297 @@ body {
 		min-width: 420px;
 	}
 }
+.notification-list {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	width: 300px;
+  }
+  
+  .notification-item {
+	background-color: #fffae6;
+	border: 1px solid #ffc107;
+	border-radius: 5px;
+	padding: 10px;
+	margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	animation: slideIn 0.5s ease-out;
+  }
+  
+  .notification-item.new {
+	background-color: #fff3cd;
+	border-color: #ffeb3b;
+	animation: pulse 1s infinite alternate;
+  }
+  
+  .notification-item .close {
+	cursor: pointer;
+	font-size: 18px;
+	color: #ff5733;
+  }
+  
+  @keyframes slideIn {
+	from {
+	  transform: translateX(100%);
+	}
+	to {
+	  transform: translateX(0);
+	}
+  }
+  
+  @keyframes pulse {
+	0% {
+	  background-color: #ffeb3b;
+	}
+	100% {
+	  background-color: #fff3cd;
+	}
+  }
+  
+  /* Container của form tìm kiếm */
+#searchForm {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 15px;
+	background-color: #fff;
+	padding: 10px 20px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin: 20px 0;
+  }
+  
+  /* Các label trong form */
+  #searchForm label {
+	font-size: 14px;
+	font-weight: 600;
+	color: #333;
+	margin-right: 5px;
+  }
+  
+  /* Các ô input chọn ngày */
+  #searchForm input[type="date"] {
+	padding: 8px 10px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	transition: border 0.3s ease;
+	outline: none;
+	width: 150px;
+  }
+  
+  #searchForm input[type="date"]:focus {
+	border: 1px solid #3C91E6;
+  }
+  
+  /* Nút tìm kiếm */
+  #searchForm button.search-btn {
+	background-color: #3C91E6;
+	color: white;
+	padding: 8px 12px;
+	font-size: 14px;
+	font-weight: 600;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	display: flex;
+	align-items: center;
+  }
+  
+  #searchForm button.search-btn:hover {
+	background-color: #45a049;
+  }
+  
+  #searchForm button.search-btn i {
+	margin-right: 5px;
+  }
+  
+  /* Bảng booking */
+  .table-data {
+	margin-top: 20px;
+  }
+  
+  .table-data table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: #fff;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	overflow: hidden;
+  }
+  
+  .table-data thead {
+	background-color: #3C91E6;
+	color: white;
+  }
+  
+  .table-data thead th {
+	padding: 10px;
+	font-size: 14px;
+	text-align: left;
+  }
+  
+  .table-data tbody tr {
+	border-bottom: 1px solid #ddd;
+	transition: background-color 0.3s ease;
+  }
+  
+  .table-data tbody tr:hover {
+	background-color: #f2f2f2;
+  }
+  
+  .table-data tbody td {
+	padding: 10px;
+	font-size: 14px;
+	color: #333;
+  }
+  
+  .table-data .actions-cell {
+	display: flex;
+	gap: 10px;
+  }
+  
+  .table-data .actions-cell img {
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+	transition: transform 0.2s ease;
+  }
+  
+  .table-data .actions-cell img:hover {
+	transform: scale(1.1);
+  }
+  /* Form tìm kiếm - Min Price và Max Price */
+#searchForm {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-bottom: 20px;
+	padding: 10px 20px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  #searchForm input[type="number"] {
+	padding: 8px 12px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 14px;
+	outline: none;
+	width: 130px;
+	transition: border 0.3s ease;
+  }
+  
+  #searchForm input[type="number"]:focus {
+	border-color: #4CAF50;
+  }
+  
+  #searchForm .search-btn {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 8px 15px;
+	font-size: 14px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 0.3s ease;
+  }
+  
+  #searchForm .search-btn:hover {
+	background-color: #0056b3;
+  }
+  
+  #searchForm .search-btn i {
+	margin-right: 5px;
+  }
+  
+  /* Bảng dữ liệu phòng */
+  .table-data {
+	margin-top: 10px;
+	border-radius: 10px;
+	overflow: hidden;
+  }
+  
+  .table-data table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table-data thead {
+	background-color: #007bff;
+	color: white;
+  }
+  
+  .table-data thead th {
+	padding: 12px;
+	font-size: 14px;
+	text-align: center;
+  }
+  
+  .table-data tbody tr {
+	border-bottom: 1px solid #ddd;
+	transition: background-color 0.3s ease;
+  }
+  
+  .table-data tbody tr:hover {
+	background-color: #f8f9fa;
+  }
+  
+  .table-data tbody td {
+	padding: 12px;
+	font-size: 14px;
+	color: #333;
+  }
+  
+  .table-data img {
+	width: 60px;
+	height: 60px;
+	object-fit: cover;
+	border-radius: 5px;
+  }
+  
+  .table-data select {
+	padding: 5px 8px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 14px;
+	outline: none;
+	transition: border 0.3s ease;
+  }
+  
+  .table-data select:focus {
+	border-color: #4CAF50;
+  }
+  
+  .table-data .actions-cell img {
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	transition: transform 0.2s ease;
+  }
+  
+  .table-data .actions-cell img:hover {
+	transform: scale(1.1);
+  }
+  
+  /* Tiêu đề chính */
+  .head-title h1 {
+	font-size: 28px;
+	font-weight: 600;
+	color: #333;
+	margin-bottom: 20px;
+  }
+  

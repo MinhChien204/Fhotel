@@ -31,7 +31,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.SECRET_KEY;
-
+const AdminFCM = require("../models/AdminFCM");
 // hàm thông báo từ administrator
 admin.initializeApp({
   credential: admin.credential.cert(__dirname + '/../config/serviceAccountKey.json'), // Điều chỉnh đường dẫn
@@ -682,9 +682,8 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Tên đăng nhập không tồn tại" });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
+    // So sánh mật khẩu mà không sử dụng bcrypt
+    if (password !== user.password) {
       return res.status(400).json({ message: "Mật khẩu không chính xác" });
     }
 
@@ -708,6 +707,7 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Lỗi máy chủ nội bộ" });
   }
 });
+
 router.post('/login/google', async (req, res) => {
   const { idToken } = req.body;
 
@@ -1051,10 +1051,19 @@ router.post("/book_room", async (req, res) => {
     const savedBooking = await newBooking.save();
 
     // Gửi thông báo cho người dùng
-    sendAdminNotification(
-      "New Room Booking",
-      `Phòng ${room.name} đã được đặt bởi ${user.name}.`
-    );
+    const adminTokens = await AdminFCM.find().select("token -_id");
+
+    // Gửi thông báo
+    // const message = {
+    //   notification: {
+    //     title: "Booking mới!",
+    //     body: "Một phòng mới đã được đặt thành công.",
+    //   },
+    //   tokens: adminTokens.map((admin) => admin.token), // Danh sách token FCM
+    // };
+
+    // const response = await admin.messaging().sendEachForMulticast(message);
+    // console.log("Notification sent:", response);
 
     // Gửi thông báo cho người dùng
     if (user.fcmToken) {
@@ -1123,6 +1132,26 @@ router.put("/update-status-booking/:id", async (req, res) => {
     res.status(500).json({ message: "Error updating booking", error });
   }
 });
+
+router.post("/save-fcm-token", async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    if (!token) return res.status(400).json({ message: "Token is required" });
+
+    const existingToken = await AdminFCM.findOne({ token });
+    if (!existingToken) {
+      await AdminFCM.create({ token });
+    }
+
+    res.status(200).json({ message: "FCM Token saved successfully" });
+  } catch (error) {
+    console.error("Error saving token:", error);
+    res.status(500).json({ message: "Failed to save token" });
+  }
+});
+
+
 router.post("/update-fcm-token", async (req, res) => {
   const { userId, fcmToken } = req.body;
 
@@ -1643,7 +1672,7 @@ router.get("/user/:userId/bills", async (req, res) => {
       return res.status(200).json({ message: "No rooms found for the bookings", data: [] });
     }
 
-
+    
     const billsWithRooms = bills.map(bill => {
       const room = rooms.find(room => room._id.toString() === bill.roomId.toString());
       const user = users.find(user => user._id.toString() === bill.userId.toString());
@@ -1712,19 +1741,28 @@ router.get("/check_room_availability", async (req, res) => {
   }
 });
 
-router.get("/searchUsersByName"), async (req, res) => {
+
+router.get("/searchUsersByName", async (req, res) => {
   try {
     const { name } = req.query; // Lấy tên từ query parameter
+
+    // Kiểm tra nếu tham số name không được truyền vào
+    if (!name) {
+      return res.status(400).json({ message: "Tên không được để trống" });
+    }
+
+    // Tìm kiếm không phân biệt chữ hoa chữ thường
     const users = await User.find({
-      name: { $regex: name, $options: 'i' } // Tìm kiếm không phân biệt chữ hoa chữ thường
+      name: { $regex: name, $options: "i" },
     });
 
-    res.json(users);
+    // Trả về kết quả
+    res.status(200).json(users);
   } catch (error) {
-    console.error(error);
+    console.error("Lỗi khi tìm kiếm người dùng:", error);
     res.status(500).json({ message: "Lỗi khi tìm kiếm người dùng" });
   }
-};
+})
 //thongke
 router.get("/bookings-by-date", async (req, res) => {
   try {
@@ -1740,6 +1778,49 @@ router.get("/bookings-by-date", async (req, res) => {
     res.json(bookingsByDate);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+
+// API handler to filter rooms by price and rating
+router.get('/searchRooms', (req, res) => {
+  const { minPrice, maxPrice } = req.query;
+
+  let filter = {};
+
+  if (minPrice) filter.price = { $gte: minPrice }; // Giá lớn hơn hoặc bằng minPrice
+  if (maxPrice) filter.price = { ...filter.price, $lte: maxPrice }; // Giá nhỏ hơn hoặc bằng maxPrice
+
+  Room.find(filter) // Tìm các phòng với điều kiện giá
+    .then(rooms => {
+      res.json({ status: 200, data: rooms });
+    })
+    .catch(error => {
+      res.json({ status: 500, message: error.message });
+    });
+});
+
+
+router.get('/searchbookings', async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    // Tạo điều kiện lọc nếu có khoảng thời gian
+    const filter = {};
+    if (startDate && endDate) {
+      filter.startDate = { $gte: new Date(startDate) };
+      filter.endDate = { $lte: new Date(endDate) };
+    }
+
+    const bookings = await Booking.find(filter)
+      .populate("userId", "name email phonenumber avatar")
+      .populate("roomId", "name price")
+      .exec();
+
+    res.status(200).json(bookings);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
