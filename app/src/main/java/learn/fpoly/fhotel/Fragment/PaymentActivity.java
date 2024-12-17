@@ -89,134 +89,132 @@ public class PaymentActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        totalPrice.setText("0.00đ");
-        tvPriceDetails.setText("Giá phòng: 0.00đ\nSố ngày:: 0\nGiá: 0.00đ");
+        totalPrice.setText("0đ");
+        tvPriceDetails.setText("Giá phòng: 0đ\nSố ngày: 0\nGiá: 0đ");
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", null);
 
 
-            // Xử lý sự kiện chọn ngày
-            tvdate.setOnClickListener(v -> {
-                // Tạo và hiển thị bottom sheet chọn ngày
-                SelectDateBottomSheet bottomSheet = new SelectDateBottomSheet();
-                bottomSheet.setOnDateSelectedListener(dateRange -> {
-                    // Cập nhật TextView với ngày đã chọn
-                    tvdate.setText(dateRange);
+        // Xử lý sự kiện chọn ngày
+        tvdate.setOnClickListener(v -> {
+            // Tạo và hiển thị bottom sheet chọn ngày
+            SelectDateBottomSheet bottomSheet = new SelectDateBottomSheet();
+            bottomSheet.setOnDateSelectedListener(dateRange -> {
+                // Cập nhật TextView với ngày đã chọn
+                tvdate.setText(dateRange);
 
-                    numberOfNights = calculateNights(dateRange);
+                numberOfNights = calculateNights(dateRange);
 
-                    if (numberOfNights > 0) {
-                        // Nếu có số đêm hợp lệ, cập nhật tổng giá
-                        updatePriceDetails();
-                    } else {
-                        Toast.makeText(this, "Ngày bắt đầu và kết thúc không được trùng nhau", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                bottomSheet.show(getSupportFragmentManager(), "SelectDateBottomSheet");
+                if (numberOfNights > 0) {
+                    // Nếu có số đêm hợp lệ, cập nhật tổng giá
+                    updatePriceDetails();
+                } else {
+                    Toast.makeText(this, "Ngày bắt đầu và kết thúc không được trùng nhau", Toast.LENGTH_SHORT).show();
+                }
             });
+            bottomSheet.show(getSupportFragmentManager(), "SelectDateBottomSheet");
+        });
 
-            tvPerson.setOnClickListener(view1 -> showSelectGuestBottomSheet());
+        tvPerson.setOnClickListener(view1 -> showSelectGuestBottomSheet());
 
-            StrictMode.ThreadPolicy policy = new
-                    StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
+        StrictMode.ThreadPolicy policy = new
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
-            // ZaloPay SDK Init
-            ZaloPaySDK.init(2553, Environment.SANDBOX);
+        // ZaloPay SDK Init
+        ZaloPaySDK.init(2553, Environment.SANDBOX);
 
 
-            btnpay.setOnClickListener(view -> {
-                String dateRange = tvdate.getText().toString().trim();
-                if (dateRange.isEmpty() || !dateRange.contains("To:")) {
-                    Toast.makeText(this, "Vui lòng chọn ngày đặt phòng!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        btnpay.setOnClickListener(view -> {
+            String dateRange = tvdate.getText().toString().trim();
+            if (dateRange.isEmpty() || !dateRange.contains("To:")) {
+                Toast.makeText(this, "Vui lòng chọn ngày đặt phòng!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                String startDate = dateRange.split("To:")[0].replace("From:", "").trim();
-                String endDate = dateRange.split("To:")[1].trim();
+            String startDate = dateRange.split("To:")[0].replace("From:", "").trim();
+            String endDate = dateRange.split("To:")[1].trim();
 
-                // Lấy giá trị tổng tiền bằng cách loại bỏ "đ" nhưng giữ nguyên định dạng số tiền
-                String totalText = totalPrice.getText().toString().replace("đ", "").trim(); // Loại bỏ ký tự "đ"
-                float total;
-                try {
-                    total = Float.parseFloat(totalText.replace(".", "").trim());  // Loại bỏ dấu "." để chuyển thành float
-                } catch (NumberFormatException e) {
-                    Toast.makeText(this, "Lỗi định dạng tổng tiền!", Toast.LENGTH_SHORT).show();
-                    Log.e("PaymentActivity", "Error parsing total price: " + e.getMessage());
-                    return;
-                }
+            // Lấy giá trị tổng tiền bằng cách loại bỏ "đ" nhưng giữ nguyên định dạng số tiền
+            String totalText = totalPrice.getText().toString().replace("đ", "").trim(); // Loại bỏ ký tự "đ"
+            float total;
+            try {
+                total = Float.parseFloat(totalText.replace(".", "").trim());  // Loại bỏ dấu "." để chuyển thành float
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Lỗi định dạng tổng tiền!", Toast.LENGTH_SHORT).show();
+                Log.e("PaymentActivity", "Error parsing total price: " + e.getMessage());
+                return;
+            }
 
-                if (total <= 0) {
-                    Toast.makeText(this, "Invalid booking details", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            if (total <= 0) {
+                Toast.makeText(this, "Invalid booking details", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                // Kiểm tra phòng đã được đặt chưa
-                checkRoomAvailable(roomId, startDate, endDate, isAvailable -> {
-                    Log.d("kkk", "onCreate: "+isAvailable);
-                    if (isAvailable) {
-                        // Nếu phòng chưa được đặt, tiến hành thanh toán với ZaloPay
-                        int selectedPaymentMethod = paymentMethodsGroup.getCheckedRadioButtonId();
-                        if (selectedPaymentMethod == R.id.rb_pay_zalopay) {
-                            // Thực hiện thanh toán qua ZaloPay
-                            CreateOrder orderApi = new CreateOrder();
-                            try {
-                                JSONObject data = orderApi.createOrder(String.valueOf((long) total));
-                                String code = data.getString("return_code");
-                                if (code.equals("1")) {
-                                    String token = data.getString("zp_trans_token");
-                                    ZaloPaySDK.getInstance().payOrder(PaymentActivity.this, token, "demozpdk://app", new PayOrderListener() {
-                                        @Override
-                                        public void onPaymentSucceeded(String s, String s1, String s2) {
-                                            Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
-                                            intent1.putExtra("result", "Đặt phòng thành công!");
+            // Kiểm tra phòng đã được đặt chưa
+            checkRoomAvailable(roomId, startDate, endDate, isAvailable -> {
+                Log.d("kkk", "onCreate: " + isAvailable);
+                if (isAvailable) {
+                    // Nếu phòng chưa được đặt, tiến hành thanh toán với ZaloPay
+                    int selectedPaymentMethod = paymentMethodsGroup.getCheckedRadioButtonId();
+                    if (selectedPaymentMethod == R.id.rb_pay_zalopay) {
+                        // Thực hiện thanh toán qua ZaloPay
+                        CreateOrder orderApi = new CreateOrder();
+                        try {
+                            JSONObject data = orderApi.createOrder(String.valueOf((long) total));
+                            String code = data.getString("return_code");
+                            if (code.equals("1")) {
+                                String token = data.getString("zp_trans_token");
+                                ZaloPaySDK.getInstance().payOrder(PaymentActivity.this, token, "demozpdk://app", new PayOrderListener() {
+                                    @Override
+                                    public void onPaymentSucceeded(String s, String s1, String s2) {
+                                        Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
+                                        intent1.putExtra("result", "Đặt phòng thành công!");
 
-                                            // Cập nhật booking thành công
-                                            Booking booking = new Booking(userId, roomId, startDate, endDate, total);
-                                            Bill bill = new Bill(userId, roomId, startDate, endDate, total);
-                                            createBooking(booking);
+                                        // Cập nhật booking thành công
+                                        Booking booking = new Booking(userId, roomId, startDate, endDate, total);
+                                        Bill bill = new Bill(userId, roomId, startDate, endDate, total);
+                                        createBooking(booking);
 
-                                            createBill(bill);
-                                            // Điều hướng sang màn hình thông báo thanh toán thành công
-                                            startActivity(intent1);
-                                        }
+                                        createBill(bill);
+                                        // Điều hướng sang màn hình thông báo thanh toán thành công
+                                        startActivity(intent1);
+                                    }
 
-                                        @Override
-                                        public void onPaymentCanceled(String s, String s1) {
-                                            Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
-                                            intent1.putExtra("result", "Hủy thanh toán");
-                                            startActivity(intent1);
-                                        }
+                                    @Override
+                                    public void onPaymentCanceled(String s, String s1) {
+                                        Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
+                                        intent1.putExtra("result", "Hủy thanh toán");
+                                        startActivity(intent1);
+                                    }
 
-                                        @Override
-                                        public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
-                                            Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
-                                            intent1.putExtra("result", "Lỗi thanh toán");
-                                            startActivity(intent1);
-                                        }
-                                    });
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(this, "Error creating ZaloPay order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
+                                        Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
+                                        intent1.putExtra("result", "Lỗi thanh toán");
+                                        startActivity(intent1);
+                                    }
+                                });
                             }
-                        } else if (selectedPaymentMethod == R.id.rb_pay_cash) {
-                            // Xử lý thanh toán tiền mặt
-                            Booking booking = new Booking(userId, roomId, startDate, endDate, total);
-                            createBookingCash(booking);
-                        } else {
-                            Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, "Error creating ZaloPay order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                    } else if (selectedPaymentMethod == R.id.rb_pay_cash) {
+                        // Xử lý thanh toán tiền mặt
+                        Booking booking = new Booking(userId, roomId, startDate, endDate, total);
+                        createBookingCash(booking);
                     } else {
-                        Toast.makeText(PaymentActivity.this, "Phòng đã được đặt trong khoảng thời gian này.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
                     }
-                });
+                } else {
+                    Toast.makeText(PaymentActivity.this, "Phòng đã được đặt trong khoảng thời gian này.", Toast.LENGTH_SHORT).show();
+                }
             });
+        });
 
 
-
-
-            btnback.setOnClickListener(view1 -> onBackPressed());
+        btnback.setOnClickListener(view1 -> onBackPressed());
 
 
     }
@@ -291,8 +289,6 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
 
-
-
 // Trong phần xử lý giá phòng:
 
 
@@ -311,13 +307,13 @@ public class PaymentActivity extends AppCompatActivity {
                         String roomName = booking.getRoom().getName();
                         String startDate = booking.getStartDate();
                         String endDate = booking.getEndDate();
-                        String message = "Bạn đã đặt phòng " + roomName+" từ ngày "+startDate+" đến ngày "+endDate;
+                        String message = "Bạn đã đặt phòng " + roomName + " từ ngày " + startDate + " đến ngày " + endDate;
                         sendNotification(booking.getUserId(), message, "booking_confirmed");
-                        Toast.makeText(PaymentActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(PaymentActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
                         String bookingId = response.body().getData().getId();
                         updateBookingStatus(bookingId, "confirmed", "paid"); // Trạng thái đã xác nhận và đã thanh toán
                         Intent intent = new Intent(PaymentActivity.this, PaymentNotification.class);
-                        intent.putExtra("result", "Thanh toán thành cong");
+                        intent.putExtra("result", "Thanh toán thành công");
                         startActivity(intent);
                     } else {
                         Log.e("Booking", "Booking failed with no data in response.");
@@ -350,7 +346,7 @@ public class PaymentActivity extends AppCompatActivity {
             public void onResponse(Call<Response<Bill>> call, retrofit2.Response<Response<Bill>> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getData() != null) {
-                        Toast.makeText(PaymentActivity.this, "Bill successful!", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(PaymentActivity.this, "Bill successful!", Toast.LENGTH_SHORT).show();
                     } else {
                         Log.e("Booking", "Bill failed with no data in response.");
                         Toast.makeText(PaymentActivity.this, "Error: No data in Bill response", Toast.LENGTH_SHORT).show();
@@ -383,6 +379,7 @@ public class PaymentActivity extends AppCompatActivity {
             Toast.makeText(PaymentActivity.this, "Error generating VNPay URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -390,6 +387,7 @@ public class PaymentActivity extends AppCompatActivity {
         ZaloPaySDK.getInstance().onResult(intent);
         handleIncomingIntent(intent);
     }
+
     private void handleIncomingIntent(Intent intent) {
         if (intent != null && intent.hasExtra("room_id")) {
             roomId = intent.getStringExtra("room_id");
@@ -412,21 +410,21 @@ public class PaymentActivity extends AppCompatActivity {
             numberOfNights = 0;
             tvdate.setText("");
             tvPerson.setText("");
-            totalPrice.setText("0.00đ");
-            tvPriceDetails.setText("Giá phòng: 0.00đ\nSố ngày: 0\nGiá: 0.00đ");
+            totalPrice.setText("0đ");
+            tvPriceDetails.setText("Giá phòng: 0đ\nSố ngày: 0\nGiá: 0đ");
         }
     }
-    private void updateBookingStatus(String bookingId, String newStatus,String paymentStatus) {
+
+    private void updateBookingStatus(String bookingId, String newStatus, String paymentStatus) {
         HttpRequest httpRequest = new HttpRequest();
-        Call<Response<Booking>> call = httpRequest.callAPI().updateBookingStatus(bookingId, new Booking(newStatus,paymentStatus));
+        Call<Response<Booking>> call = httpRequest.callAPI().updateBookingStatus(bookingId, new Booking(newStatus, paymentStatus));
 
         call.enqueue(new Callback<Response<Booking>>() {
             @Override
             public void onResponse(Call<Response<Booking>> call, retrofit2.Response<Response<Booking>> response) {
                 if (response.isSuccessful()) {
                     // Kiểm tra và cập nhật thông tin của booking chỉ cần thiết
-
-                    Toast.makeText(PaymentActivity.this, "Trạng thái đã được cập nhật!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(PaymentActivity.this, "Trạng thái đã được cập nhật!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(PaymentActivity.this, "Không thể cập nhật trạng thái", Toast.LENGTH_SHORT).show();
                     Log.d("BookingStatus", "Response: " + response.body());
@@ -440,6 +438,7 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
     }
+
     private void createBookingCash(Booking booking) {
         // Khởi tạo Retrofit
         HttpRequest httpRequest = new HttpRequest();
@@ -455,11 +454,11 @@ public class PaymentActivity extends AppCompatActivity {
                         String roomName = booking.getRoom().getName();
                         String startDate = booking.getStartDate();
                         String endDate = booking.getEndDate();
-                        String message = "Bạn đã đặt phòng " + roomName+" từ ngày "+startDate+" đến ngày "+endDate;
+                        String message = "Bạn đã đặt phòng " + roomName + " từ ngày " + startDate + " đến ngày " + endDate;
                         sendNotification(booking.getUserId(), message, "booking_confirmed");
-                        Toast.makeText(PaymentActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(PaymentActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(PaymentActivity.this, PaymentNotification.class);
-                        intent.putExtra("result", "Thanh toán thành cong");
+                        intent.putExtra("result", "Gửi yêu cầu đặt phòng thành công");
                         startActivity(intent);
                     } else {
                         Log.e("Booking", "Booking failed with no data in response.");
@@ -478,6 +477,7 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
     }
+
     private void checkRoomAvailable(String roomId, String startDate, String endDate, CheckAvailabilityCallback callback) {
         // Gọi API hoặc truy vấn cơ sở dữ liệu để kiểm tra xem phòng đã được đặt chưa
         HttpRequest httpRequest = new HttpRequest();

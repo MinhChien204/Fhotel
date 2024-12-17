@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import learn.fpoly.fhotel.Model.Room;
 import learn.fpoly.fhotel.R;
@@ -41,7 +43,7 @@ public class SeelallAdapter  extends RecyclerView.Adapter<SeelallAdapter.SeeAllV
         Room room = SeelallDataList.get(position);
         holder.room_name.setText(room.getName());
         holder.room_code.setText(room.getRoom_code());
-        holder.price_room.setText(String.valueOf(room.getPrice() + "vnd/night"));
+        holder.price_room.setText(formatCurrency(room.getPrice()) + "/đêm");
         holder.ratingBar.setRating(room.getRating());
         Glide.with(context)
                 .load(room.getImage()) // URL của hình ảnh
@@ -88,5 +90,8 @@ public class SeelallAdapter  extends RecyclerView.Adapter<SeelallAdapter.SeeAllV
         notifyDataSetChanged(); // Thông báo cập nhật dữ liệu
     }
 
-
+    private String formatCurrency(double amount) {
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        return formatter.format(amount) + "đ";
+    }
 }

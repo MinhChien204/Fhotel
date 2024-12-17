@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -51,17 +52,17 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
         String userAddress = bill.getUser().getAddress();
         String userEmail = bill.getUser().getEmail();
         // Gán tên phòng
-        holder.tvUserName.setText("Tên người dùng: "+bill.getUser().getName());
+        holder.tvUserName.setText("Tên người dùng: " + bill.getUser().getName());
         holder.tvUserPhone.setText("Số điện thoại: " + (userPhone != null && !userPhone.isEmpty() ? userPhone : "Chưa có số điện thoại"));
         holder.tvUserAddress.setText("Địa chỉ: " + (userAddress != null && !userAddress.isEmpty() ? userAddress : "Chưa có địa chỉ"));
         holder.tvUserEmail.setText("Email: " + (userEmail != null && !userEmail.isEmpty() ? userEmail : "Chưa có email"));
 
-        holder.tvRoomName.setText("Tên phòng: "+bill.getRoom().getName());
-        holder.tvRoomPrice.setText("Giá phòng: "+bill.getRoom().getPrice()+"VND");
-        holder.tvRoomCode.setText("Mã phòng: "+bill.getRoom().getRoom_code());
-        holder.tvStartDate.setText("Ngày bắt đầu: "+bill.getStartDate());
-        holder.tvEndDate.setText("Ngày kết thúc: "+bill.getEndDate());
-        holder.tvTotalPrice.setText("Tổng giá: "+bill.getTotalPrice()+"VND");
+        holder.tvRoomName.setText("Tên phòng: " + bill.getRoom().getName());
+        holder.tvRoomPrice.setText("Giá phòng: " + formatCurrency(bill.getRoom().getPrice()));
+        holder.tvRoomCode.setText("Mã phòng: " + bill.getRoom().getRoom_code());
+        holder.tvStartDate.setText("Ngày bắt đầu: " + bill.getStartDate());
+        holder.tvEndDate.setText("Ngày kết thúc: " + bill.getEndDate());
+        holder.tvTotalPrice.setText("Tổng giá: " + formatCurrency(bill.getTotalPrice()));
         if ("paid".equalsIgnoreCase(bill.getPaymentStatus())) {
             holder.tvPaymentStatus.setText("Trạng thái: Đã thanh toán");
             holder.tvPaymentStatus.setTextColor(Color.GREEN);
@@ -72,9 +73,6 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
             holder.tvPaymentStatus.setText("Trạng thái thanh toán: Không xác định");
             holder.tvPaymentStatus.setTextColor(Color.GRAY);
         }
-
-
-
     }
 
     @Override
@@ -83,7 +81,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
     }
 
     public class BillViewHolder extends RecyclerView.ViewHolder {
-        TextView tvUserName, tvUserPhone,tvUserAddress,tvUserEmail,tvRoomName,tvRoomPrice,tvRoomCode,tvStartDate,tvEndDate,tvTotalPrice,tvPaymentStatus;
+        TextView tvUserName, tvUserPhone, tvUserAddress, tvUserEmail, tvRoomName, tvRoomPrice, tvRoomCode, tvStartDate, tvEndDate, tvTotalPrice, tvPaymentStatus;
 
         public BillViewHolder(View itemView) {
             super(itemView);
@@ -100,6 +98,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
             tvPaymentStatus = itemView.findViewById(R.id.tvPaymentStatus);
         }
     }
+
     private String formatDate(String isoDate) {
         try {
 
@@ -118,4 +117,8 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
         }
     }
 
+    private String formatCurrency(double amount) {
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        return formatter.format(amount) + "đ";
+    }
 }

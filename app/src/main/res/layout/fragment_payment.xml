@@ -22,7 +22,7 @@
             android:layout_gravity="start"
             android:contentDescription="Back button"
             android:padding="8dp"
-            android:src="@drawable/ic_arrow_back_black_24dp"/>
+            android:src="@drawable/ic_arrow_back_black_24dp" />
 
         <!-- Tiêu đề -->
         <TextView
@@ -81,37 +81,23 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <!-- Hàng hiển thị đánh giá -->
 
-                        <!-- Số đánh giá -->
-                      <LinearLayout
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:orientation="horizontal">
-                          <RatingBar
-                              android:id="@+id/ratingBarPayment"
-                              style="@style/Widget.AppCompat.RatingBar.Small"
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:isIndicator="false"
-                              android:numStars="5"
-                              android:progressBackgroundTint="@android:color/darker_gray"
-                              android:progressTint="@android:color/holo_orange_light"
-                              android:rating="4.5"
-                              android:scaleX="1.0"
-                              android:scaleY="1.1"
-                              android:secondaryProgressTint="@android:color/holo_orange_light"
-                              android:stepSize="0.5" />
-                          <TextView
-                              android:id="@+id/ratingText"
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:text=" (115 Reviews)"
-                              android:textColor="#FF9800"
-                              android:textSize="12sp"
-                              android:textStyle="bold" />
+                        <RatingBar
+                            android:id="@+id/ratingBarPayment"
+                            style="@style/Widget.AppCompat.RatingBar.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:isIndicator="false"
+                            android:numStars="5"
+                            android:progressBackgroundTint="@android:color/darker_gray"
+                            android:progressTint="@android:color/holo_orange_light"
+                            android:rating="4.5"
+                            android:scaleX="1.0"
+                            android:scaleY="1.1"
+                            android:secondaryProgressTint="@android:color/holo_orange_light"
+                            android:stepSize="0.5" />
 
-                      </LinearLayout>
+
                         <!-- Tên khách sạn -->
                         <TextView
                             android:id="@+id/titleText"
@@ -154,31 +140,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:fontFamily="serif"
-                android:textSize="18dp"
                 android:text="Chi tiết đơn đặt phòng"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="17.5dp"
-                    android:textColor="@color/black"
                     android:layout_margin="5dp"
-                    android:text="Chọn ngày"/>
+                    android:text="Chọn ngày"
+                    android:textColor="@color/black"
+                    android:textSize="17.5dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/dates"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="7dp"
-                    android:hint="dd / mm / yyyy"
                     android:drawableEnd="@drawable/ic_editpayment"
                     android:fontFamily="@font/arimo_semibold"
+                    android:hint="dd / mm / yyyy"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
             </LinearLayout>
@@ -187,27 +174,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="17.5dp"
-                    android:textColor="@color/black"
                     android:layout_margin="5dp"
-                    android:text="Khách (tùy chọn)"/>
+                    android:text="Khách (tùy chọn)"
+                    android:textColor="@color/black"
+                    android:textSize="17.5dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/guests"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="7dp"
                     android:layout_marginTop="8dp"
                     android:drawableEnd="@drawable/ic_editpayment"
-                    android:hint="Adults | Children | Infants"
                     android:fontFamily="@font/arimo_semibold"
+                    android:hint="Adults | Children | Infants"
                     android:textColor="@color/black"
                     android:textSize="15dp"
-                    android:textStyle="bold"
-                    android:layout_margin="7dp"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Payment Options Section -->
@@ -216,16 +204,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:fontFamily="serif"
-                android:textSize="18dp"
                 android:text="Phương thức thanh toán"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
             <RadioGroup
                 android:id="@+id/payment_methods_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
 
                 <RadioButton
                     android:id="@+id/rb_pay_zalopay"
@@ -233,11 +221,11 @@
                     android:layout_height="wrap_content"
                     android:text="Thanh toán qua ZaloPay" />
 
-<!--                <RadioButton-->
-<!--                    android:id="@+id/rb_pay_vnpay"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Thanh toán qua VNPay" />-->
+                <!--                <RadioButton-->
+                <!--                    android:id="@+id/rb_pay_vnpay"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:text="Thanh toán qua VNPay" />-->
 
                 <RadioButton
                     android:id="@+id/rb_pay_cash"
@@ -248,65 +236,65 @@
 
 
             <!-- Payment Method Section -->
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="24dp"-->
-<!--                android:fontFamily="serif"-->
-<!--                android:text="Pay with"-->
-<!--                android:textSize="18dp"-->
-<!--                android:textStyle="bold" />-->
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="24dp"-->
+            <!--                android:fontFamily="serif"-->
+            <!--                android:text="Pay with"-->
+            <!--                android:textSize="18dp"-->
+            <!--                android:textStyle="bold" />-->
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="horizontal">-->
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:gravity="center_vertical"-->
+            <!--                android:orientation="horizontal">-->
 
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:id="@+id/rcv_visapayment"-->
-<!--                    android:layout_width="280dp"-->
-<!--                    android:layout_height="wrap_content"/>-->
+            <!--                <androidx.recyclerview.widget.RecyclerView-->
+            <!--                    android:id="@+id/rcv_visapayment"-->
+            <!--                    android:layout_width="280dp"-->
+            <!--                    android:layout_height="wrap_content"/>-->
 
-<!--                &lt;!&ndash; Thêm một khoảng trống đẩy nút "Add" về cuối &ndash;&gt;-->
-<!--                <Space-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1" />-->
+            <!--                &lt;!&ndash; Thêm một khoảng trống đẩy nút "Add" về cuối &ndash;&gt;-->
+            <!--                <Space-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_weight="1" />-->
 
-<!--                <androidx.appcompat.widget.AppCompatButton-->
-<!--                    android:id="@+id/add_payment"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="8dp"-->
-<!--                    android:background="@drawable/search_bg"-->
-<!--                    android:backgroundTint="@color/primaryColor"-->
-<!--                    android:text="Add"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textSize="14sp"-->
-<!--                    android:textStyle="bold" />-->
-<!--            </LinearLayout>-->
+            <!--                <androidx.appcompat.widget.AppCompatButton-->
+            <!--                    android:id="@+id/add_payment"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginStart="8dp"-->
+            <!--                    android:background="@drawable/search_bg"-->
+            <!--                    android:backgroundTint="@color/primaryColor"-->
+            <!--                    android:text="Add"-->
+            <!--                    android:textColor="@color/white"-->
+            <!--                    android:textSize="14sp"-->
+            <!--                    android:textStyle="bold" />-->
+            <!--            </LinearLayout>-->
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical">-->
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:orientation="vertical">-->
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="horizontal">-->
-<!--                    <ImageView-->
-<!--                        android:layout_width="40dp"-->
-<!--                        android:layout_height="40dp"-->
-<!--                        android:src="@drawable/promotion"/>-->
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="Thêm voucher"/>-->
-<!--                </LinearLayout>-->
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:orientation="horizontal">-->
+            <!--                    <ImageView-->
+            <!--                        android:layout_width="40dp"-->
+            <!--                        android:layout_height="40dp"-->
+            <!--                        android:src="@drawable/promotion"/>-->
+            <!--                    <TextView-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:text="Thêm voucher"/>-->
+            <!--                </LinearLayout>-->
 
-<!--            </LinearLayout>-->
+            <!--            </LinearLayout>-->
 
             <!-- Price Details Section -->
             <TextView

@@ -47,7 +47,7 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentsV
         Room room = recentsDataList.get(position);
         holder.room_name.setText(room.getName());
         holder.room_code.setText(room.getRoom_code());
-        holder.price_room.setText(formatCurrency(room.getPrice()) + "/night");
+        holder.price_room.setText(formatCurrency(room.getPrice()) + "/đêm");
 
         holder.ratingBar.setRating(room.getRating());
         Glide.with(context)

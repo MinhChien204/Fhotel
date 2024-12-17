@@ -54,15 +54,25 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!-- Địa điểm -->
-            <TextView
-                android:id="@+id/room_code"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Mumbai, Maharashtra"
-                android:textColor="#666666"
-                android:textSize="14sp" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/room_code" />
+
+                <TextView
+                    android:id="@+id/room_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mumbai, Maharashtra"
+                    android:textColor="#808080"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <!-- Giá -->
             <TextView
