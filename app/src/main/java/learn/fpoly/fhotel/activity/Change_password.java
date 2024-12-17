@@ -110,7 +110,8 @@ public class Change_password extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
                 if (response.isSuccessful()) {
-                    createPasswordChangeNotification();
+                    // Gửi thông báo sau khi đổi mật khẩu thành công
+                    sendNotification(userId, "Bạn đã thay đổi mật khẩu.", "password_change");
                     Toast.makeText(Change_password.this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
                     navigateToLogin();
                 } else {
@@ -124,6 +125,7 @@ public class Change_password extends AppCompatActivity {
             }
         });
     }
+
     private void navigateToLogin() {
         // Khởi tạo Intent để chuyển hướng đến màn hình login
         Intent intent = new Intent(Change_password.this, Login.class);
@@ -137,6 +139,35 @@ public class Change_password extends AppCompatActivity {
         // Kết thúc màn hình hiện tại
         finish();
     }
+
+    private void sendNotification(String userId, String message, String type) {
+        // Chuẩn bị thông tin thông báo
+        Notification notification = new Notification();
+        notification.setUserId(userId);
+        notification.setMessage(message);
+        notification.setType(type);
+
+        // Gọi API thêm thông báo
+        HttpRequest httpRequest = new HttpRequest();
+        Call<Response<Notification>> notificationCall = httpRequest.callAPI().createNotification(notification);
+
+        notificationCall.enqueue(new Callback<Response<Notification>>() {
+            @Override
+            public void onResponse(Call<Response<Notification>> call, retrofit2.Response<Response<Notification>> response) {
+                if (response.isSuccessful()) {
+                    Log.d("Notification", "Notification created successfully");
+                } else {
+                    Log.e("Notification", "Failed to create notification");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Notification>> call, Throwable t) {
+                Log.e("Notification", "Error: " + t.getMessage());
+            }
+        });
+    }
+
 
     private void createPasswordChangeNotification() {
         Notification notification = new Notification();

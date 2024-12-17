@@ -73,7 +73,7 @@ function displayRooms(rooms) {
       room.name
     }" width="100" height="100" /></td>
       <td>${room.name}</td>
-      <td>${room.price}đ</td>
+      <td>${room.price.toLocaleString()} VND</td>
       <td>${stars}</td>
       
       <td style="text-align:center">${room.room_code}</td>

@@ -107,8 +107,6 @@ Form.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const name = document.getElementById("name").value;
-    const price = document.getElementById("price").value;
-    const description = document.getElementById("description").value;
     const serviceId = document.getElementById("serviceId").value;  // Lấy serviceId
     if (!name || !price) {
         alert("Name and Price are required!");
@@ -117,8 +115,6 @@ Form.addEventListener("submit", (event) => {
 
     const serviceData = new FormData(Form);
     serviceData.append('name', name);
-    serviceData.append('price', price);
-    serviceData.append('description', description);
 
     // Thêm các hình ảnh vào FormData (nếu có)
     imageFiles.forEach((image) => {

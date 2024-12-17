@@ -73,10 +73,10 @@
       <nav>
         <i class="bx bx-menu"></i>
         <a href="#" class="nav-link">Booking</a>
-        <form action="#">
+        <form >
           <div class="form-input">
             <input type="search" placeholder="Search..." />
-            <button type="submit" class="search-btn"><i
+            <button  class="search-btn"><i
                 class="bx bx-search"
               ></i></button>
           </div>
@@ -100,19 +100,20 @@
             <h1>Quản Lí Booking</h1>
           </div>
           <div>
-            <form action="#" id="searchForm">
-  <div>
-    <label for="startDate">Start Date:</label>
-    <input type="date" id="startDate" name="startDate" />
-  </div>
-  <div>
-    <label for="endDate">End Date:</label>
-    <input type="date" id="endDate" name="endDate" />
-  </div>
-  <button type="submit" class="search-btn">
-    <i class="bx bx-search"></i> Search
-  </button>
-</form>
+            <form id="searchForm">
+            <div>
+              <label for="startDate">Start Date:</label>
+              <input type="date" id="startDate" name="startDate" required />
+            </div>
+            <div>
+              <label for="endDate">End Date:</label>
+              <input type="date" id="endDate" name="endDate" required />
+            </div>
+            <button type="submit" class="search-btn">
+              <i class="bx bx-search"></i> Search
+            </button>
+          </form>
+
           </div>
         </div>
 

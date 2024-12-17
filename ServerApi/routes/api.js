@@ -37,24 +37,7 @@ admin.initializeApp({
   credential: admin.credential.cert(__dirname + '/../config/serviceAccountKey.json'), // Điều chỉnh đường dẫn
 });
 
-const sendAdminNotification = async (title, body) => {
-  const adminFCMToken = "admin-fcm-token";  // Lấy FCM token của quản trị viên từ database
 
-  const message = {
-    notification: {
-      title: title,
-      body: body,
-    },
-    token: adminFCMToken,  // Token của người quản trị
-  };
-
-  try {
-    const response = await admin.messaging().send(message);
-    console.log("Notification sent to admin successfully:", response);
-  } catch (error) {
-    console.error("Error sending notification to admin:", error);
-  }
-};
 
 const sendNotification = async (fcmToken, title, body, data = {}) => {
   const message = {
@@ -256,6 +239,13 @@ router.put("/update_password/:id", async (req, res) => {
     // Cập nhật mật khẩu mới
     user.password = newPassword;
     await user.save();
+
+    // Gửi thông báo FCM
+    if (user.fcmToken) {
+      const title = "Đổi mật khẩu";
+      const body = "Bạn đã đổi mật khẩu thành công vui lòng đăng nhập lại.";
+      await sendNotification(user.fcmToken, title, body); // Gửi thông báo
+    }
 
     res.status(200).json({
       message: "Password updated successfully",
@@ -1805,24 +1795,32 @@ router.get('/searchbookings', async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
-    // Tạo điều kiện lọc nếu có khoảng thời gian
-    const filter = {};
-    if (startDate && endDate) {
-      filter.startDate = { $gte: new Date(startDate) };
-      filter.endDate = { $lte: new Date(endDate) };
+    if (!startDate || !endDate) {
+      return res.status(400).json({ message: "Vui lòng cung cấp cả ngày bắt đầu và ngày kết thúc." });
     }
+
+    console.log("Received Start Date:", startDate);
+    console.log("Received End Date:", endDate);
+
+    const filter = {
+      startDate: { $gte: new Date(startDate) },
+      endDate: { $lte: new Date(endDate) },
+    };
 
     const bookings = await Booking.find(filter)
       .populate("userId", "name email phonenumber avatar")
       .populate("roomId", "name price")
       .exec();
 
+    console.log("Filtered Bookings:", bookings);
     res.status(200).json(bookings);
   } catch (err) {
-    console.error(err);
+    console.error("Lỗi khi tìm kiếm booking theo ngày:", err);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+
 
 router.get("/revenue-by-room", async (req, res) => {
   try {

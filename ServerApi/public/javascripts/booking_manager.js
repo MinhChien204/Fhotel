@@ -13,7 +13,7 @@ async function fetchBookings() {
           <td>${index + 1}</td>
           <td>${booking.userId?.name || "Unknown "}</td>
           <td>${booking.roomId?.name || "Unknown "}</td>
-          <td>${booking.totalPrice}đ</td>
+          <td>${booking.totalPrice.toLocaleString()} VND</td>
           <td>${booking.startDate}</td>
           <td>${booking.endDate}</td>
           <td>${booking.userId?.phonenumber}</td>
@@ -163,54 +163,57 @@ function closeNotification(closeButton) {
 
 //tìm kiếm theo ngày
 document.getElementById("searchForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-  
+  e.preventDefault(); // Ngăn chặn hành vi mặc định của Form
+
   const startDate = document.getElementById("startDate").value;
   const endDate = document.getElementById("endDate").value;
 
-  fetchSearchBookings(startDate, endDate); // Gửi yêu cầu tìm kiếm
+  if (!startDate || !endDate) {
+    alert("Vui lòng nhập đầy đủ ngày bắt đầu và ngày kết thúc.");
+    return;
+  }
+
+  console.log("Start Date:", startDate, "End Date:", endDate); // Kiểm tra trên console
+  fetchSearchBookings(startDate, endDate); // Gọi hàm tìm kiếm
 });
+
+
 
 async function fetchSearchBookings(startDate = "", endDate = "") {
   try {
-    const url = new URL("/api/searchbookings");
-    if (startDate && endDate) {
-      url.searchParams.append("startDate", startDate);
-      url.searchParams.append("endDate", endDate);
+    console.log("Fetching search results:", startDate, endDate); // Kiểm tra xem hàm có được gọi không
+
+    const url = `/api/searchbookings?startDate=${startDate}&endDate=${endDate}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch bookings");
     }
 
-    const response = await fetch(url); // Fetch data with date range parameters
     const bookings = await response.json();
+    console.log("Fetched Bookings:", bookings); // Kiểm tra phản hồi từ API
 
     const tableBody = document.getElementById("BookingTableBody");
-    tableBody.innerHTML = ""; // Clear the table before rendering
+    tableBody.innerHTML = ""; // Xóa bảng trước khi render mới
 
     bookings.forEach((booking, index) => {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${index + 1}</td>
-        <td>${booking.userId?.name || "Unknown "}</td>
-        <td>${booking.roomId?.name || "Unknown "}</td>
-        <td>${booking.totalPrice}đ</td>
-        <td>${booking.startDate}</td>
-        <td>${booking.endDate}</td>
-        <td>${booking.userId?.phonenumber}</td>
-        <td>
-          <select
-            class="status-dropdown"
-            data-booking-id="${booking._id}"
-            onchange="updateBookingStatus('${booking._id}', this.value)"
-          >
-            <option value="pending" ${booking.status === "pending" ? "selected" : ""}>Pending</option>
-            <option value="confirmed" ${booking.status === "confirmed" ? "selected" : ""}>Confirmed</option>
-            <option value="cancelled" ${booking.status === "cancelled" ? "selected" : ""}>Cancelled</option>
-          </select>
-        </td>
-        <td></td>
+        <td>${booking.userId?.name || "Unknown"}</td>
+        <td>${booking.roomId?.name || "Unknown"}</td>
+        <td>${booking.totalPrice.toLocaleString()} VND</td>
+        <td>${new Date(booking.startDate).toLocaleDateString("vi-VN")}</td>
+        <td>${new Date(booking.endDate).toLocaleDateString("vi-VN")}</td>
+        <td>${booking.userId?.phonenumber || "Unknown"}</td>
+        <td>${booking.status}</td>
       `;
       tableBody.appendChild(row);
     });
   } catch (error) {
-    console.error("Failed to fetch bookings:", error);
+    console.error("Lỗi khi tìm kiếm booking:", error);
+    alert("Không thể tìm kiếm booking theo ngày.");
   }
 }
+
+
