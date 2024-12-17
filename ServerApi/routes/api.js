@@ -24,9 +24,9 @@ const Voucher = require("../models/vouchers");
 const Booking = require("../models/booking");
 const TypeRooms = require("../models/typeRooms");
 const Favourite = require("../models/favourite");
-const UserVoucher=require("../models/uservoucher");
-const Notification=require("../models/notification");
-const Bill=require("../models/bill");
+const UserVoucher = require("../models/uservoucher");
+const Notification = require("../models/notification");
+const Bill = require("../models/bill");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
@@ -711,50 +711,50 @@ router.post("/login", async (req, res) => {
 router.post('/login/google', async (req, res) => {
   const { idToken } = req.body;
 
- 
+
   try {
-      // Xác thực token
-        if (!idToken) {
-          return res.status(400).json({ message: 'ID Token is required' });
-        }
-      const ticket = await client.verifyIdToken({
-          idToken: idToken,
-          audience: process.env.GOOGLE_CLIENT_ID,
+    // Xác thực token
+    if (!idToken) {
+      return res.status(400).json({ message: 'ID Token is required' });
+    }
+    const ticket = await client.verifyIdToken({
+      idToken: idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { sub, email, name, picture } = payload;
+    console.log(sub);
+
+    // Kiểm tra xem người dùng đã tồn tại trong MongoDB chưa
+    let user = await User.findOne({ username: sub });
+    if (!user) {
+      // Nếu chưa tồn tại, tạo người dùng mới
+      user = new User({
+        username: sub,
+        email,
+        name,
+        gender: "",
+        address: "",
+        birthday: "",
+        avatar: picture,
+        phonenumber: "",
+        role: 1,
       });
-      const payload = ticket.getPayload();
-      const { sub,email, name, picture } = payload;
-console.log(sub);
+      await user.save();
+    }
 
-      // Kiểm tra xem người dùng đã tồn tại trong MongoDB chưa
-      let user = await User.findOne({ username:sub });
-      if (!user) {
-          // Nếu chưa tồn tại, tạo người dùng mới
-          user = new User({
-              username: sub,
-              email,
-              name,
-              gender: "",
-              address: "",
-              birthday: "",
-              avatar: picture,
-              phonenumber: "",
-              role: 1, 
-          });
-          await user.save();
-      }
+    // Tạo token JWT cho phiên đăng nhập
+    const accessToken = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
 
-      // Tạo token JWT cho phiên đăng nhập
-      const accessToken = jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
-
-      res.status(200).json({
-          status: 200,
-          message: 'Login successful',
-          data: user,
-          token: accessToken,
-      });
+    res.status(200).json({
+      status: 200,
+      message: 'Login successful',
+      data: user,
+      token: accessToken,
+    });
   } catch (error) {
-      console.error('Google login error:', error);
-      res.status(500).json({ message: 'Login failed', error: error.message });
+    console.error('Google login error:', error);
+    res.status(500).json({ message: 'Login failed', error: error.message });
   }
 });
 router.post('/login/facebook', async (req, res) => {
@@ -1071,8 +1071,8 @@ router.post("/book_room", async (req, res) => {
         name: room.name,
         price: room.price,
         image: room.image,
-        description: room.description,   
-        status: room.status,           
+        description: room.description,
+        status: room.status,
       },
     };
     res.status(201).json({ message: "Room booked successfully", data: bookingWithRoom });
@@ -1098,19 +1098,19 @@ router.put("/update-status-booking/:id", async (req, res) => {
     const user = await User.findById(booking.userId);
 
     // Gửi thông báo cho người dùng khi admin xác nhận
-    if (user.fcmToken&& booking.status=="confirmed") {
+    if (user.fcmToken && booking.status == "confirmed") {
       sendNotification(
         user.fcmToken,
         "Xác nhận đặt phòng",
         `Bạn đã đặt phòng từ ${booking.startDate} đến ${booking.endDate}.`
       );
-    }else if(user.fcmToken && booking.status=="cancelled"){
+    } else if (user.fcmToken && booking.status == "cancelled") {
       sendNotification(
         user.fcmToken,
         "Hủy đặt phòng",
         `Bạn đã hủy đặt phòng từ ${booking.startDate} đến ${booking.endDate}.`
       );
-    }else{
+    } else {
       sendNotification(
         user.fcmToken,
         "Trạng thái đặt phòng",
@@ -1127,18 +1127,18 @@ router.post("/update-fcm-token", async (req, res) => {
   const { userId, fcmToken } = req.body;
 
   try {
-      const user = await User.findById(userId);
-      if (!user) {
-          return res.status(404).json({ message: "User not found" });
-      }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-      // Cập nhật FCM Token
-      user.fcmToken = fcmToken;
-      await user.save();
+    // Cập nhật FCM Token
+    user.fcmToken = fcmToken;
+    await user.save();
 
-      res.status(200).json({ message: "FCM Token updated successfully" });
+    res.status(200).json({ message: "FCM Token updated successfully" });
   } catch (error) {
-      res.status(500).json({ message: "Error updating FCM Token", error: error.message });
+    res.status(500).json({ message: "Error updating FCM Token", error: error.message });
   }
 });
 
@@ -1161,7 +1161,7 @@ router.get("/check-fcm-token/:userId", async (req, res) => {
 // Lấy tất cả bookings của user
 router.get("/user/:userId/bookings", async (req, res) => {
   try {
-    const { userId } = req.params; 
+    const { userId } = req.params;
 
     // Truy vấn tất cả các booking của user
     const bookings = await Booking.find({ userId }).sort({ createdAt: -1 });
@@ -1183,7 +1183,7 @@ router.get("/user/:userId/bookings", async (req, res) => {
     // Kết hợp thông tin phòng vào mỗi booking, loại bỏ trường 'services'
     const bookingsWithRooms = bookings.map(booking => {
       const room = rooms.find(room => room._id.toString() === booking.roomId.toString());
-      
+
       // Loại bỏ trường 'services' khỏi phòng
       const roomWithoutServices = { ...room.toObject() };
       delete roomWithoutServices.services;
@@ -1286,8 +1286,8 @@ router.get("/bookings/:id", async (req, res) => {
         name: room.name,
         price: room.price,
         image: room.image,
-        description: room.description,   
-        status: room.status,           
+        description: room.description,
+        status: room.status,
       },
     };
 
@@ -1473,7 +1473,7 @@ router.delete("/delete_Favourite/:id", async (req, res) => {
 router.get("/get-notification/:id", async (req, res) => {
   const { userId } = req.query;
   console.log(userId);
-  
+
   try {
     const notifications = await Notification.find({ userId: userId }).sort({ createdAt: -1 });
     if (!notifications || notifications.length === 0) {
@@ -1507,7 +1507,7 @@ router.get("/notifications", async (req, res) => {
 //API add notification
 router.post("/add_notification", async (req, res) => {
   try {
-    const { userId, message,type } = req.body;
+    const { userId, message, type } = req.body;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -1574,9 +1574,9 @@ router.get("/top-rooms", async (req, res) => {
 router.get('/search-rooms', async (req, res) => {
   try {
     const { query } = req.query;
-    const rooms = await Room.find({ 
+    const rooms = await Room.find({
       name: { $regex: query, $options: "i" }
-    }).select("name image"); 
+    }).select("name image");
 
     res.status(200).json({
       status: 200,
@@ -1609,8 +1609,8 @@ router.post("/create_bill", async (req, res) => {
       startDate,
       endDate,
       totalPrice,
-      status:"confirmed",
-      paymentStatus:"paid"
+      status: "confirmed",
+      paymentStatus: "paid"
     });
 
     const savedBill = await newBill.save();
@@ -1622,7 +1622,7 @@ router.post("/create_bill", async (req, res) => {
 });
 router.get("/user/:userId/bills", async (req, res) => {
   try {
-    const { userId } = req.params; 
+    const { userId } = req.params;
 
     // Truy vấn tất cả các booking của user
     const bills = await Bill.find({ userId }).sort({ createdAt: -1 });
@@ -1643,14 +1643,14 @@ router.get("/user/:userId/bills", async (req, res) => {
       return res.status(200).json({ message: "No rooms found for the bookings", data: [] });
     }
 
-    
+
     const billsWithRooms = bills.map(bill => {
       const room = rooms.find(room => room._id.toString() === bill.roomId.toString());
       const user = users.find(user => user._id.toString() === bill.userId.toString());
       const roomWithoutServices = { ...room.toObject() };
       delete roomWithoutServices.services;
 
-      return { ...bill.toObject(), room: roomWithoutServices,user:user }; 
+      return { ...bill.toObject(), room: roomWithoutServices, user: user };
     });
 
     res.status(200).json({
@@ -1666,8 +1666,10 @@ router.get("/user/:userId/bills", async (req, res) => {
 router.get('/bills', async (req, res) => {
   try {
     // Lấy danh sách phòng và populate thông tin dịch vụ
-    const bills = await Bill.find();
-
+    const bills = await Bill.find()
+      .populate("userId", "name") 
+      .populate("roomId", "name")
+      .exec();
     // Nếu thành công, trả về kết quả
     res.status(200).json({
       status: 200,
@@ -1684,7 +1686,7 @@ router.get('/bills', async (req, res) => {
 
 router.get("/check_room_availability", async (req, res) => {
   const { roomId, startDate, endDate } = req.query;
-console.log(roomId);
+  console.log(roomId);
 
   try {
     const room = await Room.findById(roomId);
@@ -1710,7 +1712,7 @@ console.log(roomId);
   }
 });
 
-router.get("/searchUsersByName"),async (req, res) => {
+router.get("/searchUsersByName"), async (req, res) => {
   try {
     const { name } = req.query; // Lấy tên từ query parameter
     const users = await User.find({
@@ -1723,6 +1725,75 @@ router.get("/searchUsersByName"),async (req, res) => {
     res.status(500).json({ message: "Lỗi khi tìm kiếm người dùng" });
   }
 };
+//thongke
+router.get("/bookings-by-date", async (req, res) => {
+  try {
+    const bookingsByDate = await Booking.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+    res.json(bookingsByDate);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
+router.get("/revenue-by-room", async (req, res) => {
+  try {
+    const revenueByRoom = await Booking.aggregate([
+      { $match: { status: "confirmed" } },
+      { $group: { _id: "$roomId", totalRevenue: { $sum: "$totalPrice" } } },
+      { $lookup: { from: "rooms", localField: "_id", foreignField: "_id", as: "roomInfo" } },
+      { $unwind: "$roomInfo" },
+      { $project: { "roomInfo.name": 1, "roomInfo.image": 1, totalRevenue: 1 } },
+      { $sort: { totalRevenue: -1 } }
+    ]);
+    res.json(revenueByRoom);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/total-revenue", async (req, res) => {
+  try {
+    const revenue = await Booking.aggregate([
+      { $match: { status: "confirmed" } },
+      { $group: { _id: null, totalRevenue: { $sum: "$totalPrice" } } }
+    ]);
+    res.json(revenue.length > 0 ? revenue[0] : { totalRevenue: 0 });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+router.get("/booking-stats", async (req, res) => {
+  try {
+    const stats = await Booking.aggregate([
+      { $group: { _id: "$status", count: { $sum: 1 } } }
+    ]);
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+router.get("/popular-rooms", async (req, res) => {
+  try {
+    const popularRooms = await Booking.aggregate([
+      { $group: { _id: "$roomId", bookings: { $sum: 1 } } },
+      { $lookup: { from: "rooms", localField: "_id", foreignField: "_id", as: "roomInfo" } },
+      { $unwind: "$roomInfo" },
+      { $project: { "roomInfo.name": 1, "roomInfo.image": 1, bookings: 1 } },
+      { $sort: { bookings: -1 } },
+      { $limit: 5 }
+    ]);
+    res.json(popularRooms);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;
