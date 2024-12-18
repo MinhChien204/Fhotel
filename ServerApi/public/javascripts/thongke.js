@@ -85,7 +85,7 @@ async function fetchStats() {
             });
 
             // Cập nhật bảng doanh thu
-            document.getElementById('revenue-stats').innerHTML = revenueHTML;
+            // document.getElementById('revenue-stats').innerHTML = revenueHTML;
 
             // Cập nhật tổng doanh thu
             const totalRevenue = revenueStats.reduce((total, stat) => total + stat.totalRevenue, 0);
