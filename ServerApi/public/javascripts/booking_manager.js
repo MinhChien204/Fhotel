@@ -23,9 +23,9 @@ async function fetchBookings() {
               data-booking-id="${booking._id}"
               onchange="updateBookingStatus('${booking._id}', this.value)"
             >
-              <option value="pending" ${booking.status === "pending" ? "selected" : ""}>Pending</option>
-              <option value="confirmed" ${booking.status === "confirmed" ? "selected" : ""}>Confirmed</option>
-              <option value="cancelled" ${booking.status === "cancelled" ? "selected" : ""}>Cancelled</option>
+              <option value="pending" ${booking.status === "pending" ? "selected" : ""}>Chờ xử ký</option>
+              <option value="confirmed" ${booking.status === "confirmed" ? "selected" : ""}>Đã xác nhận</option>
+              <option value="cancelled" ${booking.status === "cancelled" ? "selected" : ""}>Huỷ</option>
             </select>
           </td>
           <td>   

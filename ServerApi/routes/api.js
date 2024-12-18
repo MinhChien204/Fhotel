@@ -1083,46 +1083,76 @@ router.post("/book_room", async (req, res) => {
 // Cập nhật trạng thái booking
 router.put("/update-status-booking/:id", async (req, res) => {
   const { id } = req.params;
-  const { status, paymentStatus } = req.body;
+  const { status } = req.body;
   try {
     const booking = await Booking.findById(id);
     if (!booking) {
       return res.status(404).json({ message: "Không tìm thấy booking" });
     }
 
+    // Cập nhật trạng thái booking
     booking.status = status;
-    booking.paymentStatus = paymentStatus;
     const updatedBooking = await booking.save();
 
+    // Tìm người dùng và phòng liên quan đến booking
     const user = await User.findById(booking.userId);
+    const room = await Room.findById(booking.roomId);
+
+    if (!user || !room) {
+      return res.status(404).json({ message: "User or Room not found" });
+    }
 
     // Gửi thông báo cho người dùng khi admin xác nhận
-    if (user.fcmToken && booking.status == "confirmed") {
+    if (user.fcmToken && booking.status === "confirmed") {
       sendNotification(
         user.fcmToken,
         "Xác nhận đặt phòng",
-        `Bạn đã đặt phòng từ ${booking.startDate} đến ${booking.endDate}.`
+        `Đặt phòng của bạn từ ${booking.startDate} đến ${booking.endDate} đã được xác nhận.`
       );
-    } else if (user.fcmToken && booking.status == "cancelled") {
+      
+      // Tạo hóa đơn nếu trạng thái booking là "confirmed"
+      if (status === "confirmed") {
+        await createBill(booking);
+      }
+    } else if (user.fcmToken && booking.status === "cancelled") {
       sendNotification(
         user.fcmToken,
         "Hủy đặt phòng",
-        `Bạn đã hủy đặt phòng từ ${booking.startDate} đến ${booking.endDate}.`
-      );
-    } else {
-      sendNotification(
-        user.fcmToken,
-        "Trạng thái đặt phòng",
-        `Đơn đặt phòng từ ${booking.startDate} đến ${booking.endDate} là đang xử lý.`
+        `Đặt phòng của bạn từ ${booking.startDate} đến ${booking.endDate} đã bị hủy.`
       );
     }
 
     res.status(200).json({ message: "Booking updated successfully", data: updatedBooking });
   } catch (error) {
-    res.status(500).json({ message: "Error updating booking", error });
+    console.error("Error updating booking:", error);
+    res.status(500).json({ message: "Error updating booking", error: error.message });
   }
 });
 
+// API tạo hóa đơn
+async function createBill(booking) {
+  try {
+    const { userId, roomId, startDate, endDate, totalPrice } = booking;
+
+    // Tạo hóa đơn với trạng thái thanh toán là "paid"
+    const newBill = new Bill({
+      userId,
+      roomId,
+      startDate,
+      endDate,
+      totalPrice,
+      status: "confirmed",  // Trạng thái hóa đơn là "confirmed"
+      paymentStatus: "paid",  // Thanh toán đã hoàn tất
+    });
+
+    const savedBill = await newBill.save();
+    console.log("Tạo hóa đơn thành công!", savedBill);
+    return savedBill;
+  } catch (error) {
+    console.error("Error creating bill:", error);
+    throw new Error("Không thể tạo hóa đơn.");
+  }
+}
 router.post("/save-fcm-token", async (req, res) => {
   const { token } = req.body;
 
@@ -1874,5 +1904,32 @@ router.get("/popular-rooms", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+router.get('/revenue', async (req, res) => {
+  const { startDate, endDate } = req.query;
 
+  try {
+    const bills = await Bill.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(startDate),  // Ngày bắt đầu
+            $lte: new Date(endDate),    // Ngày kết thúc
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // Nhóm theo ngày
+          totalRevenue: { $sum: '$totalPrice' }, // Tổng doanh thu theo ngày
+        },
+      },
+      { $sort: { _id: 1 } },  // Sắp xếp theo ngày từ trước đến sau
+    ]);
+
+    res.json({ revenueStats: bills });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
 module.exports = router;

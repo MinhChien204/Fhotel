@@ -176,7 +176,7 @@ public class PaymentActivity extends AppCompatActivity {
                                         Bill bill = new Bill(userId, roomId, startDate, endDate, total);
                                         createBooking(booking);
 
-                                        createBill(bill);
+//                                        createBill(bill);
                                         // Điều hướng sang màn hình thông báo thanh toán thành công
                                         startActivity(intent1);
                                     }

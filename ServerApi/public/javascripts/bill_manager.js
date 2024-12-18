@@ -13,6 +13,20 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Lỗi khi lấy dữ liệu hóa đơn:', error);
     });
 
+    // function formatDate(dateString) {
+    //   const dateObj = new Date(dateString);
+    //   <td>${formatDate(bill.createdAt)}</td>
+    //   return dateObj.toLocaleString('vi-VN', {
+    //     day: '2-digit',
+    //     month: '2-digit',
+    //     year: 'numeric',
+    //     hour: '2-digit',
+    //     minute: '2-digit',
+    //     second: '2-digit',
+    //     timeZone: 'UTC' // Đảm bảo múi giờ UTC
+    //   });
+    // }
+
   // Hàm hiển thị hóa đơn lên bảng
   function displayBills(bills) {
     const tbody = document.querySelector('#bills-table');
@@ -29,8 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${bill.startDate}</td>
         <td>${bill.endDate}</td>
         <td>${bill.totalPrice.toLocaleString()}</td>
-        <td>${bill.paymentStatus}</td>
-        <td>${bill.status}</td>
+        <td>${bill.status === 'confirmed' ? 'Đã thanh toán' : bill.status}</td>
+
       `;
       
       // Thêm hàng vào bảng

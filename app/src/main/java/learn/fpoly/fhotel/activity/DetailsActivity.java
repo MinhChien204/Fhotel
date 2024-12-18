@@ -129,7 +129,7 @@ public class DetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Response<Favourite>> call, retrofit2.Response<Response<Favourite>> response) {
                 if (response.isSuccessful()) {
 
-                    Toast.makeText(DetailsActivity.this, "create successful!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(DetailsActivity.this, "create successful!", Toast.LENGTH_SHORT).show();
 
                 } else {
                     Toast.makeText(DetailsActivity.this, "false", Toast.LENGTH_SHORT).show();
@@ -216,7 +216,7 @@ public class DetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
                 if (response.isSuccessful()) {
 
-                    Toast.makeText(DetailsActivity.this, "Delete successful!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(DetailsActivity.this, "Delete successful!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(DetailsActivity.this, "Failed to delete favourite!", Toast.LENGTH_SHORT).show();
                 }
